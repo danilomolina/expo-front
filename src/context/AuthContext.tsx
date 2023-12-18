@@ -12,6 +12,8 @@ import authConfig from 'src/configs/auth'
 
 // ** Types
 import { AuthValuesType, LoginParams, ErrCallbackType, UserDataType } from './types'
+import { signin } from 'src/services/login'
+import { ResponseAPI, ResponseLoginDefault } from 'src/models/api'
 
 // ** Defaults
 const defaultProvider: AuthValuesType = {
@@ -71,26 +73,29 @@ const AuthProvider = ({ children }: Props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const handleLogin = (params: LoginParams, errorCallback?: ErrCallbackType) => {
-    axios
-      .post(authConfig.loginEndpoint, params)
-      .then(async response => {
-        params.rememberMe
-          ? window.localStorage.setItem(authConfig.storageTokenKeyName, response.data.accessToken)
-          : null
-        const returnUrl = router.query.returnUrl
+  const handleLogin = async (params: LoginParams, errorCallback?: ErrCallbackType) => {
 
-        setUser({ ...response.data.userData })
-        params.rememberMe ? window.localStorage.setItem('userData', JSON.stringify(response.data.userData)) : null
 
-        const redirectURL = returnUrl && returnUrl !== '/' ? returnUrl : '/'
+    const res: ResponseAPI<ResponseLoginDefault> = await signin(params.email, params.password)
 
-        router.replace(redirectURL as string)
-      })
+    // signin(params.email, params.password)
+    //   .then(async response => {
+    //     params.rememberMe
+    //       ? window.localStorage.setItem(authConfig.storageTokenKeyName, response.data.token ? response.data.token : "")
+    //       : null
+    //     const returnUrl = router.query.returnUrl
 
-      .catch(err => {
-        if (errorCallback) errorCallback(err)
-      })
+    //     // setUser({ ...response.data.userData })
+    //     // params.rememberMe ? window.localStorage.setItem('userData', JSON.stringify(response.data.userData)) : null
+
+    //     const redirectURL = returnUrl && returnUrl !== '/' ? returnUrl : '/'
+
+    //     router.replace(redirectURL as string)
+    //   })
+
+    //   .catch(err => {
+    //     if (errorCallback) errorCallback(err)
+    //   })
   }
 
   const handleLogout = () => {
