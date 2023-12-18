@@ -5,7 +5,6 @@ import authConfig from 'src/configs/auth'
 
 export const api = axios.create({
   headers: {
-     baseURL: 'http://localhost:3001',
     'Content-Type': 'application/json',
   }
 });
@@ -17,6 +16,7 @@ api.interceptors.request.use(
     if (token && config.headers) {
       config.headers.Authorization = `Bearer ${token}`;
     }
+
     return config;
   },
   (error) => Promise.reject(error)

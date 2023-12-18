@@ -4,27 +4,8 @@ import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
 import CardHeader from '@mui/material/CardHeader'
 import CardContent from '@mui/material/CardContent'
-import { useEffect } from 'react'
-import Cookies from 'universal-cookie'
-import router from 'next/router'
 
 const Home = () => {
-
-  // useEffect(() => {
-  //   const cookies = new Cookies();
-  //   console.log("====>", cookies.get("jwt_auth"))
-  //   handleUserAuthenticated()
-  // }, [])
-
-  // const handleUserAuthenticated = () => {
-  //   const cookies = new Cookies();
-  //   const isAuthenticated = cookies.get("jwt_auth")
-
-  //   if (!isAuthenticated) {
-  //     return router.push('/login')
-  //   }
-  // }
-
   return (
     <Grid container spacing={6}>
       <Grid item xs={12}>
