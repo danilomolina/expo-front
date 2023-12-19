@@ -27,11 +27,11 @@ export const signin = async (email: string, password: string): Promise<ResponseA
   }
 }
 
-export const signup = async (email: string, password: string): Promise<ResponseAPI<ResponseLoginDefault>> => {
+export const signup = async (email: string | undefined, password: string | undefined): Promise<ResponseAPI<ResponseLoginDefault>> => {
   try {
-    const userCreate: UserCreate = { email: email, password: password, planId: 0, username: email };
+    const userCreate: UserCreate = { email: email, password: password };
 
-    const { data }: { data: ResponseLoginDefault } = await api.post('/signup', userCreate);
+    const { data }: { data: ResponseLoginDefault } = await api.post(`${EXPOAPI.url}/signup`, userCreate);
 
     return {
       data: data,

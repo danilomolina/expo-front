@@ -17,25 +17,54 @@ import StepperCustomDot from 'src/views/forms/form-wizard/StepperCustomDot'
 
 // ** Styled Components
 import StepperWrapper from 'src/@core/styles/mui/stepper'
+import { UserDataType } from 'src/context/types'
 
 const steps = [
   {
-    title: 'Account',
-    subtitle: 'Account Details'
+    title: 'Conta',
+    subtitle: 'Detalhes da Conta'
   },
   {
-    title: 'Personal',
-    subtitle: 'Enter Information'
+    title: 'Pessoal',
+    subtitle: 'Entre com suas informações'
   },
   {
-    title: 'Billing',
-    subtitle: 'Payment Details'
+    title: 'Plano',
+    subtitle: 'Escolha seu Plano'
   }
 ]
+
+export interface User {
+  email?: string,
+  password?: string
+}
 
 const RegisterMultiSteps = () => {
   // ** States
   const [activeStep, setActiveStep] = useState<number>(0)
+  const [user, setUser] = useState<User>({
+    email: "",
+    password: ""
+  })
+  const [people, setPeople] = useState<UserDataType>({
+    name: "",
+    birtyDate: "",
+    cellPhone: "",
+    userId: "",
+    planId: "",
+    affiliatePlatformId: "1234576",
+    paidPlan: false,
+    cpf: "",
+    cep: "",
+    neighborhood: "",
+    street: "",
+    number: "",
+    complement: "",
+    image: "src:teste",
+    role: "client",
+    city: "",
+    state: "São Paulo"
+  });
 
   // Handle Stepper
   const handleNext = () => {
@@ -50,11 +79,11 @@ const RegisterMultiSteps = () => {
   const getStepContent = (step: number) => {
     switch (step) {
       case 0:
-        return <StepAccountDetails handleNext={handleNext} />
+        return <StepAccountDetails handleNext={handleNext} user={user} setUser={setUser} />
       case 1:
-        return <StepPersonalInfo handleNext={handleNext} handlePrev={handlePrev} />
+        return <StepPersonalInfo handleNext={handleNext} handlePrev={handlePrev} people={people} setPeople={setPeople}/>
       case 2:
-        return <StepBillingDetails handlePrev={handlePrev} />
+        return <StepBillingDetails handlePrev={handlePrev} user={user} people={people}/>
 
       default:
         return null

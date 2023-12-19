@@ -1,10 +1,14 @@
+import { UserDataType } from "src/context/types";
+
 export type ResponseLoginDefault = {
     error?: {
         statusCode: number,
         name: string,
         message: string
     }
-    token?: string
+    token?: string,
+    id?: string,
+    people? : UserDataType[] | null
 };
 
 export type ResponseAPI<T> = {
