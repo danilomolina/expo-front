@@ -4,9 +4,6 @@ import { createContext, useEffect, useState, ReactNode } from 'react'
 // ** Next Import
 import { useRouter } from 'next/router'
 
-// ** Axios
-import axios from 'axios'
-
 // ** Config
 import authConfig from 'src/configs/auth'
 
@@ -35,36 +32,16 @@ const AuthProvider = ({ children }: Props) => {
   const [user, setUser] = useState<UserDataType | null>(
     defaultProvider.user !== undefined ? defaultProvider.user : null
   );
-  const [loading, setLoading] = useState<boolean>(defaultProvider.loading)
+  const [loading, setLoading] = useState<boolean>(false)
 
   // ** Hooks
   const router = useRouter()
 
   useEffect(() => {
     const initAuth = async (): Promise<void> => {
-      const storedToken = window.localStorage.getItem(authConfig.storageTokenKeyName)!
+      const storedToken = window.localStorage.getItem("accessToken")!
       if (storedToken) {
         setLoading(true)
-        // await axios
-        //   .get(authConfig.meEndpoint, {
-        //     headers: {
-        //       Authorization: storedToken
-        //     }
-        //   })
-        //   .then(async response => {
-        //     setLoading(false)
-        //     setUser({ ...response.data.userData })
-        //   })
-        //   .catch(() => {
-        //     localStorage.removeItem('userData')
-        //     localStorage.removeItem('refreshToken')
-        //     localStorage.removeItem('accessToken')
-        //     setUser(null)
-        //     setLoading(false)
-        //     if (authConfig.onTokenExpiration === 'logout' && !router.pathname.includes('login')) {
-        //       router.replace('/login')
-        //     }
-        //   })
       } else {
         setLoading(false)
       }
@@ -78,7 +55,7 @@ const AuthProvider = ({ children }: Props) => {
     signin(params.email, params.password)
       .then(async response => {
         params.rememberMe
-          ? window.localStorage.setItem(authConfig.storageTokenKeyName, response.data.token ? response.data.token : "")
+          ? window.localStorage.setItem("accessToken", response.data.token ? response.data.token : "")
           : null
         const returnUrl = router.query.returnUrl
         const user = response.data.people && response.data.people.length > 0

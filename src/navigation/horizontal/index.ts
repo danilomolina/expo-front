@@ -8,8 +8,8 @@ const navigation = (): HorizontalNavItemsType => [
     icon: 'mdi:home-outline',
   },
   {
-    title: 'Second Page',
-    path: '/second-page',
+    title: 'Cadastro Evento/Agenda',
+    path: '/events',
     icon: 'mdi:email-outline',
   },
   {

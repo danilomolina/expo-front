@@ -17,14 +17,11 @@ import Icon from 'src/@core/components/icon'
 // ** Custom Components Imports
 import CustomRadioIcons from 'src/@core/components/custom-radio/icons'
 
-// ** Util Import
-import { formatCVC, formatExpirationDate, formatCreditCardNumber } from 'src/@core/utils/format'
-
 // ** Styles Import
 import 'react-credit-cards/es/styles-compiled.css'
 import { User } from '.'
 import { UserDataType } from 'src/context/types'
-import { signin, signup } from 'src/services/login'
+import { signup } from 'src/services/login'
 import { savePeople } from 'src/services/people'
 import router from 'next/router'
 
@@ -101,6 +98,7 @@ const StepBillingDetails = (props: StepBillingDetailsParams) => {
     signup(props.user.email, props.user.password)
     .then(async response => {
       await handleSavePeople(response.data.id)
+      alert("Usuário criado com sucesso!")
 
       const redirectURL = '/login'
       router.replace(redirectURL as string)
@@ -108,7 +106,7 @@ const StepBillingDetails = (props: StepBillingDetailsParams) => {
 
   }
 
-  const handleSavePeople = async (userId: string | undefined) => {  
+  const handleSavePeople = async (userId: string | undefined) => {
     props.people.userId = userId
     props.people.planId = selectedRadio
     const date = new Date(props.people.birtyDate === undefined ? 0 : props.people.birtyDate)
