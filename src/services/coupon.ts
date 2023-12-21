@@ -1,0 +1,74 @@
+import { api } from "src/configs/api";
+import { ResponseAPI } from "src/models/api";
+import configValues from "src/configs/configValues";
+import { CouponModel } from "src/models/coupon";
+
+const { API: { EXPOAPI } } = configValues;
+
+export const saveCoupon = async (event: CouponModel): Promise<ResponseAPI<CouponModel>> => {
+  try {
+
+    const { data }: { data: CouponModel } = await api.post(`${EXPOAPI.url}/coupons`, event);
+
+    return {
+      data: data,
+      isSuccess: true
+    } as ResponseAPI<CouponModel>;
+
+  }
+  catch (error: any) {
+    console.log(error);
+
+    return {
+      isSuccess: false,
+      message: error.message
+    } as ResponseAPI<CouponModel>
+  }
+}
+
+export const getCoupon = async (offset: number, limit: number, skip: number): Promise<ResponseAPI<CouponModel[] | []>> => {
+  try {
+
+    const { data }: { data: CouponModel[] } = await api.get(`${EXPOAPI.url}/coupons`, {
+      params: {
+        offset: offset,
+        limit: limit,
+        skip: skip
+      }
+    });
+
+    return {
+      data: data,
+      isSuccess: true
+    } as ResponseAPI<CouponModel[] | []>;
+  }
+  catch (error: any) {
+    console.log(error);
+
+    return {
+      isSuccess: false,
+      message: error.message
+    } as ResponseAPI<CouponModel[] | []>
+  }
+}
+
+export const deleteCoupon = async (id: string): Promise<ResponseAPI<CouponModel>> => {
+  try {
+
+    const { data }: { data: CouponModel } = await api.delete(`${EXPOAPI.url}/coupons/${id}`);
+
+    return {
+      data: data,
+      isSuccess: true
+    } as ResponseAPI<CouponModel>;
+
+  }
+  catch (error: any) {
+    console.log(error);
+
+    return {
+      isSuccess: false,
+      message: error.message
+    } as ResponseAPI<CouponModel>
+  }
+}

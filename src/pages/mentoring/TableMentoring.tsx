@@ -15,9 +15,11 @@ import { EventModel } from 'src/models/event'
 
 import Delete from 'mdi-material-ui/Delete'
 import toast from 'react-hot-toast'
+import { MentoringModel } from 'src/models/mentoring'
+import { deleteMentoring, getMentoring } from 'src/services/mentoring'
 
 interface Column {
-  id: 'title' | 'caption' | 'date' | 'hour' | 'local'
+  id: 'title' | 'caption' | 'date' | 'hour'
   label: string
   minWidth?: number
   align?: 'right' | 'left'
@@ -49,31 +51,25 @@ const columns: readonly Column[] = [
     label: 'Hora',
     minWidth: 20,
     align: 'left',
-  },
-  {
-    id: 'local',
-    label: 'Local',
-    minWidth: 70,
-    align: 'left'
   }
 ]
 
 interface TableEventsParams {
-  event: EventModel | undefined
+  event: MentoringModel | undefined
 }
 
-const TableEvents = (props: TableEventsParams) => {
+const TableMentoring = (props: TableEventsParams) => {
   // ** States
   const [page, setPage] = useState<number>(0)
   const [rowsPerPage, setRowsPerPage] = useState<number>(10)
-  const [events, setEvents] = useState<EventModel[]>()
+  const [events, setEvents] = useState<MentoringModel[]>()
 
   useEffect(() => {
     handleGetEvents()
   }, [props.event])
 
   const handleGetEvents = async () => {
-    const response = await getEvents(0, 100, 0)
+    const response = await getMentoring(0, 100, 0)
     setEvents(response.data)
   }
 
@@ -87,14 +83,14 @@ const TableEvents = (props: TableEventsParams) => {
   }
 
   const handleOnClickDelete = async (id: string) => {
-    const response = await deleteEvent(id)
+    const response = await deleteMentoring(id)
 
     if (response.isSuccess) {
-      toast.success('Evento excluido com sucess')
+      toast.success('Mentoria excluido com sucess')
       handleGetEvents()
     }
     else
-      toast.error('Erro ao excluir Evento')
+      toast.error('Erro ao excluir Mentoria')
   }
 
   return (
@@ -158,4 +154,4 @@ const TableEvents = (props: TableEventsParams) => {
   )
 }
 
-export default TableEvents
+export default TableMentoring

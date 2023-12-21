@@ -16,12 +16,10 @@ import toast from 'react-hot-toast'
 import { useForm, Controller } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 
-import DatePicker, { ReactDatePickerProps } from 'react-datepicker'
+import DatePicker from 'react-datepicker'
 import "react-datepicker/dist/react-datepicker.css"
-import { useTheme } from '@mui/material/styles'
 import { DateType } from 'src/types/forms/reactDatepickerTypes'
 import { CardHeader } from '@mui/material'
-import TableStickyHeader from 'src/views/table/mui/TableStickyHeader'
 import TableEvents from './TableEvents'
 
 import ptBR from 'date-fns/locale/pt-BR';

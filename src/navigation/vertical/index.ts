@@ -19,12 +19,27 @@ const navigation = (): VerticalNavItemsType => {
       icon: 'mdi:email-outline',
     },
     {
-      path: '/acl',
-      action: 'read',
-      subject: 'acl-page',
-      title: 'Access Control',
-      icon: 'mdi:shield-outline',
-    }
+      title: 'Cupom',
+      path: '/coupon',
+      icon: 'mdi:email-outline',
+    },
+    {
+      title: 'Curso',
+      path: '/course',
+      icon: 'mdi:email-outline',
+    },
+    {
+      title: 'Embaixada',
+      path: '/embassie',
+      icon: 'mdi:email-outline',
+    },
+    // {
+    //   path: '/acl',
+    //   action: 'read',
+    //   subject: 'acl-page',
+    //   title: 'Access Control',
+    //   icon: 'mdi:shield-outline',
+    // }
   ]
 }
 

@@ -10,14 +10,19 @@ import TableBody from '@mui/material/TableBody'
 import TableCell from '@mui/material/TableCell'
 import TableContainer from '@mui/material/TableContainer'
 import TablePagination from '@mui/material/TablePagination'
-import { deleteEvent, getEvents } from 'src/services/event'
-import { EventModel } from 'src/models/event'
 
 import Delete from 'mdi-material-ui/Delete'
 import toast from 'react-hot-toast'
+import { MentoringModel } from 'src/models/mentoring'
+import { CouponModel } from 'src/models/coupon'
+import { deleteCoupon, getCoupon } from 'src/services/coupon'
+import { CourseModel } from 'src/models/course'
+import { deleteCousers, getCouser } from 'src/services/course'
+import { EmbassieModel } from 'src/models/embassie'
+import { deleteEmbassie, getEmbassie } from 'src/services/embassie'
 
 interface Column {
-  id: 'title' | 'caption' | 'date' | 'hour' | 'local'
+  id: 'description' | 'link' | 'image'
   label: string
   minWidth?: number
   align?: 'right' | 'left'
@@ -25,56 +30,33 @@ interface Column {
 }
 
 const columns: readonly Column[] = [
-  { id: 'title', label: 'Título', minWidth: 170 },
-  { id: 'caption', label: 'Sub Título', minWidth: 100, align: 'left' },
+  { id: 'description', label: 'Descrição', minWidth: 170 },
+  { id: 'link', label: 'Link', minWidth: 100, align: 'left' },
   {
-    id: 'date',
-    label: 'Data',
-    minWidth: 30,
-    align: 'left',
-    format: (value: string) => {
-      const data = new Date(value);
-      const dia = data.getUTCDate();
-      const mes = data.getUTCMonth() + 1;
-      const ano = data.getUTCFullYear();
-
-      const diaFormatado = dia < 10 ? `0${dia}` : dia;
-      const mesFormatado = mes < 10 ? `0${mes}` : mes;
-
-      return `${diaFormatado}/${mesFormatado}/${ano}`;
-    }
-  },
-  {
-    id: 'hour',
-    label: 'Hora',
+    id: 'image',
+    label: 'Imagem',
     minWidth: 20,
     align: 'left',
-  },
-  {
-    id: 'local',
-    label: 'Local',
-    minWidth: 70,
-    align: 'left'
   }
 ]
 
-interface TableEventsParams {
-  event: EventModel | undefined
+interface TableEmbassieParams {
+  event: EmbassieModel | undefined
 }
 
-const TableEvents = (props: TableEventsParams) => {
+const TableEmbassie = (props: TableEmbassieParams) => {
   // ** States
   const [page, setPage] = useState<number>(0)
   const [rowsPerPage, setRowsPerPage] = useState<number>(10)
-  const [events, setEvents] = useState<EventModel[]>()
+  const [embassie, setEmbassie] = useState<EmbassieModel[]>()
 
   useEffect(() => {
-    handleGetEvents()
+    handleGetEmbassie()
   }, [props.event])
 
-  const handleGetEvents = async () => {
-    const response = await getEvents(0, 100, 0)
-    setEvents(response.data)
+  const handleGetEmbassie = async () => {
+    const response = await getEmbassie(0, 100, 0)
+    setEmbassie(response.data)
   }
 
   const handleChangePage = (event: unknown, newPage: number) => {
@@ -87,14 +69,14 @@ const TableEvents = (props: TableEventsParams) => {
   }
 
   const handleOnClickDelete = async (id: string) => {
-    const response = await deleteEvent(id)
+    const response = await deleteEmbassie(id)
 
     if (response.isSuccess) {
-      toast.success('Evento excluido com sucess')
-      handleGetEvents()
+      toast.success('Embaixada excluida com sucesso')
+      handleGetEmbassie()
     }
     else
-      toast.error('Erro ao excluir Evento')
+      toast.error('Erro ao excluir Embaixada')
   }
 
   return (
@@ -117,9 +99,9 @@ const TableEvents = (props: TableEventsParams) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {events && events.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(row => {
+            {embassie && embassie.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(row => {
               return (
-                <TableRow hover role='checkbox' tabIndex={-1} key={row.hour}>
+                <TableRow hover role='checkbox' tabIndex={-1} key={row.id}>
                   {columns.map(column => {
                     const value = row[column.id]
 
@@ -148,7 +130,7 @@ const TableEvents = (props: TableEventsParams) => {
       <TablePagination
         rowsPerPageOptions={[1, 10, 25, 100]}
         component='div'
-        count={events !== undefined ? events.length : 0}
+        count={embassie !== undefined ? embassie.length : 0}
         rowsPerPage={rowsPerPage}
         page={page}
         onPageChange={handleChangePage}
@@ -158,4 +140,4 @@ const TableEvents = (props: TableEventsParams) => {
   )
 }
 
-export default TableEvents
+export default TableEmbassie
