@@ -41,7 +41,14 @@ const AuthProvider = ({ children }: Props) => {
     const initAuth = async (): Promise<void> => {
       const storedToken = window.localStorage.getItem("accessToken")!
       if (storedToken) {
-        setLoading(true)
+        // setLoading(true)
+        // const user = localStorage.getItem('userData') as UserDataType;
+        // setLoading(false)
+        // setUser({...user})
+        localStorage.removeItem('userData')
+        localStorage.removeItem('refreshToken')
+        localStorage.removeItem('accessToken')
+        setUser(null)
       } else {
         setLoading(false)
       }
@@ -50,6 +57,40 @@ const AuthProvider = ({ children }: Props) => {
     initAuth()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  // useEffect(() => {
+  //   const initAuth = async (): Promise<void> => {
+  //     const storedToken = window.localStorage.getItem(authConfig.storageTokenKeyName)!
+  //     if (storedToken) {
+  //       setLoading(true)
+  //       await axios
+  //         .get(authConfig.meEndpoint, {
+  //           headers: {
+  //             Authorization: storedToken
+  //           }
+  //         })
+  //         .then(async response => {
+  //           setLoading(false)
+  //           setUser({ ...response.data.userData })
+  //         })
+  //         .catch(() => {
+  //           localStorage.removeItem('userData')
+  //           localStorage.removeItem('refreshToken')
+  //           localStorage.removeItem('accessToken')
+  //           setUser(null)
+  //           setLoading(false)
+  //           if (authConfig.onTokenExpiration === 'logout' && !router.pathname.includes('login')) {
+  //             router.replace('/login')
+  //           }
+  //         })
+  //     } else {
+  //       setLoading(false)
+  //     }
+  //   }
+
+  //   initAuth()
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [])
 
   const handleLogin = (params: LoginParams, errorCallback?: ErrCallbackType) => {
     signin(params.email, params.password)

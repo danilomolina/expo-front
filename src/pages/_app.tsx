@@ -7,10 +7,6 @@ import { Router } from 'next/router'
 import type { NextPage } from 'next'
 import type { AppProps } from 'next/app'
 
-
-
-
-
 // ** Loader Import
 import NProgress from 'nprogress'
 
@@ -74,7 +70,7 @@ type GuardProps = {
 
 const clientSideEmotionCache = createEmotionCache()
 
-// ** Pace Loader
+//** Pace Loader
 if (themeConfig.routingLoader) {
   Router.events.on('routeChangeStart', () => {
     NProgress.start()
@@ -118,12 +114,12 @@ const App = (props: ExtendedAppProps) => {
 
       <CacheProvider value={emotionCache}>
         <Head>
-          <title>{`${themeConfig.templateName} - Material Design React Admin Template`}</title>
+          <title>{`${themeConfig.templateName}`}</title>
           <meta
             name='description'
-            content={`${themeConfig.templateName} – Material Design React Admin Dashboard Template – is the most developer friendly & highly customizable Admin Dashboard Template based on MUI v5.`}
+            content={`${themeConfig.templateName} – expo front`}
           />
-          <meta name='keywords' content='Material Design, MUI, Admin Template, React Admin Template' />
+          <meta name='keywords' content='Expo' />
           <meta name='viewport' content='initial-scale=1, width=device-width' />
         </Head>
 
