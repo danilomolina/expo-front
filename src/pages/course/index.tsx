@@ -158,4 +158,9 @@ const FormCourse = () => {
   )
 }
 
+FormCourse.acl = {
+  action: 'read',
+  subject: 'admin-page'
+}
+
 export default FormCourse

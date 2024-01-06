@@ -264,4 +264,9 @@ const FormMentoring = () => {
   )
 }
 
+FormMentoring.acl = {
+  action: 'read',
+  subject: 'admin-page'
+}
+
 export default FormMentoring

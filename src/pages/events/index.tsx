@@ -289,4 +289,9 @@ const FormEvent = () => {
   )
 }
 
+FormEvent.acl = {
+  action: 'read',
+  subject: 'admin-page'
+}
+
 export default FormEvent

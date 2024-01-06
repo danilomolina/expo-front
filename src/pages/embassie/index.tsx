@@ -158,4 +158,9 @@ const FormEmbassie = () => {
   )
 }
 
+FormEmbassie.acl = {
+  action: 'read',
+  subject: 'admin-page'
+}
+
 export default FormEmbassie

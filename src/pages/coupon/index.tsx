@@ -158,4 +158,9 @@ const FormCoupon = () => {
   )
 }
 
+FormCoupon.acl = {
+  action: 'read',
+  subject: 'admin-page'
+}
+
 export default FormCoupon
