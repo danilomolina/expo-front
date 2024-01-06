@@ -5,6 +5,9 @@ const configValues = {
         },
         Pagination: {
             pageSize: 10
+        },
+        ECOMMERCE: {
+            url: process.env.NEXT_PUBLIC_ECOMMERCE_API_URL
         }
     },
     messages: {

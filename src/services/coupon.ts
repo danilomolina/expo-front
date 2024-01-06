@@ -26,14 +26,30 @@ export const saveCoupon = async (event: CouponModel): Promise<ResponseAPI<Coupon
   }
 }
 
-export const getCoupon = async (offset: number, limit: number, skip: number): Promise<ResponseAPI<CouponModel[] | []>> => {
+export const getCoupon = async (offset: number, limit: number, skip: number, category?: string, title?: string, orderBy?: string): Promise<ResponseAPI<CouponModel[] | []>> => {
   try {
+
+    const filter: any = {};
+
+    if (category || title) {
+      filter.where = {
+        or: [
+          category ? { category: category } : {},
+          title ? { title: { like: `${title}` } } : {}
+        ],
+      };
+    }
+
+    if (orderBy) {
+      filter.order = orderBy;
+    }
 
     const { data }: { data: CouponModel[] } = await api.get(`${EXPOAPI.url}/coupons`, {
       params: {
         offset: offset,
         limit: limit,
-        skip: skip
+        skip: skip,
+        filter: filter,
       }
     });
 

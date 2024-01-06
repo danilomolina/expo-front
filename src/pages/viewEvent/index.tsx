@@ -2,7 +2,6 @@
 import Box from '@mui/material/Box'
 import Card from '@mui/material/Card'
 import Grid from '@mui/material/Grid'
-import Avatar from '@mui/material/Avatar'
 import { styled } from '@mui/material/styles'
 import TimelineDot from '@mui/lab/TimelineDot'
 import TimelineItem from '@mui/lab/TimelineItem'
@@ -13,10 +12,11 @@ import TimelineContent from '@mui/lab/TimelineContent'
 import TimelineSeparator from '@mui/lab/TimelineSeparator'
 import TimelineConnector from '@mui/lab/TimelineConnector'
 import MuiTimeline, { TimelineProps } from '@mui/lab/Timeline'
-import { FormControl, IconButton, InputAdornment, InputLabel, MenuItem, OutlinedInput, Select, SelectChangeEvent } from '@mui/material'
-import { useState } from 'react'
-import { Controller } from 'react-hook-form'
+import { Button, FormControl, InputLabel, MenuItem, OutlinedInput, Select } from '@mui/material'
+import { useEffect, useState } from 'react'
 import Icon from 'src/@core/components/icon'
+import { EventModel } from 'src/models/event'
+import { getEvents } from 'src/services/event'
 
 
 // Styled Timeline component
@@ -35,15 +35,22 @@ const Timeline = styled(MuiTimeline)<TimelineProps>(({ theme }) => ({
 }))
 
 const UserViewOverview = () => {
-  const [value, setValue] = useState<string>('')
+  const [orderBy, setOrderBy] = useState<string>('')
   const [name, setName] = useState<string>('')
+  const [category, setCategory] = useState<string>('')
+  const [events, setEvents] = useState<EventModel[]>()
 
-  const handleChange = (event: SelectChangeEvent) => {
-    setValue(event.target.value as string)
+  useEffect(() => {
+    handleGetEvents()
+  }, [])
+
+  const handleGetEvents = async (name? : string, category?: string, orderBy? : string) => {
+    const response = await getEvents(0, 100, 0, name, category, orderBy)
+    setEvents(response.data)
   }
 
   const handleSearch = () => {
-
+    handleGetEvents(category, name, orderBy)
   }
 
   return (
@@ -60,16 +67,19 @@ const UserViewOverview = () => {
                   <FormControl fullWidth>
                     <InputLabel id='controlled-select-label'>Ordernado por</InputLabel>
                     <Select
-                      value={value}
+                      value={orderBy}
                       label='Ordernado por'
                       id='controlled-select'
-                      onChange={handleChange}
+                      onChange={(e) => setOrderBy(e.target.value)}
                       labelId='controlled-select-label'
                     >
                       <MenuItem value=''>
                         <em>Nada</em>
                       </MenuItem>
-                      <MenuItem value={10}>Data</MenuItem>
+                      <MenuItem value="date">Data</MenuItem>
+                      <MenuItem value="category">Categoria</MenuItem>
+                      <MenuItem value="local">Local</MenuItem>
+                      <MenuItem value="mentors">Mentores</MenuItem>
                     </Select>
                   </FormControl>
                 </Grid>
@@ -77,107 +87,86 @@ const UserViewOverview = () => {
                   <FormControl fullWidth>
                     <InputLabel id='controlled-select-label'>Categorias</InputLabel>
                     <Select
-                      value={value}
+                      value={category}
                       label='Categorias'
                       id='controlled-select'
-                      onChange={handleChange}
+                      onChange={(e) => setCategory(e.target.value)}
                       labelId='controlled-select-label'
                     >
                       <MenuItem value=''>
                         <em>Nada</em>
                       </MenuItem>
-                      <MenuItem value={10}>Categoria 1</MenuItem>
+                      <MenuItem value="Categoria 1">Categoria 1</MenuItem>
                     </Select>
                   </FormControl>
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={4}>
                   <FormControl fullWidth>
                     <InputLabel htmlFor='auth-login-v2-password'>
                       Buscar por Nome
                     </InputLabel>
 
                     <OutlinedInput
-                      value={value}
-                      label='Senha'
+                      value={name}
+                      label='Nome'
                       onChange={(e) => setName(e.target.value)}
                       id='auth-login-v2-password'
                       type={'text'}
-                      endAdornment={
-                        <InputAdornment position='end'>
-                          <IconButton
-                            edge='end'
-                            onMouseDown={e => e.preventDefault()}
-                            onClick={() => handleSearch()}
-                          >
-                            <Icon icon={'mdi:text-box-search'} fontSize={20} />
-                          </IconButton>
-                        </InputAdornment>
-                      }
                     />
 
+                  </FormControl>
+                </Grid>
+                <Grid item xs={2}>
+                  <FormControl fullWidth>
+                    <Button
+                      fullWidth
+                      color='primary'
+                      variant='contained'
+                      onClick={handleSearch}
+                    >
+                       <Icon icon={'mdi:text-box-search'} fontSize={20} /> Buscar
+                    </Button>
                   </FormControl>
                 </Grid>
               </Grid>
             </div>
 
             <br /><br />
-            <Timeline>
-              <TimelineItem>
-                <TimelineSeparator>
-                  <TimelineDot color='primary' />
-                  <TimelineConnector />
-                </TimelineSeparator>
-                <TimelineContent>
-                  <Box
-                    sx={{
-                      mb: 2,
-                      display: 'flex',
-                      flexWrap: 'wrap',
-                      alignItems: 'center',
-                      justifyContent: 'space-between'
-                    }}
-                  >
-                    <Typography variant='body2' sx={{ mr: 2, fontWeight: 600, color: 'text.primary' }}>
-                      Mentoria: A importancia de um bom desing
-                    </Typography>
-                    {/* <Typography variant='caption'>12 min ago</Typography> */}
-                  </Box>
-                  <Typography variant='body2'>Mentores: Mago do ecommerce</Typography>
-                  <Typography variant='body2'>Data: 20/10/2023  as 19:00</Typography>
-                  <Typography variant='body2'>Local: Aplicativo</Typography>
-                </TimelineContent>
-              </TimelineItem>
+            {events && events.map((item, key) => {
+              const dataObj = new Date(item.date)
+              const formattedDate = `${dataObj.getDate()}/${dataObj.getMonth() + 1}/${dataObj.getFullYear()} as ${item.hour}`
 
-            </Timeline>
+              return (
+                <Timeline key={key}>
+                  <TimelineItem>
+                    <TimelineSeparator>
+                      <TimelineDot color='primary' />
+                      <TimelineConnector />
+                    </TimelineSeparator>
+                    <TimelineContent>
+                      <Box
+                        sx={{
+                          mb: 2,
+                          display: 'flex',
+                          flexWrap: 'wrap',
+                          alignItems: 'center',
+                          justifyContent: 'space-between'
+                        }}
+                      >
+                        <Typography variant='body2' sx={{ mr: 2, fontWeight: 600, color: 'text.primary' }}>
+                          {item.title}
+                        </Typography>
+                      </Box>
+                      <Typography variant='body2'>Mentores: {item.mentors} </Typography>
+                      <Typography variant='body2'>Data: {formattedDate}</Typography>
+                      <Typography variant='body2'>Local: {item.local}</Typography>
+                      <Typography variant='body2'>Categoria: {item.category}</Typography>
+                    </TimelineContent>
+                  </TimelineItem>
+                </Timeline>)
+            })}
 
-            <Timeline>
-              <TimelineItem>
-                <TimelineSeparator>
-                  <TimelineDot color='primary' />
-                  <TimelineConnector />
-                </TimelineSeparator>
-                <TimelineContent>
-                  <Box
-                    sx={{
-                      mb: 2,
-                      display: 'flex',
-                      flexWrap: 'wrap',
-                      alignItems: 'center',
-                      justifyContent: 'space-between'
-                    }}
-                  >
-                    <Typography variant='body2' sx={{ mr: 2, fontWeight: 600, color: 'text.primary' }}>
-                      Mentoria: A importancia de um bom desing 2
-                    </Typography>
-                    {/* <Typography variant='caption'>12 min ago</Typography> */}
-                  </Box>
-                  <Typography variant='body2'>Mentores: Mago do ecommerce</Typography>
-                  <Typography variant='body2'>Data: 20/10/2023  as 19:00</Typography>
-                  <Typography variant='body2'>Local: Aplicativo</Typography>
-                </TimelineContent>
-              </TimelineItem>
 
-            </Timeline>
           </CardContent>
         </Card>
       </Grid>

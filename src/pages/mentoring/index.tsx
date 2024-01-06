@@ -24,7 +24,6 @@ import TableEvents from './TableMentoring'
 
 import ptBR from 'date-fns/locale/pt-BR';
 import { MentoringModel } from 'src/models/mentoring'
-import { saveEvent } from 'src/services/event'
 import { saveMentoring } from 'src/services/mentoring'
 
 const defaultValues = {

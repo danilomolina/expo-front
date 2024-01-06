@@ -10,8 +10,6 @@ import TableBody from '@mui/material/TableBody'
 import TableCell from '@mui/material/TableCell'
 import TableContainer from '@mui/material/TableContainer'
 import TablePagination from '@mui/material/TablePagination'
-import { deleteEvent, getEvents } from 'src/services/event'
-import { EventModel } from 'src/models/event'
 
 import Delete from 'mdi-material-ui/Delete'
 import toast from 'react-hot-toast'
@@ -54,23 +52,23 @@ const columns: readonly Column[] = [
   }
 ]
 
-interface TableEventsParams {
+interface TableMentoringParams {
   event: MentoringModel | undefined
 }
 
-const TableMentoring = (props: TableEventsParams) => {
+const TableMentoring = (props: TableMentoringParams) => {
   // ** States
   const [page, setPage] = useState<number>(0)
   const [rowsPerPage, setRowsPerPage] = useState<number>(10)
-  const [events, setEvents] = useState<MentoringModel[]>()
+  const [mentorings, setMentorings] = useState<MentoringModel[]>()
 
   useEffect(() => {
-    handleGetEvents()
+    handleGetMentorings()
   }, [props.event])
 
-  const handleGetEvents = async () => {
+  const handleGetMentorings = async () => {
     const response = await getMentoring(0, 100, 0)
-    setEvents(response.data)
+    setMentorings(response.data)
   }
 
   const handleChangePage = (event: unknown, newPage: number) => {
@@ -87,7 +85,7 @@ const TableMentoring = (props: TableEventsParams) => {
 
     if (response.isSuccess) {
       toast.success('Mentoria excluido com sucess')
-      handleGetEvents()
+      handleGetMentorings()
     }
     else
       toast.error('Erro ao excluir Mentoria')
@@ -113,7 +111,7 @@ const TableMentoring = (props: TableEventsParams) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {events && events.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(row => {
+            {mentorings && mentorings.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(row => {
               return (
                 <TableRow hover role='checkbox' tabIndex={-1} key={row.hour}>
                   {columns.map(column => {
@@ -144,7 +142,7 @@ const TableMentoring = (props: TableEventsParams) => {
       <TablePagination
         rowsPerPageOptions={[1, 10, 25, 100]}
         component='div'
-        count={events !== undefined ? events.length : 0}
+        count={mentorings !== undefined ? mentorings.length : 0}
         rowsPerPage={rowsPerPage}
         page={page}
         onPageChange={handleChangePage}

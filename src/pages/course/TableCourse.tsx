@@ -13,9 +13,6 @@ import TablePagination from '@mui/material/TablePagination'
 
 import Delete from 'mdi-material-ui/Delete'
 import toast from 'react-hot-toast'
-import { MentoringModel } from 'src/models/mentoring'
-import { CouponModel } from 'src/models/coupon'
-import { deleteCoupon, getCoupon } from 'src/services/coupon'
 import { CourseModel } from 'src/models/course'
 import { deleteCousers, getCouser } from 'src/services/course'
 

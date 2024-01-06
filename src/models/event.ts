@@ -6,5 +6,7 @@ export type EventModel = {
   hour: number,
   local: string,
   observation: string,
-  link: string
+  link: string,
+  mentors: string,
+  category: string
 }
