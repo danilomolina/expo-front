@@ -17,9 +17,9 @@ const FooterContent = () => {
     <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between' }}>
       <Typography sx={{ mr: 2 }}>
         {`© ${new Date().getFullYear()}, Feito `}
-        <Box component='span' sx={{ color: 'error.main' }}>
+        {/* <Box component='span' sx={{ color: 'error.main' }}>
           ❤️
-        </Box>
+        </Box> */}
         {` por `}
         <LinkStyled target='_blank' href='https://marketnetti.com.br/'>
           marketnetti
