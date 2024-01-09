@@ -5,8 +5,8 @@ const ViewCourse = () => {
 
     const handleSearch = async () => {
         const token = await getToken("danilomolina@gmail.com", "Danilo")
-        window.location.href = `https://escola.ecommercenapratica.com/?token=${token}`
-    } 
+        window.open(`https://escola.ecommercenapratica.com/?token=${token}`, "_blank");
+    }
 
     return (
         <Grid container spacing={2}>
