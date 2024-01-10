@@ -46,6 +46,13 @@ const navigation = (): VerticalNavItemsType => {
       action: 'read',
     },
     {
+      title: 'Categoria',
+      path: '/category',
+      icon: 'mdi:cellphone-marker',
+      subject: 'admin-page',
+      action: 'read',
+    },
+    {
       path: '/viewEvent',
       action: 'read',
       subject: 'acl-page',
