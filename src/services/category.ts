@@ -26,15 +26,16 @@ export const saveCategory = async (event: CategoryModel): Promise<ResponseAPI<Ca
   }
 }
 
-export const getCategory = async (offset: number, limit: number, skip: number, id?: string): Promise<ResponseAPI<CategoryModel[] | []>> => {
+export const getCategory = async (offset: number, limit: number, skip: number, id?: string, active?: boolean): Promise<ResponseAPI<CategoryModel[] | []>> => {
   try {
 
     const filter: any = {};
 
-    if (id) {
+    if (id || active) {
       filter.where = {
         or: [
           id ? { id: id } : {},
+          active ? { active: active } : {}
         ],
       };
     }

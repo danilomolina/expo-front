@@ -52,10 +52,10 @@ const TableCategory = (props: TableCategoryParams) => {
   const [categoryActive, setCategoryActive] = useState<boolean | undefined>()
 
   useEffect(() => {
-    handleGetCoupons()
+    handleGetCategories()
   }, [props.event])
 
-  const handleGetCoupons = async () => {
+  const handleGetCategories = async () => {
     const response = await getCategory(0, 100, 0)
     setCategories(response.data)
   }
@@ -74,7 +74,7 @@ const TableCategory = (props: TableCategoryParams) => {
 
     if (response.isSuccess) {
       toast.success('Categoria excluida com sucesso')
-      handleGetCoupons()
+      handleGetCategories()
     }
     else
       toast.error('Erro ao excluir Categoria')
@@ -98,7 +98,7 @@ const TableCategory = (props: TableCategoryParams) => {
     const response = await updateCategory(newCategory)
     if (response.isSuccess) {
       toast.success('Categoria alterada com sucesso')
-      handleGetCoupons()
+      handleGetCategories()
       handleEditClose()
       setCategoryActive(undefined)
       setCategoryName(undefined)

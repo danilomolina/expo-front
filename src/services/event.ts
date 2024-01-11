@@ -26,15 +26,16 @@ export const saveEvent = async (event: EventModel): Promise<ResponseAPI<EventMod
   }
 }
 
-export const getEvents = async (offset: number, limit: number, skip: number, category?: string, title?: string, orderBy?: string): Promise<ResponseAPI<EventModel[] | []>> => {
+export const getEvents = async (offset: number, limit: number, skip: number, category?: string, title?: string, orderBy?: string, id?: string): Promise<ResponseAPI<EventModel[] | []>> => {
   try {
     const filter: any = {};
 
-    if (category || title) {
+    if (category || title || id) {
       filter.where = {
         or: [
           category ? { category: category } : {},
-          title ? { title: { like: `${title}` } } : {}
+          title ? { title: { like: `${title}` } } : {},
+          id ? { id: id } : {},
         ],
       };
     }
@@ -71,6 +72,27 @@ export const deleteEvent = async (id: string): Promise<ResponseAPI<EventModel>> 
   try {
 
     const { data }: { data: EventModel } = await api.delete(`${EXPOAPI.url}/events/${id}`);
+
+    return {
+      data: data,
+      isSuccess: true
+    } as ResponseAPI<EventModel>;
+
+  }
+  catch (error: any) {
+    console.log(error);
+
+    return {
+      isSuccess: false,
+      message: error.message
+    } as ResponseAPI<EventModel>
+  }
+}
+
+export const updateEvent = async (event: EventModel): Promise<ResponseAPI<EventModel>> => {
+  try {
+
+    const { data }: { data: EventModel } = await api.put(`${EXPOAPI.url}/events/${event.id}`, event);
 
     return {
       data: data,
