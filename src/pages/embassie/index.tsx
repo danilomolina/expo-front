@@ -22,8 +22,11 @@ import TableCourse from './TableEmbassie'
 
 import { EmbassieModel } from 'src/models/embassie'
 import { saveEmbassie } from 'src/services/embassie'
+import { VisuallyHiddenInput, previewImage, uploadFile } from 'src/utils/fileUploader'
 
-const defaultValues = {
+import CloudUploadIcon from '@mui/icons-material/CloudUpload'
+
+let defaultValues = {
   description: "",
   link: "",
   image: ""
@@ -37,9 +40,11 @@ const schema = yup.object().shape({
 
 const FormEmbassie = () => {
   const [embassie, setEmbassie] = useState<EmbassieModel | undefined>()
+  const [file, setFile] = useState<File>()
+  const previewEmbassie = document.getElementById('imagePreviewEmbassie') as HTMLImageElement;
 
   // ** Hook
-  const { control, handleSubmit, formState: { errors } } = useForm({
+  const { control, handleSubmit, reset, formState: { errors } } = useForm({
     defaultValues,
     mode: 'onChange',
     resolver: yupResolver(schema),
@@ -49,8 +54,13 @@ const FormEmbassie = () => {
     const response = await saveEmbassie(data)
     setEmbassie(response.data)
 
+    await uploadFile(file)
+
     if(response.isSuccess){
       toast.success('Embaixada salvo')
+      reset(defaultValues)
+      previewEmbassie.src = ""
+      previewEmbassie.style.display = 'none';
     }
     else
       toast.error('Erro ao criar Embaixada')
@@ -62,6 +72,34 @@ const FormEmbassie = () => {
       <CardContent>
         <form onSubmit={handleSubmit(onSubmit)}>
           <Grid container spacing={5}>
+          <Grid item xs={12}>
+              <Button component="label" variant="contained" startIcon={<CloudUploadIcon />}>
+                Upload Logo
+                <Controller
+                  name='image'
+                  control={control}
+                  rules={{ required: true }}
+                  render={({ field: { } }) => (
+                    <VisuallyHiddenInput type="file" id="uploadInput" onChange={(e) => {
+                      const src = previewImage(e, setFile, previewEmbassie)
+                      defaultValues = {
+                        description: defaultValues.description,
+                        link: defaultValues.link,
+                        image: src !== undefined ? src : ""
+                      }
+                      reset(defaultValues)
+                    }} />
+                  )}
+                />
+              </Button>
+              {errors.image && (
+                <FormHelperText sx={{ color: 'error.main' }} id='validation-schema-first-name'>
+                  {errors.image.message}
+                </FormHelperText>
+              )}
+              <img id="imagePreviewEmbassie" alt="Image Preview" style={{ display: "none", maxWidth: "30%" }} />
+            </Grid>
+
             <Grid item xs={6}>
               <FormControl fullWidth>
                 <Controller
@@ -105,31 +143,6 @@ const FormEmbassie = () => {
                 {errors.link && (
                   <FormHelperText sx={{ color: 'error.main' }} id='validation-schema-last-name'>
                     {errors.link.message}
-                  </FormHelperText>
-                )}
-              </FormControl>
-            </Grid>
-
-
-            <Grid item xs={6}>
-              <FormControl fullWidth>
-                <Controller
-                  name='image'
-                  control={control}
-                  rules={{ required: true }}
-                  render={({ field: { value, onChange } }) => (
-                    <TextField
-                      value={value}
-                      label='Imagem'
-                      onChange={onChange}
-                      error={Boolean(errors.image)}
-                      aria-describedby='validation-schema-last-name'
-                    />
-                  )}
-                />
-                {errors.image && (
-                  <FormHelperText sx={{ color: 'error.main' }} id='validation-schema-last-name'>
-                    {errors.image.message}
                   </FormHelperText>
                 )}
               </FormControl>

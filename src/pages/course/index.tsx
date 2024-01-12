@@ -1,5 +1,5 @@
 // ** React Imports
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 // ** MUI Imports
 import Card from '@mui/material/Card'
@@ -17,29 +17,46 @@ import { useForm, Controller } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 
 import "react-datepicker/dist/react-datepicker.css"
-import { CardHeader } from '@mui/material'
+import { CardHeader, InputLabel, MenuItem, Select } from '@mui/material'
 import TableCourse from './TableCourse'
 
 import { CourseModel } from 'src/models/course'
 import { saveCourse } from 'src/services/course'
+import { VisuallyHiddenInput, previewImage, uploadFile } from 'src/utils/fileUploader'
 
-const defaultValues = {
+import CloudUploadIcon from '@mui/icons-material/CloudUpload'
+import { CategoryModel } from 'src/models/category'
+import { getCategory } from 'src/services/category'
+
+let defaultValues = {
   name: "",
   category: "",
   image: ""
 }
 
 const schema = yup.object().shape({
-  name: yup.string().required(),
-  category: yup.string().required(),
-  image: yup.string().required()
+  name: yup.string().required("Nome é obrigatório"),
+  category: yup.string().required("Categoria é obrigatório"),
+  image: yup.string().required("Imagem é obrigatório")
 })
 
 const FormCourse = () => {
   const [course, setCourse] = useState<CourseModel | undefined>()
+  const [file, setFile] = useState<File>()
+  const previewCurse = document.getElementById('imagePreviewCourse') as HTMLImageElement;
+  const [categories, setCategories] = useState<CategoryModel[]>()
+
+  useEffect(() => {
+    handleGetCategories()
+  }, [])
+
+  const handleGetCategories = async () => {
+    const response = await getCategory(0, 100, 0, undefined, true)
+    setCategories(response.data)
+  }
 
   // ** Hook
-  const { control, handleSubmit, formState: { errors } } = useForm({
+  const { control, handleSubmit, reset, formState: { errors } } = useForm({
     defaultValues,
     mode: 'onChange',
     resolver: yupResolver(schema),
@@ -49,8 +66,13 @@ const FormCourse = () => {
     const response = await saveCourse(data)
     setCourse(response.data)
 
+    await uploadFile(file)
+
     if(response.isSuccess){
       toast.success('Curso salvo')
+      reset(defaultValues)
+      previewCurse.src = ""
+      previewCurse.style.display = 'none';
     }
     else
       toast.error('Erro ao criar Curso')
@@ -62,6 +84,34 @@ const FormCourse = () => {
       <CardContent>
         <form onSubmit={handleSubmit(onSubmit)}>
           <Grid container spacing={5}>
+          <Grid item xs={12}>
+              <Button component="label" variant="contained" startIcon={<CloudUploadIcon />}>
+                Upload Logo
+                <Controller
+                  name='image'
+                  control={control}
+                  rules={{ required: true }}
+                  render={({ field: { } }) => (
+                    <VisuallyHiddenInput type="file" id="uploadInput" onChange={(e) => {
+                      const src = previewImage(e, setFile, previewCurse)
+                      defaultValues = {
+                        name: defaultValues.name,
+                        category: defaultValues.category,
+                        image: src !== undefined ? src : ""
+                      }
+                      reset(defaultValues)
+                    }} />
+                  )}
+                />
+              </Button>
+              {errors.image && (
+                <FormHelperText sx={{ color: 'error.main' }} id='validation-schema-first-name'>
+                  {errors.image.message}
+                </FormHelperText>
+              )}
+              <img id="imagePreviewCourse" alt="Image Preview" style={{ display: "none", maxWidth: "30%" }} />
+            </Grid>
+
             <Grid item xs={6}>
               <FormControl fullWidth>
                 <Controller
@@ -86,50 +136,29 @@ const FormCourse = () => {
               </FormControl>
             </Grid>
 
-            <Grid item xs={6}>
+            <Grid item xs={5}>
               <FormControl fullWidth>
+                <InputLabel htmlFor="active">Categoria</InputLabel>
                 <Controller
                   name='category'
                   control={control}
                   rules={{ required: true }}
                   render={({ field: { value, onChange } }) => (
-                    <TextField
+                    <Select
                       value={value}
-                      label='Categoria'
+                      name="category"
+                      label="Categoria"
                       onChange={onChange}
-                      error={Boolean(errors.category)}
-                      aria-describedby='validation-schema-last-name'
-                    />
+                    >
+                      {categories && categories.map((category, index) => (
+                        <MenuItem value={category.name} key={index}>{category.name}</MenuItem>
+                      ))}
+                    </Select>
                   )}
                 />
                 {errors.category && (
                   <FormHelperText sx={{ color: 'error.main' }} id='validation-schema-last-name'>
                     {errors.category.message}
-                  </FormHelperText>
-                )}
-              </FormControl>
-            </Grid>
-
-
-            <Grid item xs={6}>
-              <FormControl fullWidth>
-                <Controller
-                  name='image'
-                  control={control}
-                  rules={{ required: true }}
-                  render={({ field: { value, onChange } }) => (
-                    <TextField
-                      value={value}
-                      label='Imagem'
-                      onChange={onChange}
-                      error={Boolean(errors.image)}
-                      aria-describedby='validation-schema-last-name'
-                    />
-                  )}
-                />
-                {errors.image && (
-                  <FormHelperText sx={{ color: 'error.main' }} id='validation-schema-last-name'>
-                    {errors.image.message}
                   </FormHelperText>
                 )}
               </FormControl>

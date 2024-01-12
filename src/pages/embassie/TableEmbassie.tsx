@@ -25,14 +25,14 @@ interface Column {
 }
 
 const columns: readonly Column[] = [
-  { id: 'description', label: 'Descrição', minWidth: 170 },
-  { id: 'link', label: 'Link', minWidth: 100, align: 'left' },
   {
     id: 'image',
     label: 'Imagem',
     minWidth: 20,
     align: 'left',
-  }
+  },
+  { id: 'description', label: 'Descrição', minWidth: 170 },
+  { id: 'link', label: 'Link', minWidth: 100, align: 'left' }
 ]
 
 interface TableEmbassieParams {
@@ -102,7 +102,10 @@ const TableEmbassie = (props: TableEmbassieParams) => {
 
                     return (
                       <TableCell key={column.id} align={column.align}>
-                        {column.format && typeof value === 'string' ? column.format(value) : value}
+                        {column.format && typeof value === 'string' && column.id !== 'image' ?
+                          column.format(value) : column.id == 'image' ?
+                            <img id="imagePreviewTable" alt="Image Preview" src={value !== undefined ? value.toString() : ""} height={80} width={80} />
+                            : value}
                       </TableCell>
                     )
                   })}
@@ -130,6 +133,8 @@ const TableEmbassie = (props: TableEmbassieParams) => {
         page={page}
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
+        labelRowsPerPage="Linhas por página"
+        labelDisplayedRows={({ from, to, count }) => `${from}-${to} de ${count}`}
       />
     </>
   )
