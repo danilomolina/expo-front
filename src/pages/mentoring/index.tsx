@@ -1,5 +1,5 @@
 // ** React Imports
-import { ChangeEvent, forwardRef, useState } from 'react'
+import { ChangeEvent, forwardRef, useEffect, useState } from 'react'
 
 // ** MUI Imports
 import Card from '@mui/material/Card'
@@ -19,12 +19,14 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import DatePicker from 'react-datepicker'
 import "react-datepicker/dist/react-datepicker.css"
 import { DateType } from 'src/types/forms/reactDatepickerTypes'
-import { CardHeader } from '@mui/material'
+import { CardHeader, InputLabel, MenuItem, Select } from '@mui/material'
 import TableEvents from './TableMentoring'
 
 import ptBR from 'date-fns/locale/pt-BR';
 import { MentoringModel } from 'src/models/mentoring'
 import { saveMentoring } from 'src/services/mentoring'
+import { CategoryModel } from 'src/models/category'
+import { getCategory } from 'src/services/category'
 
 const defaultValues = {
   title: "",
@@ -33,16 +35,20 @@ const defaultValues = {
   hour: "08:00",
   local: "",
   observation: "",
-  link: ""
+  link: "",
+  category: "",
+  mentors: ""
 }
 
 const schema = yup.object().shape({
-  title: yup.string().required(),
-  caption: yup.string().required(),
-  date: yup.string().required(),
-  hour: yup.string().required(),
-  observation: yup.string(),
-  link: yup.string().required()
+  title: yup.string().required("Título é obrigatório"),
+  caption: yup.string().required("Sub Título é obrigatório"),
+  date: yup.string().required("Data é obrigatório"),
+  hour: yup.string().required("Hora é obrigatório"),
+  observation: yup.string().required("Observação é obrigatório"),
+  link: yup.string().required("Link é obrigatório"),
+  category: yup.string().required("Categoria é obrigatório"),
+  mentors: yup.string().required("Mentores é obrigatório"),
 })
 
 interface CustomInputProps {
@@ -58,9 +64,10 @@ const CustomInput = forwardRef(({ ...props }: CustomInputProps, ref) => {
 
 const FormMentoring = () => {
   const [mentoring, setMentoring] = useState<MentoringModel | undefined>()
+  const [categories, setCategories] = useState<CategoryModel[]>()
 
   // ** Hook
-  const { control, handleSubmit, formState: { errors } } = useForm({
+  const { control, handleSubmit, reset, formState: { errors } } = useForm({
     defaultValues,
     mode: 'onChange',
     resolver: yupResolver(schema),
@@ -75,9 +82,19 @@ const FormMentoring = () => {
 
     if(response.isSuccess){
       toast.success('Mentoria salva')
+      reset(defaultValues)
     }
     else
       toast.error('Erro ao criar Mentoria')
+  }
+
+  useEffect(() => {
+    handleGetCategories()
+  }, [])
+
+  const handleGetCategories = async () => {
+    const response = await getCategory(0, 100, 0, undefined, true)
+    setCategories(response.data)
   }
 
   return (
@@ -236,6 +253,58 @@ const FormMentoring = () => {
                 {errors.link && (
                   <FormHelperText sx={{ color: 'error.main' }} id='validation-schema-last-name'>
                     {errors.link.message}
+                  </FormHelperText>
+                )}
+              </FormControl>
+            </Grid>
+
+            <Grid item xs={6}>
+              <FormControl fullWidth>
+                <InputLabel htmlFor="active">Categoria</InputLabel>
+                <Controller
+                  name='category'
+                  control={control}
+                  rules={{ required: true }}
+                  render={({ field: { value, onChange } }) => (
+                    <Select
+                      value={value}
+                      name="category"
+                      label="Categoria"
+                      onChange={onChange}
+                    >
+                      {categories && categories.map((category, index) => (
+                        <MenuItem value={category.name} key={index}>{category.name}</MenuItem>
+                      ))}
+                    </Select>
+                  )}
+                />
+                {errors.category && (
+                  <FormHelperText sx={{ color: 'error.main' }} id='validation-schema-last-name'>
+                    {errors.category.message}
+                  </FormHelperText>
+                )}
+              </FormControl>
+            </Grid>
+
+            <Grid item xs={6}>
+              <FormControl fullWidth>
+                <Controller
+                  name='mentors'
+                  control={control}
+                  rules={{ required: true }}
+                  render={({ field: { value, onChange } }) => (
+                    <TextField
+                      value={value}
+                      label='Mentores'
+                      onChange={onChange}
+                      error={Boolean(errors.mentors)}
+                      aria-describedby='validation-schema-last-name'
+                    />
+                  )}
+                />
+                {errors.mentors && (
+                  <FormHelperText sx={{ color: 'error.main' }} id='validation-schema-last-name'>
+                    {errors.mentors.message}
                   </FormHelperText>
                 )}
               </FormControl>

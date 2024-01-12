@@ -165,6 +165,8 @@ const TableCategory = (props: TableCategoryParams) => {
         page={page}
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
+        labelRowsPerPage="Linhas por página"
+        labelDisplayedRows={({ from, to, count }) => `${from}-${to} de ${count}`}
       />
 
       {/* dialogo de edicao */}

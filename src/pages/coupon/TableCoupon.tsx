@@ -17,7 +17,7 @@ import { CouponModel } from 'src/models/coupon'
 import { deleteCoupon, getCoupon } from 'src/services/coupon'
 
 interface Column {
-  id: 'soon' | 'discount' | 'link'
+  id: 'soon' | 'discount' | 'link' | 'category'
   label: string
   minWidth?: number
   align?: 'right' | 'left'
@@ -32,7 +32,8 @@ const columns: readonly Column[] = [
     label: 'Link',
     minWidth: 20,
     align: 'left',
-  }
+  },
+  { id: 'category', label: 'Categoria', minWidth: 170 },
 ]
 
 interface TableCouponParams {
@@ -102,7 +103,10 @@ const TableCoupon = (props: TableCouponParams) => {
 
                     return (
                       <TableCell key={column.id} align={column.align}>
-                        {column.format && typeof value === 'string' ? column.format(value) : value}
+                        {column.format && typeof value === 'string' && column.id !== 'soon' ?
+                          column.format(value) : column.id == 'soon' ?
+                            <img id="imagePreviewTable" alt="Image Preview" src={value !== undefined ? value.toString() : ""} height={80} width={80} />
+                            : value}
                       </TableCell>
                     )
                   })}
@@ -130,6 +134,8 @@ const TableCoupon = (props: TableCouponParams) => {
         page={page}
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
+        labelRowsPerPage="Linhas por página"
+        labelDisplayedRows={({ from, to, count }) => `${from}-${to} de ${count}`}
       />
     </>
   )

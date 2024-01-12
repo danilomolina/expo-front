@@ -4,8 +4,10 @@ export type MentoringModel = {
     caption: string,
     date: string,
     hour: number,
-    observation?: string,
+    observation: string,
     link: string,
+    local:string,
     mentors: string,
-    description: string
+    description: string,
+    category: string
   }
