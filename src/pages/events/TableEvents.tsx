@@ -10,7 +10,7 @@ import TableBody from '@mui/material/TableBody'
 import TableCell from '@mui/material/TableCell'
 import TableContainer from '@mui/material/TableContainer'
 import TablePagination from '@mui/material/TablePagination'
-import { deleteEvent, getEvents, saveEvent, updateEvent } from 'src/services/event'
+import { deleteEvent, getEvents, updateEvent } from 'src/services/event'
 import { EventModel } from 'src/models/event'
 
 import Delete from 'mdi-material-ui/Delete'
