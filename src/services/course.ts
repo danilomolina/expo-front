@@ -26,14 +26,30 @@ export const saveCourse = async (event: CourseModel): Promise<ResponseAPI<Course
   }
 }
 
-export const getCouser = async (offset: number, limit: number, skip: number): Promise<ResponseAPI<CourseModel[] | []>> => {
+export const getCouser = async (offset: number, limit: number, skip: number,  category?: string, title?: string, orderBy?: string): Promise<ResponseAPI<CourseModel[] | []>> => {
   try {
+
+    const filter: any = {};
+
+    if (category || title) {
+      filter.where = {
+        or: [
+          category ? { category: category } : {},
+          title ? { title: { like: `${title}` } } : {}
+        ],
+      };
+    }
+
+    if (orderBy) {
+      filter.order = orderBy;
+    }
 
     const { data }: { data: CourseModel[] } = await api.get(`${EXPOAPI.url}/courses`, {
       params: {
         offset: offset,
         limit: limit,
-        skip: skip
+        skip: skip,
+        filter: filter
       }
     });
 

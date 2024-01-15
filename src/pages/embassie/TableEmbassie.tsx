@@ -17,7 +17,7 @@ import { EmbassieModel } from 'src/models/embassie'
 import { deleteEmbassie, getEmbassie } from 'src/services/embassie'
 
 interface Column {
-  id: 'description' | 'link' | 'image'
+  id: 'description' | 'link' | 'image' | 'category' | 'name'
   label: string
   minWidth?: number
   align?: 'right' | 'left'
@@ -25,6 +25,7 @@ interface Column {
 }
 
 const columns: readonly Column[] = [
+  { id: 'name', label: 'Nome', minWidth: 170 },
   {
     id: 'image',
     label: 'Imagem',
@@ -32,7 +33,8 @@ const columns: readonly Column[] = [
     align: 'left',
   },
   { id: 'description', label: 'Descrição', minWidth: 170 },
-  { id: 'link', label: 'Link', minWidth: 100, align: 'left' }
+  { id: 'link', label: 'Link', minWidth: 100, align: 'left' },
+  { id: 'category', label: 'Categoria', minWidth: 100, align: 'left' }
 ]
 
 interface TableEmbassieParams {

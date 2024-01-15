@@ -6,81 +6,110 @@ import { getMentoring } from 'src/services/mentoring'
 
 const ViewMentoring = () => {
 
-    const [mentorings, setMentorings] = useState<MentoringModel[]>()
+  const [mentorings, setMentorings] = useState<MentoringModel[]>()
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth)
 
-    useEffect(() => {
-        handleGetMentorings()
-    }, [])
+  useEffect(() => {
+    handleGetMentorings()
+  }, [])
 
-    const handleGetMentorings = async () => {
-        const response = await getMentoring(0, 100, 0)
-        setMentorings(response.data)
+  const handleGetMentorings = async () => {
+    const response = await getMentoring(0, 100, 0)
+    setMentorings(response.data)
+  }
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
     }
 
-    const opts = {
-        height: '390',
-        width: '640',
-        playerVars: {
-            autoplay: 0,
-        },
-    }
+  }, [windowWidth])
 
-    const optsSmall = {
-        height: '140',
-        width: '180',
-        playerVars: {
-            autoplay: 0,
-        },
-    }
+  const opts = {
+    height: '390',
+    width: '640',
+    playerVars: {
+      autoplay: 0,
+    },
+  }
 
-    const formattedDate = (date: string, hour: number | undefined) => {
-        const dataObj = new Date(date)
-        const formattedDate = `${dataObj.getDate()}/${dataObj.getMonth() + 1}/${dataObj.getFullYear()} as ${hour}`
+  const optsSmall = {
+    height: '140',
+    width: '180',
+    playerVars: {
+      autoplay: 0,
+    },
+  }
 
-        return formattedDate
-    }
+  const formattedDate = (date: string, hour: number | undefined) => {
+    const dataObj = new Date(date)
+    const formattedDate = `${dataObj.getDate()}/${dataObj.getMonth() + 1}/${dataObj.getFullYear()} as ${hour}`
 
-    function getYoutubeId(url: string) {
-        const regex = /[?&]v=([^?&]+)/i;
-        const match = url.match(regex);
+    return formattedDate
+  }
 
-        return match && match[1] ? match[1] : undefined;
-    }
+  function getYoutubeId(url: string) {
+    const regex = /[?&]v=([^?&]+)/i;
+    const match = url.match(regex);
 
-    return (
-        <Paper>
-            <div style={{ margin: 35, fontSize: 14, padding: 30 }}>
-                <Typography variant="h5" >
-                    {mentorings && mentorings[0].title} <br />
-                </Typography>
-                <Typography>
-                    Mentores:  {mentorings && mentorings[0].mentors} <br />
-                    Data: {formattedDate(mentorings !== undefined ? mentorings[0].date : "", mentorings && mentorings[0].hour)}
-                </Typography>
-                <YouTube videoId={mentorings !== undefined ? getYoutubeId(mentorings[0].link) : ""} opts={opts} />
+    return match && match[1] ? match[1] : undefined;
+  }
 
-                <Typography>
-                    Descrição: {mentorings && mentorings[0].description}
-                </Typography>
-                <br />
-                <Typography variant="h5" >
-                    Mentorias anteriores <br />
-                </Typography>
-                <Grid container spacing={1}>
-                    {mentorings && mentorings.map((item, key) => (
-                        <Grid item xs={2} key={key}>
-                            <YouTube videoId={item !== undefined ? getYoutubeId(item.link) : ""} opts={optsSmall} />
-                        </Grid>
-                    ))}
+  return (
+    <Paper style={{width: '100%'}}>
+      <div style={{ margin: 35, fontSize: 14, padding: 30 }}>
+        <Grid container spacing={3}>
+
+          <Grid item xs={12} md={7}>
+            <YouTube videoId={mentorings !== undefined ? getYoutubeId(mentorings[0].link) : ""} opts={windowWidth >= 960 ? opts : optsSmall} />
+            <Typography style={{ fontSize: 23, fontWeight: 'bold' }} >
+              {mentorings && mentorings[0].title} <br />
+            </Typography>
+            <Typography>
+              Por:  {mentorings && mentorings[0].mentors} <br />
+              <span style={{ fontSize: 16, fontWeight: 'bold' }}>Estreia: </span>{formattedDate(mentorings !== undefined ? mentorings[0].date : "", mentorings && mentorings[0].hour)}
+            </Typography>
+            <br /><br />
+            <Typography>
+              {mentorings && mentorings[0].caption}
+            </Typography>
+          </Grid>
+          <br />
+          <Grid item xs={12} md={4}>
+            <Typography style={{ fontSize: 18 }} >
+              Atidades anteriores <br />
+            </Typography>
+
+
+            {mentorings && mentorings.map((item, key) => (
+              <Grid container spacing={3} key={key}>
+                <Grid item xs={12} md={6}>
+                  <YouTube videoId={item !== undefined ? getYoutubeId(item.link) : ""} opts={optsSmall} />
                 </Grid>
-            </div>
-        </Paper>
-    )
+                <Grid item xs={12} md={6}>
+                  <Typography style={{ fontSize: 20, fontWeight: 'bold' }} >
+                    {item.title} <br />
+                  </Typography>
+                  Por: {item.mentors}
+                </Grid>
+              </Grid>
+            ))}
+          </Grid>
+        </Grid>
+      </div>
+    </Paper>
+  )
 }
 
 ViewMentoring.acl = {
-    action: 'read',
-    subject: 'acl-page'
+  action: 'read',
+  subject: 'acl-page'
 }
 
 export default ViewMentoring

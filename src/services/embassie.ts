@@ -26,15 +26,16 @@ export const saveEmbassie = async (event: EmbassieModel): Promise<ResponseAPI<Em
   }
 }
 
-export const getEmbassie = async (offset: number, limit: number, skip: number, title?: string, orderBy?: string): Promise<ResponseAPI<EmbassieModel[] | []>> => {
+export const getEmbassie = async (offset: number, limit: number, skip: number, title?: string, orderBy?: string, category?: string): Promise<ResponseAPI<EmbassieModel[] | []>> => {
   try {
 
     const filter: any = {};
 
-    if (title) {
+    if (title || category) {
       filter.where = {
         or: [
-          title ? { title: { like: `${title}` } } : {}
+          title ? { title: { like: `${title}` } } : {},
+          category ? { category: category } : {},
         ],
       };
     }

@@ -31,13 +31,17 @@ import { getCategory } from 'src/services/category'
 let defaultValues = {
   name: "",
   category: "",
-  image: ""
+  image: "",
+  description: "",
+  link: ""
 }
 
 const schema = yup.object().shape({
   name: yup.string().required("Nome é obrigatório"),
   category: yup.string().required("Categoria é obrigatório"),
-  image: yup.string().required("Imagem é obrigatório")
+  image: yup.string().required("Imagem é obrigatório"),
+  description: yup.string().required("Descrição é obrigatório"),
+  link: yup.string().required("Link é obrigatório")
 })
 
 const FormCourse = () => {
@@ -97,7 +101,9 @@ const FormCourse = () => {
                       defaultValues = {
                         name: defaultValues.name,
                         category: defaultValues.category,
-                        image: src !== undefined ? src : ""
+                        image: src !== undefined ? src : "",
+                        description: defaultValues.description,
+                        link: defaultValues.link
                       }
                       reset(defaultValues)
                     }} />
@@ -110,6 +116,30 @@ const FormCourse = () => {
                 </FormHelperText>
               )}
               <img id="imagePreviewCourse" alt="Image Preview" style={{ display: "none", maxWidth: "30%" }} />
+            </Grid>
+
+            <Grid item xs={12}>
+              <FormControl fullWidth>
+                <Controller
+                  name='description'
+                  control={control}
+                  rules={{ required: true }}
+                  render={({ field: { value, onChange } }) => (
+                    <TextField
+                      value={value}
+                      label='Descrição'
+                      onChange={onChange}
+                      error={Boolean(errors.description)}
+                      aria-describedby='validation-schema-first-name'
+                    />
+                  )}
+                />
+                {errors.description && (
+                  <FormHelperText sx={{ color: 'error.main' }} id='validation-schema-first-name'>
+                    {errors.description.message}
+                  </FormHelperText>
+                )}
+              </FormControl>
             </Grid>
 
             <Grid item xs={6}>
@@ -131,6 +161,30 @@ const FormCourse = () => {
                 {errors.name && (
                   <FormHelperText sx={{ color: 'error.main' }} id='validation-schema-first-name'>
                     {errors.name.message}
+                  </FormHelperText>
+                )}
+              </FormControl>
+            </Grid>
+
+            <Grid item xs={6}>
+              <FormControl fullWidth>
+                <Controller
+                  name='link'
+                  control={control}
+                  rules={{ required: true }}
+                  render={({ field: { value, onChange } }) => (
+                    <TextField
+                      value={value}
+                      label='Link'
+                      onChange={onChange}
+                      error={Boolean(errors.link)}
+                      aria-describedby='validation-schema-first-name'
+                    />
+                  )}
+                />
+                {errors.link && (
+                  <FormHelperText sx={{ color: 'error.main' }} id='validation-schema-first-name'>
+                    {errors.link.message}
                   </FormHelperText>
                 )}
               </FormControl>

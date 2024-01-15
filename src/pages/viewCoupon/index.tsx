@@ -6,132 +6,228 @@ import Typography from '@mui/material/Typography'
 import CardContent from '@mui/material/CardContent'
 import { Button, CardMedia, FormControl, InputLabel, MenuItem, OutlinedInput, Select } from '@mui/material'
 import { useEffect, useState } from 'react'
-import Icon from 'src/@core/components/icon'
+
 import { CouponModel } from 'src/models/coupon'
 import { getCoupon } from 'src/services/coupon'
 
+/*icons*/
+import SearchIcon from '@mui/icons-material/Search'
+import CloseIcon from '@mui/icons-material/Close'
+import { getCategory } from 'src/services/category'
+import { CategoryModel } from 'src/models/category'
+
 const ViewCoupon = () => {
-    const [orderBy, setOrderBy] = useState<string>('')
-    const [name, setName] = useState<string>('')
-    const [category, setCategory] = useState<string>('')
-    const [coupons, setCoupons] = useState<CouponModel[]>()
+  const [orderBy, setOrderBy] = useState<string>('')
+  const [name, setName] = useState<string>('')
+  const [category, setCategory] = useState<string>('')
+  const [coupons, setCoupons] = useState<CouponModel[]>()
 
-    useEffect(() => {
-        handleGetCoupons()
-    }, [])
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth)
+  const [showFilters, setShowFilters] = useState(true);
+  const [showClose, setShowClose] = useState(false);
+  const [categories, setCategories] = useState<CategoryModel[]>()
 
-    const handleGetCoupons = async (name? : string, category?: string, orderBy? : string) => {
-        const response = await getCoupon(0, 100, 0, name, category, orderBy)
-        setCoupons(response.data)
+  useEffect(() => {
+    handleGetCategories()
+  }, [])
+
+  const handleGetCategories = async () => {
+    const response = await getCategory(0, 100, 0, undefined, true)
+    setCategories(response.data)
+  }
+
+  useEffect(() => {
+    handleGetCoupons()
+  }, [])
+
+  const handleGetCoupons = async (name?: string, category?: string, orderBy?: string) => {
+    const response = await getCoupon(0, 100, 0, name, category, orderBy)
+    setCoupons(response.data)
+  }
+
+  const handleSearch = () => {
+    handleGetCoupons(category, name, orderBy)
+  }
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    setShowFilters(windowWidth >= 960 ? true : false)
+    setShowClose(windowWidth >= 960 ? false : true)
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
     }
 
-    const handleSearch = () => {
-        handleGetCoupons(category, name, orderBy)
-    }
+  }, [windowWidth])
+
+  const CouponComponent: React.FC<{ item: CouponModel }> = ({ item }) => {
+    const [isHovered, setIsHovered] = useState(false);
 
     return (
-        <Grid container spacing={6}>
+      <Grid item xs={12} md={2}>
+        <Card
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
+        >
+          {!isHovered &&
+            <>
+              <CardMedia sx={{ height: 90 }} image={item.soon} />
+              <CardContent sx={{ pt: 4 }}>
+                <Typography sx={{ mb: 2, fontSize: 16 }}>
 
-            <Grid item xs={12}>
-                <Card>
-                    <CardHeader title='Cupons' />
-                    <CardContent>
+                  Até {item.discount} % desconto
+                </Typography>
+              </CardContent>
+            </>
+          }
+          {isHovered &&
+            <>
+              <span style={{ fontSize: 16, fontWeight: 'bold', textAlign: 'center', display: 'block', marginTop: 12 }}>{item.title}</span><br />
+              <span style={{ fontSize: 12, textAlign: 'center', display: 'block' }}>{item.description}</span>
+              <CardContent sx={{ pt: 4 }}>
+                <Typography sx={{ mb: 2, fontSize: 16 }}>
 
-                        <div className='demo-space-x'>
-                            <Grid container spacing={6}>
-                                <Grid item xs={3}>
-                                    <FormControl fullWidth>
-                                        <InputLabel id='controlled-select-label'>Ordernado por</InputLabel>
-                                        <Select
-                                            value={orderBy}
-                                            label='Ordernado por'
-                                            id='controlled-select'
-                                            onChange={(e) => setOrderBy(e.target.value)}
-                                            labelId='controlled-select-label'
-                                        >
-                                            <MenuItem value=''>
-                                                <em>Nada</em>
-                                            </MenuItem>
-                                            <MenuItem value="date">Data</MenuItem>
-                                            <MenuItem value="category">Categoria</MenuItem>
-                                            <MenuItem value="local">Local</MenuItem>
-                                            <MenuItem value="mentors">Mentores</MenuItem>
-                                        </Select>
-                                    </FormControl>
-                                </Grid>
-                                <Grid item xs={3}>
-                                    <FormControl fullWidth>
-                                        <InputLabel id='controlled-select-label'>Categorias</InputLabel>
-                                        <Select
-                                            value={category}
-                                            label='Categorias'
-                                            id='controlled-select'
-                                            onChange={(e) => setCategory(e.target.value)}
-                                            labelId='controlled-select-label'
-                                        >
-                                            <MenuItem value=''>
-                                                <em>Nada</em>
-                                            </MenuItem>
-                                            <MenuItem value="Categoria 1">Categoria 1</MenuItem>
-                                        </Select>
-                                    </FormControl>
-                                </Grid>
-                                <Grid item xs={4}>
-                                    <FormControl fullWidth>
-                                        <InputLabel htmlFor='auth-login-v2-password'>
-                                            Buscar por Nome
-                                        </InputLabel>
+                  <a href={item.link} target='blank' style={{ textDecoration: "none", color: "inherit" }}>
+                    <Button
+                      fullWidth
+                      color='primary'
+                      variant='contained'
+                    >
+                      Pegar Cupom
+                    </Button>
 
-                                        <OutlinedInput
-                                            value={name}
-                                            label='Nome'
-                                            onChange={(e) => setName(e.target.value)}
-                                            id='auth-login-v2-password'
-                                            type={'text'}
-                                        />
+                  </a>
+                </Typography>
+              </CardContent>
+            </>
+          }
+        </Card>
+      </Grid>
+    );
+  };
 
-                                    </FormControl>
-                                </Grid>
-                                <Grid item xs={2}>
-                                    <FormControl fullWidth>
-                                        <Button
-                                            fullWidth
-                                            color='primary'
-                                            variant='contained'
-                                            onClick={handleSearch}
-                                        >
-                                            <Icon icon={'mdi:text-box-search'} fontSize={20} /> Buscar
-                                        </Button>
-                                    </FormControl>
-                                </Grid>
-                            </Grid>
-                        </div>
+  return (
+    <Grid container spacing={6}>
 
-                        <br /><br />
-                        <Grid container spacing={2}>
-                            {coupons && coupons.map((item, key) => (
-                                <Grid item xs={2} key={key}>
-                                    <Card>
-                                        <CardMedia sx={{ height: 90 }} image='https://firebasestorage.googleapis.com/v0/b/blun-app.appspot.com/o/notfound.jpeg?alt=media&token=8fec25e6-d05c-4b13-8255-04fdc152145a' />
-                                        <CardContent sx={{ pt: 4 }}>
-                                            <Typography variant='h6' sx={{ mb: 2 }}>
-                                                <a href={item.link} style={{ textDecoration: "none", color: "inherit" }}>{item.discount} % desconto   </a>
-                                            </Typography>
-                                        </CardContent>
-                                    </Card>
-                                </Grid>
-                            ))}
-                        </Grid>
-                    </CardContent>
-                </Card>
+      <Grid item xs={12}>
+        <Card>
+          <Grid item xs={7} >
+            <CardHeader title='Cupons e benefícios' />
+          </Grid>
+          <Grid item xs={3} style={{ display: !showFilters ? 'block' : 'none', marginTop: 12 }}>
+            <Button onClick={() => {
+              setShowFilters(!showFilters)
+              setShowClose(true)
+            }}>
+              <SearchIcon />
+            </Button>
+          </Grid>
+          <CardContent>
+
+            <div className='demo-space-x'>
+              <Grid container spacing={6} >
+                <Grid item xs={9} style={{ display: showFilters && showClose ? 'block' : 'none' }}>
+                  Filtros
+                </Grid>
+                <Grid item xs={2} style={{ display: showFilters && showClose ? 'block' : 'none', marginTop: -12 }}>
+                  <Button onClick={() => setShowFilters(!showFilters)}>
+                    <CloseIcon />
+                  </Button>
+                </Grid>
+                <Grid item xs={12} md={3} style={{ display: showFilters ? 'block' : 'none' }}>
+                  <FormControl fullWidth>
+                    <InputLabel id='controlled-select-label'>Ordernado por</InputLabel>
+                    <Select
+                      value={orderBy}
+                      label='Ordernado por'
+                      id='controlled-select'
+                      onChange={(e) => setOrderBy(e.target.value)}
+                      labelId='controlled-select-label'
+                    >
+                      <MenuItem value=''>
+                        <em>Nada</em>
+                      </MenuItem>
+                      <MenuItem value="date">Data</MenuItem>
+                      <MenuItem value="category">Categoria</MenuItem>
+                      <MenuItem value="local">Local</MenuItem>
+                      <MenuItem value="mentors">Mentores</MenuItem>
+                    </Select>
+                  </FormControl>
+                </Grid>
+                <Grid item xs={12} md={3} style={{ display: showFilters ? 'block' : 'none' }}>
+                  <FormControl fullWidth>
+                    <InputLabel id='controlled-select-label'>Categorias</InputLabel>
+                    <Select
+                      value={category}
+                      label='Categorias'
+                      id='controlled-select'
+                      onChange={(e) => setCategory(e.target.value)}
+                      labelId='controlled-select-label'
+                    >
+                      <MenuItem value=''>
+                        <em>Nada</em>
+                      </MenuItem>
+                      {categories && categories.map((category, index) => (
+                        <MenuItem value={category.name} key={index}>{category.name}</MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Grid>
+                <Grid item xs={12} md={3} style={{ display: showFilters ? 'block' : 'none' }}>
+                  <FormControl fullWidth>
+                    <InputLabel htmlFor='auth-login-v2-password'>
+                      Buscar por Nome
+                    </InputLabel>
+
+                    <OutlinedInput
+                      value={name}
+                      label='Nome'
+                      onChange={(e) => setName(e.target.value)}
+                      id='auth-login-v2-password'
+                      type={'text'}
+                    />
+
+                  </FormControl>
+                </Grid>
+                <Grid item xs={12} md={3} style={{ display: showFilters ? 'block' : 'none' }}>
+                  <FormControl fullWidth>
+                    <Button
+                      fullWidth
+                      color='primary'
+                      variant='contained'
+                      onClick={handleSearch}
+                    >
+                      filtrar
+                    </Button>
+                  </FormControl>
+                </Grid>
+              </Grid>
+            </div>
+            {showFilters &&
+              <>
+                <br /> <br />
+              </>
+            }
+            <Grid container spacing={2}>
+              {coupons && coupons.map((item: CouponModel, key) => (
+                <CouponComponent key={key} item={item} />
+              ))}
             </Grid>
-        </Grid>
-    )
+          </CardContent>
+        </Card>
+      </Grid>
+    </Grid>
+  )
 }
 
 ViewCoupon.acl = {
-    action: 'read',
-    subject: 'acl-page'
+  action: 'read',
+  subject: 'acl-page'
 }
 
 export default ViewCoupon

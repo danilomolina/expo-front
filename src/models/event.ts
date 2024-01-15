@@ -8,5 +8,6 @@ export type EventModel = {
   observation: string,
   link: string,
   mentors: string,
-  category: string
+  category: string,
+  image: string
 }

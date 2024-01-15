@@ -22,7 +22,6 @@ import FormControl from '@mui/material/FormControl'
 import DialogContent from '@mui/material/DialogContent'
 import DialogActions from '@mui/material/DialogActions'
 import InputAdornment from '@mui/material/InputAdornment'
-import LinearProgress from '@mui/material/LinearProgress'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import DialogContentText from '@mui/material/DialogContentText'
 
@@ -86,7 +85,6 @@ const data: UsersType = {
 const UserViewLeft = () => {
   // ** States
   const [openEdit, setOpenEdit] = useState<boolean>(false)
-  const [openPlans, setOpenPlans] = useState<boolean>(false)
   const [suspendDialogOpen, setSuspendDialogOpen] = useState<boolean>(false)
   const [subscriptionDialogOpen, setSubscriptionDialogOpen] = useState<boolean>(false)
   const [user, setUser] = useState<UserDataType>()
@@ -106,10 +104,9 @@ const UserViewLeft = () => {
   // Handle Edit dialog
   const handleEditClose = () => setOpenEdit(false)
 
-  // Handle Upgrade Plan dialog
-  const handlePlansClickOpen = () => setOpenPlans(true)
-  const handlePlansClose = () => setOpenPlans(false)
-
+  const handleRedirect = () => {
+    window.open('https://chk.eduzz.com/2186000', '_blank')
+  }
 
   return (
     <Grid container spacing={6}>
@@ -163,7 +160,7 @@ const UserViewLeft = () => {
               <Box sx={{ display: 'flex', mb: 2.7 }}>
                 <Typography sx={{ mr: 2, fontWeight: 500, fontSize: '0.875rem' }}>Endereço:</Typography>
                 <Typography variant='body2' sx={{ textTransform: 'capitalize' }}>
-                  {user && user.street} - {user && user.number } / { user && user.neighborhood}
+                  {user && user.street} - {user && user.number} / {user && user.neighborhood}
                 </Typography>
               </Box>
             </Box>
@@ -309,8 +306,8 @@ const UserViewLeft = () => {
         </Card>
       </Grid>
 
-      <Grid item xs={12}>
-        <Card sx={{ boxShadow: 'none', border: theme => `2px solid ${theme.palette.primary.main}` }}>
+      <Grid item xs={12} md={6}>
+        <Card sx={{ boxShadow: 'none', border: theme => `2px solid ${theme.palette.primary.main}`, textAlign: 'center' }}>
           <CardContent
             sx={{ display: 'flex', flexWrap: 'wrap', pb: '0 !important', justifyContent: 'space-between' }}
           >
@@ -322,7 +319,7 @@ const UserViewLeft = () => {
               sx={{ fontSize: '0.75rem', borderRadius: '4px' }}
             />
             <Box sx={{ display: 'flex', position: 'relative' }}>
-              <Sup>R$</Sup>
+              <Sup sx={{ marginLeft: '-8px !important' }}>R$</Sup>
               <Typography
                 variant='h3'
                 sx={{
@@ -344,7 +341,7 @@ const UserViewLeft = () => {
               >
                 <Icon icon='mdi:circle' fontSize='0.625rem' />
                 <Typography component='span' sx={{ fontSize: '0.875rem' }}>
-                Um começo simples para startups e estudantes com Agenda e Mentoria
+                  Mentoria
                 </Typography>
               </Box>
               <Box
@@ -358,126 +355,163 @@ const UserViewLeft = () => {
               >
                 <Icon icon='mdi:circle' fontSize='0.625rem' />
                 <Typography component='span' sx={{ fontSize: '0.875rem' }}>
-                  Suporte Básico
+                  Cupons
+                </Typography>
+              </Box>
+              <Box
+                sx={{
+                  mt: 2.5,
+                  display: 'flex',
+                  mb: 2.5,
+                  alignItems: 'center',
+                  '& svg': { mr: 2, color: 'text.secondary' }
+                }}
+              >
+                <Icon icon='mdi:circle' fontSize='0.625rem' />
+                <Typography component='span' sx={{ fontSize: '0.875rem' }}>
+                  Selo Member <span style={{ fontWeight: 'bold' }}>Blue</span>
+                </Typography>
+              </Box>
+              <br />  <br />  <br />  <br />  <br />
+            </Box>
+            <Button variant='contained' sx={{ width: '50%' }}>
+              Plano Atual
+            </Button>
+          </CardContent>
+        </Card>
+      </Grid>
+
+      <Grid item xs={12} md={6}>
+        <Card sx={{ boxShadow: 'none', border: theme => `2px solid ${theme.palette.primary.main}`, textAlign: 'center' }}>
+          <CardContent
+            sx={{ display: 'flex', flexWrap: 'wrap', pb: '0 !important', justifyContent: 'space-between' }}
+          >
+            <CustomChip
+              skin='light'
+              size='small'
+              color='primary'
+              label='Premium'
+              sx={{ fontSize: '0.75rem', borderRadius: '4px' }}
+            />
+            <Box sx={{ display: 'flex', position: 'relative' }}>
+              <Sup sx={{ marginLeft: '-8px !important' }}>R$</Sup>
+              <Typography
+                variant='h3'
+                sx={{
+                  mb: -1.2,
+                  lineHeight: 1,
+                  color: 'primary.main'
+                }}
+              >
+                187
+              </Typography>
+              <Sub>/ mês</Sub>
+            </Box>
+          </CardContent>
+
+          <CardContent>
+            <Box sx={{ mt: 4, mb: 5 }}>
+              <Box
+                sx={{ display: 'flex', mb: 2.5, alignItems: 'center', '& svg': { mr: 2, color: 'text.secondary' } }}
+              >
+                <Icon icon='mdi:circle' fontSize='0.625rem' />
+                <Typography component='span' sx={{ fontSize: '0.875rem' }}>
+                  Mentoria
+                </Typography>
+              </Box>
+              <Box
+                sx={{
+                  mt: 2.5,
+                  display: 'flex',
+                  mb: 2.5,
+                  alignItems: 'center',
+                  '& svg': { mr: 2, color: 'text.secondary' }
+                }}
+              >
+                <Icon icon='mdi:circle' fontSize='0.625rem' />
+                <Typography component='span' sx={{ fontSize: '0.875rem' }}>
+                  Cupons
+                </Typography>
+              </Box>
+              <Box
+                sx={{
+                  mt: 2.5,
+                  display: 'flex',
+                  mb: 2.5,
+                  alignItems: 'center',
+                  '& svg': { mr: 2, color: 'text.secondary' }
+                }}
+              >
+                <Icon icon='mdi:circle' fontSize='0.625rem' />
+                <Typography component='span' sx={{ fontSize: '0.875rem' }}>
+                  Selo Member <span style={{ fontWeight: 'bold' }}>Gold</span>
+                </Typography>
+              </Box>
+              <Box
+                sx={{
+                  mt: 2.5,
+                  display: 'flex',
+                  mb: 2.5,
+                  alignItems: 'center',
+                  '& svg': { mr: 2, color: 'text.secondary' }
+                }}
+              >
+                <Icon icon='mdi:circle' fontSize='0.625rem' />
+                <Typography component='span' sx={{ fontSize: '0.875rem' }}>
+                  Cursos Ilimitados
+                </Typography>
+              </Box>
+
+              <Box
+                sx={{
+                  mt: 2.5,
+                  display: 'flex',
+                  mb: 2.5,
+                  alignItems: 'center',
+                  '& svg': { mr: 2, color: 'text.secondary' }
+                }}
+              >
+                <Icon icon='mdi:circle' fontSize='0.625rem' />
+                <Typography component='span' sx={{ fontSize: '0.875rem' }}>
+                  Free Pass ExpoEcomm
+                </Typography>
+              </Box>
+
+              <Box
+                sx={{
+                  mt: 2.5,
+                  display: 'flex',
+                  mb: 2.5,
+                  alignItems: 'center',
+                  '& svg': { mr: 2, color: 'text.secondary' }
+                }}
+              >
+                <Icon icon='mdi:circle' fontSize='0.625rem' />
+                <Typography component='span' sx={{ fontSize: '0.875rem' }}>
+                  Grupos de Networking
+                </Typography>
+              </Box>
+
+              <Box
+                sx={{
+                  mt: 2.5,
+                  display: 'flex',
+                  mb: 2.5,
+                  alignItems: 'center',
+                  '& svg': { mr: 2, color: 'text.secondary' }
+                }}
+              >
+                <Icon icon='mdi:circle' fontSize='0.625rem' />
+                <Typography component='span' sx={{ fontSize: '0.875rem' }}>
+                  Embaixadas
                 </Typography>
               </Box>
             </Box>
-            <Box sx={{ display: 'flex', mb: 1.5, justifyContent: 'space-between' }}>
-              <Typography variant='body2' sx={{ fontWeight: 600, color: 'text.secondary' }}>
-                Dias
-              </Typography>
-              <Typography variant='body2' sx={{ fontWeight: 600, color: 'text.secondary' }}>
-                26 de 30 Dias
-              </Typography>
-            </Box>
-            <LinearProgress value={86.66} variant='determinate' sx={{ height: 8, borderRadius: '5px' }} />
-            <Typography variant='caption' sx={{ mt: 1.5, mb: 6 }}>
-              4 dias restantes
-            </Typography>
-            <Button variant='contained' sx={{ width: '100%' }} onClick={handlePlansClickOpen}>
+            <Button variant='contained' sx={{ width: '50%' }} onClick={handleRedirect}>
               Alterar Plano
             </Button>
           </CardContent>
 
-          <Dialog
-            open={openPlans}
-            onClose={handlePlansClose}
-            aria-labelledby='user-view-plans'
-            aria-describedby='user-view-plans-description'
-            sx={{ '& .MuiPaper-root': { width: '100%', maxWidth: 650 } }}
-          >
-            <DialogTitle
-              id='user-view-plans'
-              sx={{
-                textAlign: 'center',
-                fontSize: '1.5rem !important',
-                px: theme => [`${theme.spacing(5)} !important`, `${theme.spacing(15)} !important`],
-                pt: theme => [`${theme.spacing(8)} !important`, `${theme.spacing(12.5)} !important`]
-              }}
-            >
-              Alterar Plano
-            </DialogTitle>
-
-            <DialogContent
-              sx={{ px: theme => [`${theme.spacing(5)} !important`, `${theme.spacing(15)} !important`] }}
-            >
-              <DialogContentText variant='body2' sx={{ textAlign: 'center' }} id='user-view-plans-description'>
-                Escolha outro plano
-              </DialogContentText>
-            </DialogContent>
-
-            <DialogContent
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                flexWrap: ['wrap', 'nowrap'],
-                pt: theme => `${theme.spacing(2)} !important`,
-                pb: theme => `${theme.spacing(8)} !important`,
-                px: theme => [`${theme.spacing(5)} !important`, `${theme.spacing(15)} !important`]
-              }}
-            >
-              <FormControl fullWidth size='small' sx={{ mr: [0, 3], mb: [3, 0] }}>
-                <InputLabel id='user-view-plans-select-label'>Choose Plan</InputLabel>
-                <Select
-                  label='Escolha um plano'
-                  defaultValue='gold'
-                  id='user-view-plans-select'
-                  labelId='user-view-plans-select-label'
-                >
-                  <MenuItem value='gold'>Gold - R$99/mês</MenuItem>
-                </Select>
-              </FormControl>
-              <Button variant='contained' sx={{ minWidth: ['100%', 0] }}>
-                Alterar
-              </Button>
-            </DialogContent>
-
-            <Divider sx={{ m: '0 !important' }} />
-
-            <DialogContent
-              sx={{
-                pt: theme => [`${theme.spacing(8)} !important`, `${theme.spacing(8)} !important`],
-                px: theme => [`${theme.spacing(5)} !important`, `${theme.spacing(15)} !important`],
-                pb: theme => [`${theme.spacing(8)} !important`, `${theme.spacing(12.5)} !important`]
-              }}
-            >
-              <Typography sx={{ fontWeight: 500, mb: 2, fontSize: '0.875rem' }}>
-                O seu plano contratato é 
-              </Typography>
-              <Box
-                sx={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  flexWrap: ['wrap', 'nowrap'],
-                  justifyContent: 'space-between'
-                }}
-              >
-                <Box sx={{ mr: 3, display: 'flex', ml: 2.4, position: 'relative' }}>
-                  <Sup>R$</Sup>
-                  <Typography
-                    variant='h3'
-                    sx={{
-                      mb: -1.2,
-                      lineHeight: 1,
-                      color: 'primary.main',
-                      fontSize: '3rem !important'
-                    }}
-                  >
-                    0
-                  </Typography>
-                  <Sub>/ mês</Sub>
-                </Box>
-                <Button
-                  color='error'
-                  sx={{ mt: 2 }}
-                  variant='outlined'
-                  onClick={() => setSubscriptionDialogOpen(true)}
-                >
-                  Cancelar assinatura
-                </Button>
-              </Box>
-            </DialogContent>
-          </Dialog>
         </Card>
       </Grid>
     </Grid>

@@ -27,8 +27,10 @@ import { EventModel } from 'src/models/event'
 import { saveEvent } from 'src/services/event'
 import { CategoryModel } from 'src/models/category'
 import { getCategory } from 'src/services/category'
+import { VisuallyHiddenInput, previewImage, uploadFile } from 'src/utils/fileUploader'
+import CloudUploadIcon from '@mui/icons-material/CloudUpload'
 
-const defaultValues = {
+let defaultValues = {
   title: "",
   caption: "",
   date: new Date(),
@@ -37,7 +39,8 @@ const defaultValues = {
   observation: "",
   link: "",
   category: "",
-  mentors: ""
+  mentors: "",
+  image: ""
 }
 
 const schema = yup.object().shape({
@@ -49,7 +52,8 @@ const schema = yup.object().shape({
   observation: yup.string().required("Observação é obrigatório"),
   link: yup.string().required("Link é obrigatório"),
   category: yup.string().required("Categoria é obrigatório"),
-  mentors: yup.string().required("Mentores é obrigatório")
+  mentors: yup.string().required("Mentores é obrigatório"),
+  image: yup.string().required("Imagem é obrigatório")
 })
 
 interface CustomInputProps {
@@ -66,6 +70,8 @@ const CustomInput = forwardRef(({ ...props }: CustomInputProps, ref) => {
 const FormEvent = () => {
   const [event, setEvent] = useState<EventModel | undefined>()
   const [categories, setCategories] = useState<CategoryModel[]>()
+  const previewEvent = document.getElementById('imagePreviewEvent') as HTMLImageElement;
+  const [file, setFile] = useState<File>()
 
   // ** Hook
   const { control, handleSubmit, reset, formState: { errors } } = useForm({
@@ -81,9 +87,13 @@ const FormEvent = () => {
     const response = await saveEvent(data)
     setEvent(response.data)
 
+    await uploadFile(file)
+
     if (response.isSuccess) {
       toast.success('Evento salvo')
       reset(defaultValues)
+      previewEvent.src = ""
+      previewEvent.style.display = 'none';
     }
     else
       toast.error('Erro ao criar Evento')
@@ -104,6 +114,41 @@ const FormEvent = () => {
       <CardContent>
         <form onSubmit={handleSubmit(onSubmit)}>
           <Grid container spacing={5}>
+          <Grid item xs={12}>
+              <Button component="label" variant="contained" startIcon={<CloudUploadIcon />}>
+                Upload Imagem
+                <Controller
+                  name='image'
+                  control={control}
+                  rules={{ required: true }}
+                  render={({ field: { } }) => (
+                    <VisuallyHiddenInput type="file" id="uploadInput" onChange={(e) => {
+                      const src = previewImage(e, setFile, previewEvent)
+                      defaultValues = {
+                        title: defaultValues.title,
+                        caption: defaultValues.caption,
+                        date: defaultValues.date,
+                        hour: defaultValues.hour,
+                        local: defaultValues.local,
+                        observation: defaultValues.observation,
+                        link: defaultValues.link,
+                        category: defaultValues.category,
+                        mentors: defaultValues.mentors,
+                        image: src !== undefined ? src : ""
+                      }
+                      reset(defaultValues)
+                    }} />
+                  )}
+                />
+              </Button>
+              {errors.image && (
+                <FormHelperText sx={{ color: 'error.main' }} id='validation-schema-first-name'>
+                  {errors.image.message}
+                </FormHelperText>
+              )}
+              <img id="imagePreviewEvent" alt="Image Preview" style={{ display: "none", maxWidth: "30%" }} />
+            </Grid>
+
             <Grid item xs={6}>
               <FormControl fullWidth>
                 <Controller

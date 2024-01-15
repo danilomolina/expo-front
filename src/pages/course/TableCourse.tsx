@@ -17,7 +17,7 @@ import { CourseModel } from 'src/models/course'
 import { deleteCousers, getCouser } from 'src/services/course'
 
 interface Column {
-  id: 'name' | 'category' | 'image'
+  id: 'name' | 'category' | 'image' | 'description'
   label: string
   minWidth?: number
   align?: 'right' | 'left'
@@ -32,6 +32,7 @@ const columns: readonly Column[] = [
     align: 'left',
   },
   { id: 'name', label: 'Nome', minWidth: 170 },
+  { id: 'description', label: 'Descrição', minWidth: 170 },
   { id: 'category', label: 'Categoria', minWidth: 100, align: 'left' },
 ]
 
@@ -102,7 +103,7 @@ const TableCourse = (props: TableCouseParams) => {
 
                     return (
                       <TableCell key={column.id} align={column.align}>
-                             {column.format && typeof value === 'string' && column.id !== 'image' ?
+                        {column.format && typeof value === 'string' && column.id !== 'image' ?
                           column.format(value) : column.id == 'image' ?
                             <img id="imagePreviewTable" alt="Image Preview" src={value !== undefined ? value.toString() : ""} height={80} width={80} />
                             : value}

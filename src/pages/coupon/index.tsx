@@ -32,14 +32,18 @@ let defaultValues = {
   soon: "",
   discount: "",
   link: "",
-  category: ""
+  category: "",
+  title: "",
+  description: ""
 }
 
 const schema = yup.object().shape({
   soon: yup.string().required("Logo é obrigatório"),
   discount: yup.string().required("Desconto é obrigatório"),
   link: yup.string().required("Link é obrigatório"),
-  category: yup.string().required("Categoria é obrigatório")
+  category: yup.string().required("Categoria é obrigatório"),
+  title: yup.string().required("Título é obrigatório"),
+  description: yup.string().required("Descrição é obrigatório")
 })
 
 const FormCoupon = () => {
@@ -102,8 +106,11 @@ const FormCoupon = () => {
                         soon: src !== undefined ? src : "",
                         discount: defaultValues.discount,
                         link: defaultValues.link,
-                        category: defaultValues.category
+                        category: defaultValues.category,
+                        title: defaultValues.title,
+                        description: defaultValues.description
                       }
+                      reset(defaultValues)
                     }} />
                   )}
                 />
@@ -114,6 +121,54 @@ const FormCoupon = () => {
                 </FormHelperText>
               )}
               <img id="imagePreview" alt="Image Preview" style={{ display: "none", maxWidth: "30%" }} />
+            </Grid>
+
+            <Grid item xs={3}>
+              <FormControl fullWidth>
+                <Controller
+                  name='title'
+                  control={control}
+                  rules={{ required: true }}
+                  render={({ field: { value, onChange } }) => (
+                    <TextField
+                      value={value}
+                      label='Título'
+                      onChange={onChange}
+                      error={Boolean(errors.title)}
+                      aria-describedby='validation-schema-last-name'
+                    />
+                  )}
+                />
+                {errors.title && (
+                  <FormHelperText sx={{ color: 'error.main' }} id='validation-schema-last-name'>
+                    {errors.title.message}
+                  </FormHelperText>
+                )}
+              </FormControl>
+            </Grid>
+
+            <Grid item xs={7}>
+              <FormControl fullWidth>
+                <Controller
+                  name='description'
+                  control={control}
+                  rules={{ required: true }}
+                  render={({ field: { value, onChange } }) => (
+                    <TextField
+                      value={value}
+                      label='Descrição'
+                      onChange={onChange}
+                      error={Boolean(errors.description)}
+                      aria-describedby='validation-schema-last-name'
+                    />
+                  )}
+                />
+                {errors.description && (
+                  <FormHelperText sx={{ color: 'error.main' }} id='validation-schema-last-name'>
+                    {errors.description.message}
+                  </FormHelperText>
+                )}
+              </FormControl>
             </Grid>
 
             <Grid item xs={3}>

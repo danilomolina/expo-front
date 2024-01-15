@@ -28,7 +28,7 @@ import { DateType } from 'src/types/forms/reactDatepickerTypes'
 import { CategoryModel } from 'src/models/category'
 
 interface Column {
-  id: 'title' | 'caption' | 'date' | 'hour' | 'local' | 'category' | 'mentors'
+  id: 'title' | 'caption' | 'date' | 'hour' | 'local' | 'category' | 'mentors' | 'image'
   label: string
   minWidth?: number
   align?: 'right' | 'left'
@@ -36,6 +36,12 @@ interface Column {
 }
 
 const columns: readonly Column[] = [
+  {
+    id: 'image',
+    label: 'Imagem',
+    minWidth: 20,
+    align: 'left',
+  },
   { id: 'title', label: 'Título', minWidth: 170 },
   { id: 'caption', label: 'Sub Título', minWidth: 100, align: 'left' },
   {
@@ -108,7 +114,8 @@ let defaultValues = {
   observation: "",
   link: "",
   category: "",
-  mentors: ""
+  mentors: "",
+  image: ""
 }
 
 const TableEvents = (props: TableEventsParams) => {
@@ -198,7 +205,8 @@ const TableEvents = (props: TableEventsParams) => {
       observation: response.data[0] && response.data[0].observation,
       link: response.data[0] && response.data[0].link,
       category: response.data[0] && response.data[0].category,
-      mentors: response.data[0] && response.data[0].mentors
+      mentors: response.data[0] && response.data[0].mentors,
+      image: response.data[0] && response.data[0].image
     }
 
     reset(defaultValues);
@@ -232,7 +240,10 @@ const TableEvents = (props: TableEventsParams) => {
 
                     return (
                       <TableCell key={column.id} align={column.align}>
-                        {column.format && typeof value === 'string' ? column.format(value) : value}
+                        {column.format && typeof value === 'string' && column.id !== 'image' ?
+                          column.format(value) : column.id == 'image' ?
+                            <img id="imagePreviewTable" alt="Image Preview" src={value !== undefined ? value.toString() : ""} height={80} width={80} />
+                            : value}
                       </TableCell>
                     )
                   })}
@@ -241,7 +252,7 @@ const TableEvents = (props: TableEventsParams) => {
                       <Delete />
                     </div>
                   </TableCell>
-                   <TableCell>
+                  <TableCell>
                     <div onClick={() => handleOnClickEdit(row.id !== undefined ? row.id : "")} style={{ cursor: 'pointer' }}>
                       <Edit />
                     </div>

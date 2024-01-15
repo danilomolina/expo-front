@@ -21,3 +21,9 @@ api.interceptors.request.use(
   },
   (error) => Promise.reject(error)
 );
+
+export const apiEcommerce = axios.create({
+  headers: {
+    'Content-Type': 'application/json',
+  }
+});

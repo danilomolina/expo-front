@@ -1,5 +1,5 @@
 // ** React Imports
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 // ** MUI Imports
 import Card from '@mui/material/Card'
@@ -17,7 +17,7 @@ import { useForm, Controller } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 
 import "react-datepicker/dist/react-datepicker.css"
-import { CardHeader } from '@mui/material'
+import { CardHeader, InputLabel, MenuItem, Select } from '@mui/material'
 import TableCourse from './TableEmbassie'
 
 import { EmbassieModel } from 'src/models/embassie'
@@ -25,30 +25,47 @@ import { saveEmbassie } from 'src/services/embassie'
 import { VisuallyHiddenInput, previewImage, uploadFile } from 'src/utils/fileUploader'
 
 import CloudUploadIcon from '@mui/icons-material/CloudUpload'
+import { getCategory } from 'src/services/category'
+import { CategoryModel } from 'src/models/category'
 
 let defaultValues = {
   description: "",
   link: "",
-  image: ""
+  image: "",
+  name: "",
+  category: ""
 }
 
 const schema = yup.object().shape({
-  description: yup.string().required(),
-  link: yup.string().required(),
-  image: yup.string().required()
+  description: yup.string().required('Descrição é Obrigatório'),
+  link: yup.string().required('Link é Obrigatório'),
+  image: yup.string().required('Imagem é Obrigatório'),
+  name: yup.string().required('Nome é Obrigatório'),
+  category: yup.string().required('Categoria é Obrigatório'),
 })
 
 const FormEmbassie = () => {
   const [embassie, setEmbassie] = useState<EmbassieModel | undefined>()
   const [file, setFile] = useState<File>()
-  const previewEmbassie = document.getElementById('imagePreviewEmbassie') as HTMLImageElement;
+  const previewEmbassie = document.getElementById('imagePreviewEmbassie') as HTMLImageElement
+
+  const [categories, setCategories] = useState<CategoryModel[]>()
+
+  useEffect(() => {
+    handleGetCategories()
+  }, [])
+
+  const handleGetCategories = async () => {
+    const response = await getCategory(0, 100, 0, undefined, true)
+    setCategories(response.data)
+  }
 
   // ** Hook
   const { control, handleSubmit, reset, formState: { errors } } = useForm({
     defaultValues,
     mode: 'onChange',
     resolver: yupResolver(schema),
-  });
+  })
 
   const onSubmit = async (data: any) => {
     const response = await saveEmbassie(data)
@@ -85,7 +102,9 @@ const FormEmbassie = () => {
                       defaultValues = {
                         description: defaultValues.description,
                         link: defaultValues.link,
-                        image: src !== undefined ? src : ""
+                        image: src !== undefined ? src : "",
+                        name: defaultValues.name,
+                        category: defaultValues.category
                       }
                       reset(defaultValues)
                     }} />
@@ -127,6 +146,30 @@ const FormEmbassie = () => {
             <Grid item xs={6}>
               <FormControl fullWidth>
                 <Controller
+                  name='name'
+                  control={control}
+                  rules={{ required: true }}
+                  render={({ field: { value, onChange } }) => (
+                    <TextField
+                      value={value}
+                      label='Nome'
+                      onChange={onChange}
+                      error={Boolean(errors.name)}
+                      aria-describedby='validation-schema-first-name'
+                    />
+                  )}
+                />
+                {errors.name && (
+                  <FormHelperText sx={{ color: 'error.main' }} id='validation-schema-first-name'>
+                    {errors.name.message}
+                  </FormHelperText>
+                )}
+              </FormControl>
+            </Grid>
+
+            <Grid item xs={6}>
+              <FormControl fullWidth>
+                <Controller
                   name='link'
                   control={control}
                   rules={{ required: true }}
@@ -143,6 +186,34 @@ const FormEmbassie = () => {
                 {errors.link && (
                   <FormHelperText sx={{ color: 'error.main' }} id='validation-schema-last-name'>
                     {errors.link.message}
+                  </FormHelperText>
+                )}
+              </FormControl>
+            </Grid>
+
+            <Grid item xs={5}>
+              <FormControl fullWidth>
+                <InputLabel htmlFor="active">Categoria</InputLabel>
+                <Controller
+                  name='category'
+                  control={control}
+                  rules={{ required: true }}
+                  render={({ field: { value, onChange } }) => (
+                    <Select
+                      value={value}
+                      name="category"
+                      label="Categoria"
+                      onChange={onChange}
+                    >
+                      {categories && categories.map((category, index) => (
+                        <MenuItem value={category.name} key={index}>{category.name}</MenuItem>
+                      ))}
+                    </Select>
+                  )}
+                />
+                {errors.category && (
+                  <FormHelperText sx={{ color: 'error.main' }} id='validation-schema-last-name'>
+                    {errors.category.message}
                   </FormHelperText>
                 )}
               </FormControl>

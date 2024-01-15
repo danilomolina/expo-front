@@ -32,9 +32,6 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { useAuth } from 'src/hooks/useAuth'
 import { useSettings } from 'src/@core/hooks/useSettings'
 
-// ** Configs
-import themeConfig from 'src/configs/themeConfig'
-
 // ** Layout Import
 import BlankLayout from 'src/@core/layouts/BlankLayout'
 
@@ -165,7 +162,7 @@ const LoginPage = () => {
               <Img alt='error-illustration' src='/images/logo.png' />
             </Box>
             <Box sx={{ mb: 6 }}>
-              <TypographyStyled variant='h5'>{`Bem vindo ao portal ${themeConfig.templateName}!`}</TypographyStyled>
+              <TypographyStyled variant='h5'>{`Seja bem vindo a X-Ecomm App!`}</TypographyStyled>
               <Typography variant='body2'>Faça login em sua conta e comece agora</Typography>
             </Box>
             <form noValidate autoComplete='off' onSubmit={handleSubmit(onSubmit)}>

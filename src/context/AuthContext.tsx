@@ -106,6 +106,9 @@ const AuthProvider = ({ children }: Props) => {
         setUser({ ...user })
         params.rememberMe ? window.localStorage.setItem('userData', JSON.stringify(user)) : null
 
+        if (response.data.email)
+          window.localStorage.setItem("email", response.data.email)
+
         const redirectURL = returnUrl && returnUrl !== '/' ? returnUrl : '/'
 
         router.replace(redirectURL as string)

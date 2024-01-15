@@ -9,6 +9,7 @@ export type ResponseLoginDefault = {
     token?: string,
     id?: string,
     people? : UserDataType[] | null
+    email?: string
 };
 
 export type ResponseAPI<T> = {

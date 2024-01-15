@@ -1,228 +1,188 @@
 // ** React Imports
-import { Fragment, useEffect, useState, SyntheticEvent } from 'react'
+import { Button, Card, CardContent, CardHeader, FormControl, FormHelperText, Grid, InputLabel, MenuItem, Select, TextField } from '@mui/material'
+import { Fragment } from 'react'
+import { yupResolver } from '@hookform/resolvers/yup'
+import * as yup from 'yup'
+import { Controller, useForm } from 'react-hook-form'
+import toast from 'react-hot-toast'
 
-// ** Next Imports
-import { GetStaticProps, InferGetStaticPropsType } from 'next/types'
-
-// ** MUI Imports
-import Box from '@mui/material/Box'
-import Typography from '@mui/material/Typography'
-
-// ** Icon Imports
-import Icon from 'src/@core/components/icon'
-
-// ** Types
-import { FaqType } from 'src/@fake-db/types'
-import FaqHeader from './FaqHeader'
-import FaqFooter from './FaqFooter'
-
-const dataFAQ: { faqData: FaqType } = {
-    faqData: {
-        // payment
-        payment: {
-            id: 'payment',
-            title: 'Payment',
-            icon: 'mdi:credit-card-outline',
-            subtitle: 'Get help with payment',
-            qandA: [
-                {
-                    id: 'order-payment',
-                    question: 'When is payment taken for my order?',
-                    answer:
-                        'Payment is taken during the checkout process when you pay for your order. The order number that appears on the confirmation screen indicates payment has been successfully processed.'
-                },
-                {
-                    id: 'order',
-                    question: 'How do I pay for my order?',
-                    answer:
-                        'We accept Visa®, MasterCard®, American Express®, and PayPal®. Our servers encrypt all information submitted to them, so you can be confident that your credit card information will be kept safe and secure.'
-                },
-                {
-                    id: 'placing-order',
-                    question: "What should I do if I'm having trouble placing an order?",
-                    answer:
-                        'For any technical difficulties you are experiencing with our website, please contact us at our support portal, or you can call us toll-free at 1-000-000-000, or email us at order@companymail.com'
-                },
-                {
-                    id: 'users-license',
-                    question: 'Which license do I need for an end product that is only accessible to paying users?',
-                    answer:
-                        'If you have paying users or you are developing any SaaS products then you need an Extended License. For each products, you need a license. You can get free lifetime updates as well.'
-                },
-                {
-                    id: 'subscription-review',
-                    question: 'Does my subscription automatically renew?',
-                    answer:
-                        'No, This is not subscription based item.Pastry pudding cookie toffee bonbon jujubes jujubes powder topping. Jelly beans gummi bears sweet roll bonbon muffin liquorice. Wafer lollipop sesame snaps.'
-                }
-            ]
-        },
-
-        // delivery
-        delivery: {
-            id: 'delivery',
-            title: 'Delivery',
-            icon: 'mdi:cart-outline',
-            subtitle: 'Get help with delivery',
-            qandA: [
-                {
-                    id: 'ship-order',
-                    question: 'How would you ship my order?',
-                    answer:
-                        'For large products, we deliver your product via a third party logistics company offering you the “room of choice” scheduled delivery service. For small products, we offer free parcel delivery.'
-                },
-                {
-                    id: 'delivery-cost',
-                    question: 'What is the delivery cost of my order?',
-                    answer:
-                        'The cost of scheduled delivery is $69 or $99 per order, depending on the destination postal code. The parcel delivery is free.'
-                },
-                {
-                    id: 'product-damaged',
-                    question: 'What to do if my product arrives damaged?',
-                    answer:
-                        'We will promptly replace any product that is damaged in transit. Just contact our support team, to notify us of the situation within 48 hours of product arrival.'
-                }
-            ]
-        },
-
-        // cancellation and return
-        cancellationReturn: {
-            icon: 'mdi:rotate-right',
-            id: 'cancellation-return',
-            title: 'Cancellation & Return',
-            subtitle: 'Get help with cancellation & return',
-            qandA: [
-                {
-                    id: 'cancel-order',
-                    question: 'Can I cancel my order?',
-                    answer:
-                        'Scheduled delivery orders can be cancelled 72 hours prior to your selected delivery date for full refund. Parcel delivery orders cannot be cancelled, however a free return label can be provided upon request.'
-                },
-                {
-                    id: 'product-return',
-                    question: 'Can I return my product?',
-                    answer:
-                        'You can return your product within 15 days of delivery, by contacting our support team, All merchandise returned must be in the original packaging with all original items.'
-                },
-                {
-                    id: 'return-status',
-                    question: 'Where can I view status of return?',
-                    answer: 'Locate the item from Your Orders. Select Return/Refund status'
-                }
-            ]
-        },
-
-        // my orders
-        myOrders: {
-            id: 'my-orders',
-            title: 'My Orders',
-            icon: 'mdi:archive-outline',
-            subtitle: 'Order details',
-            qandA: [
-                {
-                    id: 'order-success',
-                    question: 'Has my order been successful?',
-                    answer:
-                        'All successful order transactions will receive an order confirmation email once the order has been processed. If you have not received your order confirmation email within 24 hours, check your junk email or spam folder. Alternatively, log in to your account to check your order summary. If you do not have a account, you can contact our Customer Care Team on 1-000-000-000.'
-                },
-                {
-                    id: 'promo-code',
-                    question: 'My Promotion Code is not working, what can I do?',
-                    answer: 'If you are having issues with a promotion code, please contact us at 1 000 000 000 for assistance.'
-                },
-                {
-                    id: 'track-orders',
-                    question: 'How do I track my Orders?',
-                    answer:
-                        'If you have an account just sign into your account from here and select “My Orders”. If you have a a guest account track your order from here using the order number and the email address.'
-                }
-            ]
-        },
-
-        // product and services
-        productServices: {
-            icon: 'mdi:camera-outline',
-            id: 'product-services',
-            title: 'Product & Services',
-            subtitle: 'Get help with product & services',
-            qandA: [
-                {
-                    id: 'shipping-notification',
-                    question: 'Will I be notified once my order has shipped?',
-                    answer:
-                        'Yes, We will send you an email once your order has been shipped. This email will contain tracking and order information.'
-                },
-                {
-                    id: 'warranty-notification',
-                    question: 'Where can I find warranty information?',
-                    answer:
-                        'We are committed to quality products. For information on warranty period and warranty services, visit our Warranty section here.'
-                },
-                {
-                    id: 'warranty-coverage',
-                    question: 'How can I purchase additional warranty coverage?',
-                    answer:
-                        'For the peace of your mind, we offer extended warranty plans that add additional year(s) of protection to the standard manufacturer’s warranty provided by us. To purchase or find out more about the extended warranty program, visit Extended Warranty section here.'
-                }
-            ]
-        }
-    }
+const defaultValues = {
+  name: "",
+  company: "",
+  phone: "",
+  category: "",
+  message: ""
 }
 
-const FAQ = ({ apiData }: InferGetStaticPropsType<typeof getStaticProps>) => {
-    // ** States
-    const [data, setData] = useState<{ faqData: FaqType } | null>(null)
-    const [searchTerm, setSearchTerm] = useState<string>('')
-    const [activeTab, setActiveTab] = useState<string>('payment')
+const schema = yup.object().shape({
+  name: yup.string().required("Nome é obrigatório"),
+  company: yup.string().required("Empresa é obrigatório"),
+  phone: yup.string().required("Telefone é obrigatório"),
+  category: yup.string().required("Categoria é obrigatório"),
+  message: yup.string().required("Mensagem é obrigatório")
+})
 
-    useEffect(() => {
-        if (dataFAQ.faqData && Object.values(dataFAQ.faqData).length) {
-            setData(null)
+const FAQ = () => {
+  // ** Hook
+  const { handleSubmit, formState: { errors }, control } = useForm({
+    defaultValues,
+    mode: 'onChange',
+    resolver: yupResolver(schema),
+  });
 
-            // @ts-ignore
-            setActiveTab(Object.values(dataFAQ.faqData)[0].id)
-        } else {
-            setData(null)
-        }
+  const onSubmit = async () => {
+    toast.success('Mensagem enviada com sucesso')
+  }
 
+  return (
+    <Fragment>
+      <Card>
+        <CardHeader title='Olá, precisa de ajuda?' />
+        <CardContent>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <Grid container spacing={5}>
+              <Grid item xs={12} md={6}>
+                <FormControl fullWidth>
+                  <Controller
+                    name='name'
+                    control={control}
+                    rules={{ required: true }}
+                    render={({ field: { value, onChange } }) => (
+                      <TextField
+                        value={value}
+                        label='Seu nome'
+                        onChange={onChange}
+                        error={Boolean(errors.name)}
+                        aria-describedby='validation-schema-first-name'
+                      />
+                    )}
+                  />
+                  {errors.name && (
+                    <FormHelperText sx={{ color: 'error.main' }} id='validation-schema-first-name'>
+                      {errors.name.message}
+                    </FormHelperText>
+                  )}
+                </FormControl>
+              </Grid>
 
-    }, [apiData, searchTerm])
+              <Grid item xs={12} md={6}>
+                <FormControl fullWidth>
+                  <Controller
+                    name='company'
+                    control={control}
+                    rules={{ required: true }}
+                    render={({ field: { value, onChange } }) => (
+                      <TextField
+                        value={value}
+                        label='Empresa'
+                        onChange={onChange}
+                        error={Boolean(errors.company)}
+                        aria-describedby='validation-schema-first-name'
+                      />
+                    )}
+                  />
+                  {errors.company && (
+                    <FormHelperText sx={{ color: 'error.main' }} id='validation-schema-first-name'>
+                      {errors.company.message}
+                    </FormHelperText>
+                  )}
+                </FormControl>
+              </Grid>
 
-    const handleChange = (event: SyntheticEvent, newValue: string) => {
-        setActiveTab(newValue)
-    }
+              <Grid item xs={12} md={6}>
+                <FormControl fullWidth>
+                  <Controller
+                    name='phone'
+                    control={control}
+                    rules={{ required: true }}
+                    render={({ field: { value, onChange } }) => (
+                      <TextField
+                        value={value}
+                        label='Seu Telefone'
+                        onChange={onChange}
+                        error={Boolean(errors.phone)}
+                        aria-describedby='validation-schema-first-name'
+                      />
+                    )}
+                  />
+                  {errors.phone && (
+                    <FormHelperText sx={{ color: 'error.main' }} id='validation-schema-first-name'>
+                      {errors.phone.message}
+                    </FormHelperText>
+                  )}
+                </FormControl>
+              </Grid>
 
-    const renderNoResult = (
-        <Box sx={{ mt: 8, display: 'flex', justifyContent: 'center', alignItems: 'center', '& svg': { mr: 2 } }}>
-            <Icon icon='mdi:alert-circle-outline' />
-            <Typography variant='h6'>Nenhum resultado encontrado!!</Typography>
-        </Box>
-    )
+              <Grid item xs={12} md={5}>
+                <FormControl fullWidth>
+                  <InputLabel htmlFor="active">Como podemos ajudar?</InputLabel>
+                  <Controller
+                    name='category'
+                    control={control}
+                    rules={{ required: true }}
+                    render={({ field: { value, onChange } }) => (
+                      <Select
+                        value={value}
+                        name="category"
+                        label="Como podemos ajudar?"
+                        onChange={onChange}
+                      >
+                        <MenuItem value="Solicitar selo de membro">Solicitar selo de membro</MenuItem>
+                        <MenuItem value="Solicitar ingresso ExpoEcomm">Solicitar ingresso ExpoEcomm</MenuItem>
+                        <MenuItem value="Dúvidas Gerais">Dúvidas Gerais</MenuItem>
+                        <MenuItem value="Outros">Outros</MenuItem>
+                      </Select>
+                    )}
+                  />
+                  {errors.category && (
+                    <FormHelperText sx={{ color: 'error.main' }} id='validation-schema-last-name'>
+                      {errors.category.message}
+                    </FormHelperText>
+                  )}
+                </FormControl>
+              </Grid>
 
-    return (
-        <Fragment>
-            <FaqHeader searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
-            {data !== null ? <FAQ data={data} activeTab={activeTab} handleChange={handleChange} /> : renderNoResult}
-            <FaqFooter />
-        </Fragment>
-    )
-}
+              <Grid item xs={12} md={12}>
+                <FormControl fullWidth>
+                  <Controller
+                    name='message'
+                    control={control}
+                    rules={{ required: true }}
+                    render={({ field: { value, onChange } }) => (
+                      <TextField
+                        value={value}
+                        label='Mensagem'
+                        onChange={onChange}
+                        error={Boolean(errors.message)}
+                        aria-describedby='validation-schema-first-name'
+                        type=''
+                      />
+                    )}
+                  />
+                  {errors.message && (
+                    <FormHelperText sx={{ color: 'error.main' }} id='validation-schema-first-name'>
+                      {errors.message.message}
+                    </FormHelperText>
+                  )}
+                </FormControl>
+              </Grid>
 
-export const getStaticProps: GetStaticProps = async () => {
-    //const res = await axios.get('/pages/faqs')
-    //const apiData: FaqType = dataFAQ
-
-    return {
-        props: {
-            dataFAQ
-        }
-    }
+              <Grid item xs={12} md={12}>
+                <Button size='large' type='submit' variant='contained'>
+                  Enviar
+                </Button>
+              </Grid>
+            </Grid>
+          </form>
+        </CardContent>
+      </Card>
+    </Fragment >
+  )
 }
 
 FAQ.acl = {
-    action: 'read',
-    subject: 'acl-page'
+  action: 'read',
+  subject: 'acl-page'
 }
 
 export default FAQ
