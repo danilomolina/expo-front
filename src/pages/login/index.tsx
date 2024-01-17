@@ -81,20 +81,39 @@ interface FormData {
   password: string
 }
 
+// const Img = styled('img')(({ theme }) => ({
+//   marginTop: theme.spacing(85),
+//   marginBottom: theme.spacing(15),
+//   marginLeft: theme.spacing(85),
+//   [theme.breakpoints.down('lg')]: {
+//     height: 80,
+//     marginTop: theme.spacing(30),
+//     marginBottom: theme.spacing(10),
+//     marginLeft: theme.spacing(35)
+//   },
+//   [theme.breakpoints.down('md')]: {
+//     height: 5
+//   }
+// }))
+
 const Img = styled('img')(({ theme }) => ({
-  marginTop: theme.spacing(85),
-  marginBottom: theme.spacing(15),
-  marginLeft: theme.spacing(85),
-  [theme.breakpoints.down('lg')]: {
-    height: 80,
-    marginTop: theme.spacing(30),
-    marginBottom: theme.spacing(10),
-    marginLeft: theme.spacing(35)
+  marginBottom: theme.spacing(6),
+  marginLeft: 'auto',
+  marginRight: 'auto',
+  maxWidth: '100%',
+  height: 'auto',
+  [theme.breakpoints.up('lg')]: {
+    maxWidth: '80%',
+    marginTop: theme.spacing(85),
+    marginBottom: theme.spacing(15),
+    marginLeft: theme.spacing(85)
   },
-  [theme.breakpoints.down('md')]: {
-    height: 5
-  }
-}))
+  [theme.breakpoints.up('xl')]: {
+    maxWidth: '60%',
+    marginBottom: theme.spacing(80),
+    marginTop: theme.spacing(85),
+  },
+}));
 
 const LoginPage = () => {
   const [rememberMe, setRememberMe] = useState<boolean>(true)
@@ -105,6 +124,10 @@ const LoginPage = () => {
   const theme = useTheme()
   const { settings } = useSettings()
   const hidden = useMediaQuery(theme.breakpoints.down('md'))
+
+  const isMobileDevice = () => {
+    return typeof window !== 'undefined' && window.innerWidth <= 960;
+  }
 
   // ** Vars
   const { skin } = settings
@@ -132,35 +155,41 @@ const LoginPage = () => {
 
   return (
     <Box className='content-right'>
-      {!hidden ? (
+      {!isMobileDevice() &&
         <Box sx={{ flex: 1, display: 'flex', position: 'relative', alignItems: 'center', justifyContent: 'center', backgroundColor: '#0087ff' }}>
-
         </Box>
-      ) : null}
+      }
       <RightWrapper sx={skin === 'bordered' && !hidden ? { borderLeft: `1px solid ${theme.palette.divider}` } : {}}>
         <Box
           sx={{
             p: 7,
             height: '100%',
             display: 'flex',
-            alignItems: 'center',
+            //alignItems: 'center',
             justifyContent: 'center',
             backgroundColor: 'background.paper'
           }}
         >
           <BoxWrapper>
-            <Box
-              sx={{
-                top: 30,
-                left: 40,
-                display: 'flex',
-                position: 'absolute',
-                alignItems: 'center',
-                justifyContent: 'center'
-              }}
-            >
-              <Img alt='error-illustration' src='/images/logo.png' />
-            </Box>
+            {!isMobileDevice() &&
+              <Box
+                sx={{
+                  top: 30,
+                  left: 40,
+                  display: 'flex',
+                  position: 'absolute',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}
+              >
+                <Img alt='logo' src='/images/logo.png' />
+              </Box>
+            }
+
+            {isMobileDevice() &&
+              <Img alt='logo' src='/images/logo2.png' />
+            }
+
             <Box sx={{ mb: 6 }}>
               <TypographyStyled variant='h5'>{`Seja bem vindo a X-Ecomm App!`}</TypographyStyled>
               <Typography variant='body2'>Faça login em sua conta e comece agora</Typography>
