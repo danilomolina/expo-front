@@ -21,7 +21,7 @@ import { getEvents } from 'src/services/event'
 import SearchIcon from '@mui/icons-material/Search'
 import CloseIcon from '@mui/icons-material/Close'
 import { CategoryModel } from 'src/models/category'
-import { getCategory } from 'src/services/category'
+import { getCategoryByGroup } from 'src/services/category'
 
 
 // Styled Timeline component
@@ -58,7 +58,7 @@ const UserViewOverview = () => {
   }, [])
 
   const handleGetCategories = async () => {
-    const response = await getCategory(0, 100, 0, undefined, true)
+    const response = await getCategoryByGroup(0, 100, 0, 'Agenda')
     setCategories(response.data)
   }
 

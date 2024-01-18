@@ -13,8 +13,8 @@ import { getCoupon } from 'src/services/coupon'
 /*icons*/
 import SearchIcon from '@mui/icons-material/Search'
 import CloseIcon from '@mui/icons-material/Close'
-import { getCategory } from 'src/services/category'
 import { CategoryModel } from 'src/models/category'
+import { getCategoryByGroup } from 'src/services/category'
 
 const ViewCoupon = () => {
   const [orderBy, setOrderBy] = useState<string>('')
@@ -32,7 +32,7 @@ const ViewCoupon = () => {
   }, [])
 
   const handleGetCategories = async () => {
-    const response = await getCategory(0, 100, 0, undefined, true)
+    const response = await getCategoryByGroup(0, 100, 0, 'Cupons')
     setCategories(response.data)
   }
 
@@ -116,16 +116,18 @@ const ViewCoupon = () => {
 
       <Grid item xs={12}>
         <Card>
-          <Grid item xs={7} >
-            <CardHeader title='Cupons e benefícios' />
-          </Grid>
-          <Grid item xs={3} style={{ display: !showFilters ? 'block' : 'none', marginTop: 12 }}>
-            <Button onClick={() => {
-              setShowFilters(!showFilters)
-              setShowClose(true)
-            }}>
-              <SearchIcon />
-            </Button>
+          <Grid container>
+            <Grid item xs={7} sx={{ height: 10 }}>
+              <CardHeader title='Cupons e benefícios' />
+            </Grid>
+            <Grid item xs={2} style={{ display: !showFilters ? 'block' : 'none', marginTop: 12, height: 2 }}>
+              <Button onClick={() => {
+                setShowFilters(!showFilters)
+                setShowClose(true)
+              }}>
+                <SearchIcon />
+              </Button>
+            </Grid>
           </Grid>
           <CardContent>
 

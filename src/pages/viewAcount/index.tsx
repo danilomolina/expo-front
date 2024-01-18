@@ -39,8 +39,12 @@ import { ThemeColor } from 'src/@core/layouts/types'
 import { UsersType } from 'src/types/apps/userTypes'
 
 // ** Utils Import
-import { getInitials } from 'src/@core/utils/get-initials'
 import { UserDataType } from 'src/context/types'
+
+import { VisuallyHiddenInput, previewImage, uploadFile } from 'src/utils/fileUploader'
+import CloudUploadIcon from '@mui/icons-material/CloudUpload'
+import { getPeople, updatePeople } from 'src/services/people'
+import toast from 'react-hot-toast'
 
 interface ColorsType {
   [key: string]: ThemeColor
@@ -88,15 +92,32 @@ const UserViewLeft = () => {
   const [suspendDialogOpen, setSuspendDialogOpen] = useState<boolean>(false)
   const [subscriptionDialogOpen, setSubscriptionDialogOpen] = useState<boolean>(false)
   const [user, setUser] = useState<UserDataType>()
+  const [file, setFile] = useState<File>()
+  const imagePreviewPerfil = document.getElementById('imagePreviewPerfil') as HTMLImageElement
+  const [name, setName] = useState<string | undefined>('')
+  const [people, setPeople] = useState<UserDataType>()
 
   useEffect(() => {
-    const userDataString = window.localStorage.getItem('userData');
+    handleGetPeople()
+  }, [])
+
+  const handleGetPeople = async () => {
+    const userDataString = window.localStorage.getItem('userData')
+    if (userDataString !== null) {
+      const userData = JSON.parse(userDataString) as UserDataType
+      const response = await getPeople(0, 100, 0, userData?.id)
+      setPeople(response.data[0])
+    }
+  }
+
+  useEffect(() => {
+    const userDataString = window.localStorage.getItem('userData')
 
     if (userDataString !== null) {
-      const userData = JSON.parse(userDataString) as UserDataType;
+      const userData = JSON.parse(userDataString) as UserDataType
 
-      console.log(userData.name);
       setUser(userData);
+      setName(userData.name)
     }
   }, []);
 
@@ -108,38 +129,77 @@ const UserViewLeft = () => {
     window.open('https://chk.eduzz.com/2186000', '_blank')
   }
 
+  const handleUploadFile = async () => {
+    await uploadFile(file)
+  }
+
+  const handleEdit = async (src?: string) => {
+    if (people) {
+      if (src)
+        people.image = src
+
+      people.name = name
+      await updatePeople(people)
+      window.localStorage.setItem('userData', JSON.stringify(people))
+      toast.success('Dados salvo com sucesso')
+    }
+
+  }
+
   return (
     <Grid container spacing={6}>
       <Grid item xs={12}>
         <Card>
           <CardContent sx={{ pt: 15, display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
-            {user && user.image ? (
-              <CustomAvatar
-                src={user && user.image}
-                variant='rounded'
-                alt={user && user.name}
-                sx={{ width: 120, height: 120, fontWeight: 600, mb: 4 }}
-              />
+            {people && people.image ? (
+              <>
+                <CustomAvatar
+                  src={people && people.image}
+                  variant='rounded'
+                  alt={people && people.name}
+                  sx={{ width: 120, height: 120, fontWeight: 600, mb: 4 }}
+                />
+                <br />
+                <Button component="label" variant="contained" startIcon={<CloudUploadIcon />}>
+                  Carregar Foto
+                  <VisuallyHiddenInput type="file" id="uploadInput" onChange={(e) => {
+                    const src = previewImage(e, setFile, imagePreviewPerfil)
+                    handleUploadFile()
+                    handleEdit(src)
+                  }} />
+                </Button>
+              </>
             ) : (
-              <CustomAvatar
-                skin='light'
-                variant='rounded'
-                color={data.avatarColor as ThemeColor}
-                sx={{ width: 120, height: 120, fontWeight: 600, mb: 4, fontSize: '3rem' }}
-              >
-                {getInitials(user && user.name)}
-              </CustomAvatar>
+              <>
+                <img id="imagePreviewPerfil" src='/images/avatars/1.png' alt="Perfil" style={{ display: "none", maxWidth: "10%", borderRadius: "50%" }} />
+                <br />
+                <Button component="label" variant="contained" startIcon={<CloudUploadIcon />}>
+                  Carregar Foto
+                  <VisuallyHiddenInput type="file" id="uploadInput" onChange={(e) => {
+                    const src = previewImage(e, setFile, imagePreviewPerfil)
+                    handleUploadFile()
+                    handleEdit(src)
+                  }} />
+                </Button>
+              </>
             )}
-            <Typography variant='h6' sx={{ mb: 2 }}>
-              {user && user.name}
-            </Typography>
+
           </CardContent>
 
           <CardContent>
-            <Typography variant='h6'>Informações</Typography>
+            <Typography variant='h6'>Dados</Typography>
             <Divider sx={{ mt: theme => `${theme.spacing(4)} !important` }} />
             <Box sx={{ pt: 2, pb: 1 }}>
               <Box sx={{ display: 'flex', mb: 2.7 }}>
+                <TextField
+                  value={name}
+                  label='Nome'
+                  onChange={(e) => setName(e.target.value)}
+                  aria-describedby='validation-schema-first-name'
+                />
+              </Box>
+              <Box sx={{ display: 'flex', mb: 2.7 }}>
+
                 <Typography variant='subtitle2' sx={{ mr: 2, color: 'text.primary' }}>
                   Status do Plano:
                 </Typography>
@@ -167,9 +227,9 @@ const UserViewLeft = () => {
           </CardContent>
 
           <CardActions sx={{ display: 'flex', justifyContent: 'center' }}>
-            {/* <Button variant='contained' sx={{ mr: 2 }} onClick={handleEditClickOpen}>
-              Editar
-            </Button> */}
+            <Button variant='contained' sx={{ mr: 2 }} onClick={() => handleEdit()}>
+              Salvar Alterações
+            </Button>
             {/* <Button color='error' variant='outlined' onClick={() => setSuspendDialogOpen(true)}>
               Cancelar
             </Button> */}

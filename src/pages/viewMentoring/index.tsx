@@ -40,8 +40,8 @@ const ViewMentoring = () => {
   }
 
   const optsSmall = {
-    height: '140',
-    width: '180',
+    height: '240',
+    width: '380',
     playerVars: {
       autoplay: 0,
     },
@@ -63,12 +63,12 @@ const ViewMentoring = () => {
 
   return (
     <Paper style={{ width: '100%' }}>
-      <div style={{ margin: 35, fontSize: 14, padding: 30 }}>
+      <div style={{ margin: 0, fontSize: 14, padding: 10 }}>
         <Grid container spacing={3}>
 
           <Grid item xs={12} md={12}>
             <YouTube videoId={mentorings !== undefined ? getYoutubeId(mentorings[0].link) : ""} opts={windowWidth >= 960 ? opts : optsSmall} />
-            <Typography style={{ fontSize: 23, fontWeight: 'bold' }} >
+            <Typography style={{ fontSize: windowWidth >= 960 ? 23 : 14, fontWeight: 'bold' }} >
               {mentorings && mentorings[0].title} <br />
             </Typography>
             <Typography>
@@ -80,7 +80,7 @@ const ViewMentoring = () => {
             </Typography>
           </Grid>
 
-       
+
 
           <Grid item xs={12} md={12}>
           <Divider>
@@ -91,10 +91,10 @@ const ViewMentoring = () => {
               <>
                 <Grid container spacing={1} key={key}>
                   <Grid item xs={12} md={12}>
-                    <YouTube videoId={item !== undefined ? getYoutubeId(item.link) : ""} opts={opts} />
+                    <YouTube videoId={item !== undefined ? getYoutubeId(item.link) : ""} opts={windowWidth >= 960 ? opts : optsSmall} />
                   </Grid>
                   <Grid item xs={12} md={12}>
-                    <Typography style={{ fontSize: windowWidth >= 960 ? 20 : 10, fontWeight: 'bold' }} >
+                    <Typography style={{ fontSize: windowWidth >= 960 ? 20 : 14, fontWeight: 'bold' }} >
                       {item.title} <br />
                     </Typography>
                     Por: {item.mentors}

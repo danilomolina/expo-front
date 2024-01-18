@@ -1,5 +1,5 @@
 // ** React Imports
-import { useState, SyntheticEvent, Fragment } from 'react'
+import { useState, SyntheticEvent, Fragment, useEffect } from 'react'
 
 // ** Next Import
 import { useRouter } from 'next/router'
@@ -21,6 +21,7 @@ import { useAuth } from 'src/hooks/useAuth'
 
 // ** Type Imports
 import { Settings } from 'src/@core/context/settingsContext'
+import { UserDataType } from 'src/context/types'
 
 interface Props {
   settings: Settings
@@ -36,6 +37,8 @@ const BadgeContentSpan = styled('span')(({ theme }) => ({
 }))
 
 const UserDropdown = (props: Props) => {
+  const [user, setUser] = useState<UserDataType>()
+
   // ** Props
   const { settings } = props
 
@@ -65,6 +68,16 @@ const UserDropdown = (props: Props) => {
     handleDropdownClose()
   }
 
+  useEffect(() => {
+    const userDataString = window.localStorage.getItem('userData')
+    console.log(userDataString)
+    if (userDataString !== null) {
+      const userData = JSON.parse(userDataString) as UserDataType
+
+      setUser(userData);
+    }
+  }, []);
+
   return (
     <Fragment>
       <Badge
@@ -81,7 +94,7 @@ const UserDropdown = (props: Props) => {
           alt=''
           onClick={handleDropdownOpen}
           sx={{ width: 40, height: 40 }}
-          src='/images/avatars/1.png'
+          src={user && user.image ? user.image : '/images/avatars/1.png'}
         />
       </Badge>
       <Menu
@@ -102,7 +115,7 @@ const UserDropdown = (props: Props) => {
                 horizontal: 'right'
               }}
             >
-              <Avatar alt='John Doe' src='/images/avatars/1.png' sx={{ width: '2.5rem', height: '2.5rem' }} />
+              <Avatar alt='John Doe' src={user && user.image ? user.image : '/images/avatars/1.png'} sx={{ width: '2.5rem', height: '2.5rem' }} />
             </Badge>
             <Box sx={{ display: 'flex', ml: 3, alignItems: 'flex-start', flexDirection: 'column' }}>
               {/* <Typography sx={{ fontWeight: 600 }}>John Doe</Typography> */}

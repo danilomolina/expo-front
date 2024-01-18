@@ -19,7 +19,7 @@ import { deleteCategory, getCategory, updateCategory } from 'src/services/catego
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, Grid, InputLabel, MenuItem, Select, TextField } from '@mui/material'
 
 interface Column {
-  id: 'name' | 'active'
+  id: 'name' | 'active' | 'group'
   label: string
   minWidth?: number
   align?: 'right' | 'left'
@@ -28,7 +28,8 @@ interface Column {
 
 const columns: readonly Column[] = [
   { id: 'name', label: 'Nome', minWidth: 170 },
-  { id: 'active', label: 'Ativo', minWidth: 100, align: 'left' }
+  { id: 'active', label: 'Ativo', minWidth: 100, align: 'left' },
+  { id: 'group', label: 'Grupo', minWidth: 100, align: 'left' }
 ]
 
 interface TableCategoryParams {
@@ -50,6 +51,7 @@ const TableCategory = (props: TableCategoryParams) => {
 
   const [categoryName, setCategoryName] = useState<string | undefined>()
   const [categoryActive, setCategoryActive] = useState<boolean | undefined>()
+  const [categoryGroup, setCategoryGroup] = useState<string | undefined>()
 
   useEffect(() => {
     handleGetCategories()
@@ -92,7 +94,8 @@ const TableCategory = (props: TableCategoryParams) => {
     const newCategory: CategoryModel = {
       id: id,
       name: categoryName !== undefined ? categoryName : category !== undefined ? category.name : "",
-      active: categoryActive !== undefined ? categoryActive : category !== undefined ? category?.active : false
+      active: categoryActive !== undefined ? categoryActive : category !== undefined ? category?.active : false,
+      group: categoryGroup !== undefined ? categoryGroup : category !== undefined ? category.group : "",
     }
 
     const response = await updateCategory(newCategory)
@@ -220,6 +223,27 @@ const TableCategory = (props: TableCategoryParams) => {
                   >
                     <MenuItem value='true'>Sim</MenuItem>
                     <MenuItem value='false'>Não</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+
+              <Grid item xs={12} sm={4}>
+                <FormControl fullWidth>
+                  <InputLabel id='user-view-status-label'>Grupo</InputLabel>
+                  <Select
+                    label='Grupo'
+                    defaultValue={category?.group}
+                    id='user-view-status'
+                    labelId='user-view-status-label'
+                    onChange={(e) => {
+                      setCategoryGroup(e.target.value)
+                    }}
+                  >
+                    <MenuItem value="Agenda">Agenda</MenuItem>
+                    <MenuItem value="Mentorias">Mentorias</MenuItem>
+                    <MenuItem value="Cupons">Cupons</MenuItem>
+                    <MenuItem value="Cursos">Cursos</MenuItem>
+                    <MenuItem value="Embaixadas">Embaixadas</MenuItem>
                   </Select>
                 </FormControl>
               </Grid>

@@ -25,12 +25,14 @@ import { saveCategory } from 'src/services/category'
 
 const defaultValues = {
   name: "",
-  active: true
+  active: true,
+  group: ""
 }
 
 const schema = yup.object().shape({
   name: yup.string().required("Campo nome é obrigatório"),
   active: yup.bool().required("Campo ativo é obrigatório"),
+  group: yup.string().required("Campo grupo é obrigatório"),
 })
 
 const FormCoupon = () => {
@@ -108,6 +110,37 @@ const FormCoupon = () => {
                 {errors.active && (
                   <FormHelperText sx={{ color: 'error.main' }} id='validation-schema-last-name'>
                     {errors.active.message}
+                  </FormHelperText>
+                )}
+              </FormControl>
+            </Grid>
+
+            <Grid item xs={6}>
+              <FormControl fullWidth>
+
+                <InputLabel htmlFor="active">Grupo</InputLabel>
+                <Controller
+                  name='group'
+                  control={control}
+                  rules={{ required: true }}
+                  render={({ field: { value, onChange } }) => (
+                    <Select
+                    value={value}
+                      name="group"
+                      label="Grupo"
+                      onChange={onChange}
+                    >
+                      <MenuItem value="Agenda">Agenda</MenuItem>
+                      <MenuItem value="Mentorias">Mentorias</MenuItem>
+                      <MenuItem value="Cupons">Cupons</MenuItem>
+                      <MenuItem value="Cursos">Cursos</MenuItem>
+                      <MenuItem value="Embaixadas">Embaixadas</MenuItem>
+                    </Select>
+                  )}
+                />
+                {errors.group && (
+                  <FormHelperText sx={{ color: 'error.main' }} id='validation-schema-last-name'>
+                    {errors.group.message}
                   </FormHelperText>
                 )}
               </FormControl>

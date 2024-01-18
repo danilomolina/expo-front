@@ -9,7 +9,7 @@ import SearchIcon from '@mui/icons-material/Search'
 import CloseIcon from '@mui/icons-material/Close'
 import { UserDataType } from "src/context/types"
 import { CategoryModel } from "src/models/category"
-import { getCategory } from "src/services/category"
+import { getCategoryByGroup } from "src/services/category"
 
 const ViewCourse = () => {
 
@@ -28,7 +28,7 @@ const ViewCourse = () => {
   }, [])
 
   const handleGetCategories = async () => {
-    const response = await getCategory(0, 100, 0, undefined, true)
+    const response = await getCategoryByGroup(0, 100, 0, 'Cursos')
     setCategories(response.data)
   }
 
@@ -81,8 +81,8 @@ const ViewCourse = () => {
           {!isHovered &&
             <>
               <CardMedia sx={{ height: 90 }} image={item.image} />
-              <CardContent sx={{ pt: 4 }}>
-                <Typography sx={{ mb: 2, fontSize: 12, fontWeight: 'bold', textAlign: 'center', display: 'block', marginTop: 12 }}>
+              <CardContent sx={{ pt: 4, height: 60  }}>
+                <Typography sx={{ mb: 2, fontSize: 20, fontWeight: 'bold', textAlign: 'center', display: 'block', marginTop: 0 }}>
                   {item.name}
                 </Typography>
               </CardContent>
@@ -97,14 +97,14 @@ const ViewCourse = () => {
                   <span style={{ fontSize: 12, textAlign: 'center', display: 'block' }}>{item.description}</span>
                   <CardContent sx={{ pt: 4 }}>
                     <Typography sx={{ mb: 2, fontSize: 16 }}>
-                        <Button
-                          fullWidth
-                          color='primary'
-                          variant='contained'
-                          onClick={handleSearch}
-                        >
-                          Assistir
-                        </Button>
+                      <Button
+                        fullWidth
+                        color='primary'
+                        variant='contained'
+                        onClick={handleSearch}
+                      >
+                        Assistir
+                      </Button>
                     </Typography>
                   </CardContent>
                 </>
@@ -121,16 +121,18 @@ const ViewCourse = () => {
     <Grid container spacing={2}>
       <Grid item xs={12}>
         <Card>
-          <Grid item xs={7} >
-            <CardHeader title='Cursos' />
-          </Grid>
-          <Grid item xs={3} style={{ display: !showFilters ? 'block' : 'none', marginTop: 12 }}>
-            <Button onClick={() => {
-              setShowFilters(!showFilters)
-              setShowClose(true)
-            }}>
-              <SearchIcon />
-            </Button>
+          <Grid container>
+            <Grid item xs={7} sx={{ height: 10 }}>
+              <CardHeader title='Cursos' />
+            </Grid>
+            <Grid item xs={3} style={{ display: !showFilters ? 'block' : 'none', marginTop: 12, height: 2 }}>
+              <Button onClick={() => {
+                setShowFilters(!showFilters)
+                setShowClose(true)
+              }}>
+                <SearchIcon />
+              </Button>
+            </Grid>
           </Grid>
           <CardContent>
 
