@@ -1,4 +1,4 @@
-import { Grid, Paper, Typography } from '@mui/material'
+import { Chip, Divider, Grid, Paper, Typography } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import YouTube from 'react-youtube'
 import { MentoringModel } from 'src/models/mentoring'
@@ -62,11 +62,11 @@ const ViewMentoring = () => {
   }
 
   return (
-    <Paper style={{width: '100%'}}>
+    <Paper style={{ width: '100%' }}>
       <div style={{ margin: 35, fontSize: 14, padding: 30 }}>
         <Grid container spacing={3}>
 
-          <Grid item xs={12} md={7}>
+          <Grid item xs={12} md={12}>
             <YouTube videoId={mentorings !== undefined ? getYoutubeId(mentorings[0].link) : ""} opts={windowWidth >= 960 ? opts : optsSmall} />
             <Typography style={{ fontSize: 23, fontWeight: 'bold' }} >
               {mentorings && mentorings[0].title} <br />
@@ -75,30 +75,33 @@ const ViewMentoring = () => {
               Por:  {mentorings && mentorings[0].mentors} <br />
               <span style={{ fontSize: 16, fontWeight: 'bold' }}>Estreia: </span>{formattedDate(mentorings !== undefined ? mentorings[0].date : "", mentorings && mentorings[0].hour)}
             </Typography>
-            <br /><br />
             <Typography>
               {mentorings && mentorings[0].caption}
             </Typography>
           </Grid>
-          <br />
-          <Grid item xs={12} md={4}>
-            <Typography style={{ fontSize: 18 }} >
-              Atidades anteriores <br />
-            </Typography>
 
+       
+
+          <Grid item xs={12} md={12}>
+          <Divider>
+            <Chip label="  Atidades anteriores" size="small" />
+          </Divider> <br /><br />
 
             {mentorings && mentorings.map((item, key) => (
-              <Grid container spacing={3} key={key}>
-                <Grid item xs={12} md={6}>
-                  <YouTube videoId={item !== undefined ? getYoutubeId(item.link) : ""} opts={optsSmall} />
+              <>
+                <Grid container spacing={1} key={key}>
+                  <Grid item xs={12} md={12}>
+                    <YouTube videoId={item !== undefined ? getYoutubeId(item.link) : ""} opts={opts} />
+                  </Grid>
+                  <Grid item xs={12} md={12}>
+                    <Typography style={{ fontSize: windowWidth >= 960 ? 20 : 10, fontWeight: 'bold' }} >
+                      {item.title} <br />
+                    </Typography>
+                    Por: {item.mentors}
+                  </Grid>
                 </Grid>
-                <Grid item xs={12} md={6}>
-                  <Typography style={{ fontSize: 20, fontWeight: 'bold' }} >
-                    {item.title} <br />
-                  </Typography>
-                  Por: {item.mentors}
-                </Grid>
-              </Grid>
+                <br /><br />
+              </>
             ))}
           </Grid>
         </Grid>

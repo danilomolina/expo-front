@@ -67,34 +67,19 @@ const FormControlLabel = styled(MuiFormControlLabel)<FormControlLabelProps>(({ t
 }))
 
 const schema = yup.object().shape({
-  email: yup.string().email().required(),
-  password: yup.string().min(5).required()
+  email: yup.string().email().required('Email é obrigatório'),
+  password: yup.string().min(5, 'Senha tem que ter no minímo 5 caracteres').required('Senha é obrigatório')
 })
 
 const defaultValues = {
-  password: 'admin',
-  email: 'admin@materialize.com'
+  password: '',
+  email: ''
 }
 
 interface FormData {
   email: string
   password: string
 }
-
-// const Img = styled('img')(({ theme }) => ({
-//   marginTop: theme.spacing(85),
-//   marginBottom: theme.spacing(15),
-//   marginLeft: theme.spacing(85),
-//   [theme.breakpoints.down('lg')]: {
-//     height: 80,
-//     marginTop: theme.spacing(30),
-//     marginBottom: theme.spacing(10),
-//     marginLeft: theme.spacing(35)
-//   },
-//   [theme.breakpoints.down('md')]: {
-//     height: 5
-//   }
-// }))
 
 const Img = styled('img')(({ theme }) => ({
   marginBottom: theme.spacing(6),
@@ -104,9 +89,9 @@ const Img = styled('img')(({ theme }) => ({
   height: 'auto',
   [theme.breakpoints.up('lg')]: {
     maxWidth: '80%',
-    marginTop: theme.spacing(85),
+    marginTop: theme.spacing(60),
     marginBottom: theme.spacing(15),
-    marginLeft: theme.spacing(85)
+    marginLeft: theme.spacing(85),
   },
   [theme.breakpoints.up('xl')]: {
     maxWidth: '60%',
@@ -165,7 +150,7 @@ const LoginPage = () => {
             p: 7,
             height: '100%',
             display: 'flex',
-            //alignItems: 'center',
+            alignItems: !isMobileDevice() ? 'center' : '',
             justifyContent: 'center',
             backgroundColor: 'background.paper'
           }}

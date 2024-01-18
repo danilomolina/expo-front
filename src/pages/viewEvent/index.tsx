@@ -48,8 +48,8 @@ const UserViewOverview = () => {
   const [showFilters, setShowFilters] = useState(true)
   const [showClose, setShowClose] = useState(false)
 
-  const imageWidth = windowWidth >= 960 ? 150 : 250
-  const imageHeight = windowWidth >= 960 ? 100 : 150
+  const imageWidth = windowWidth >= 960 ? 150 : 350
+  const imageHeight = windowWidth >= 960 ? 100 : 200
 
   const [categories, setCategories] = useState<CategoryModel[]>()
 
@@ -93,16 +93,16 @@ const UserViewOverview = () => {
   }, [windowWidth])
 
   return (
-    <Grid container spacing={6}>
+    <Grid container spacing={1}>
 
       <Grid item xs={12}>
         <Card>
           <Grid container>
-            <Grid item xs={7} >
+            <Grid item xs={7} sx={{height: 10}}>
               <CardHeader title='Próximas atividades' />
             </Grid>
             {/* Ícone de busca para telas de celular */}
-            <Grid item xs={3} style={{ display: !showFilters ? 'block' : 'none', marginTop: 12 }}>
+            <Grid item xs={3} style={{ display: !showFilters ? 'block' : 'none', marginTop: 12, height: 2 }}>
               <Button onClick={() => {
                 setShowFilters(!showFilters)
                 setShowClose(true)
@@ -113,13 +113,12 @@ const UserViewOverview = () => {
           </Grid>
 
           <CardContent>
-
             <div className='demo-space-x'>
-              <Grid container spacing={6} >
+              <Grid container spacing={1} >
                 <Grid item xs={9} style={{ display: showFilters && showClose ? 'block' : 'none' }}>
                   Filtros
                 </Grid>
-                <Grid item xs={2} style={{ display: showFilters && showClose ? 'block' : 'none', marginTop: -12 }}>
+                <Grid item xs={2} style={{ display: showFilters && showClose ? 'block' : 'none', marginTop: -12, marginLeft: 29 }}>
                   <Button onClick={() => setShowFilters(!showFilters)}>
                     <CloseIcon />
                   </Button>
@@ -212,7 +211,7 @@ const UserViewOverview = () => {
                       alt="Image Preview"
                     />
                   </Grid>
-                  <Grid item xs={12} md={3}>
+                  <Grid item xs={12} md={6}>
                     <Timeline key={key}>
                       <TimelineItem>
                         <TimelineSeparator>
