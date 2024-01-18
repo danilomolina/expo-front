@@ -117,7 +117,7 @@ const ViewCoupon = () => {
       <Grid item xs={12}>
         <Card>
           <Grid container>
-            <Grid item xs={7} sx={{ height: 10 }}>
+            <Grid item xs={9} sx={{ height: 10 }}>
               <CardHeader title='Cupons e benefícios' />
             </Grid>
             <Grid item xs={2} style={{ display: !showFilters ? 'block' : 'none', marginTop: 12, height: 2 }}>

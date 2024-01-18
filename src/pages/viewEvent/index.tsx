@@ -48,7 +48,7 @@ const UserViewOverview = () => {
   const [showFilters, setShowFilters] = useState(true)
   const [showClose, setShowClose] = useState(false)
 
-  const imageWidth = windowWidth >= 960 ? 150 : 350
+  const imageWidth = windowWidth >= 960 ? 150 : 310
   const imageHeight = windowWidth >= 960 ? 100 : 200
 
   const [categories, setCategories] = useState<CategoryModel[]>()
@@ -95,7 +95,7 @@ const UserViewOverview = () => {
   return (
     <Grid container spacing={1}>
 
-      <Grid item xs={12}>
+      <Grid item xs={12} md={12}>
         <Card>
           <Grid container>
             <Grid item xs={7} sx={{height: 10}}>
