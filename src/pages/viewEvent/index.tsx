@@ -48,7 +48,7 @@ const UserViewOverview = () => {
   const [windowWidth, setWindowWidth] = useState(window.innerWidth)
   const [showFilters, setShowFilters] = useState(true)
   const [showClose, setShowClose] = useState(false)
-
+  console.log(windowWidth)
   const imageWidth = getImageDimensions(windowWidth)
   const imageHeight = windowWidth >= 960 ? 100 : 200
 

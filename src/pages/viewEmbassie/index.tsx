@@ -37,7 +37,7 @@ const ViewEmbassie = () => {
 
   useEffect(() => {
     handleGetEmbassie()
-  })
+  }, [])
 
   const handleGetEmbassie = async (name?: string, orderBy?: string) => {
     const response = await getEmbassie(0, 100, 0, name, orderBy, category)
@@ -47,11 +47,6 @@ const ViewEmbassie = () => {
   const handleSearch = () => {
     handleGetEmbassie(name, orderBy)
   }
-
-  const handleRedirect = (link: string) => {
-    window.open(`${link}`, "_blank");
-  }
-
   useEffect(() => {
     const handleResize = () => {
       setWindowWidth(window.innerWidth);
@@ -96,20 +91,21 @@ const ViewEmbassie = () => {
                   <span style={{ fontSize: 12, textAlign: 'center', display: 'block' }}>{item.description}</span>
                   <CardContent sx={{ pt: 4 }}>
                     <Typography sx={{ mb: 2, fontSize: 16 }}>
-                      <Button
-                        fullWidth
-                        color='primary'
-                        variant='contained'
-                        onClick={() => handleRedirect(item.link)}
-                      >
-                        Grupo WhatsApp
-                      </Button>
+
+                      <a href={item.link} target='blank' style={{ textDecoration: "none", color: "inherit" }}>
+                        <Button
+                          fullWidth
+                          color='primary'
+                          variant='contained'
+                        >
+                          Grupo WhatsApp
+                        </Button>
+                      </a>
                     </Typography>
                   </CardContent>
                 </>
               </CardContent>
             </>
-
           }
         </Card>
       </Grid>
@@ -125,7 +121,7 @@ const ViewEmbassie = () => {
             <Grid item xs={7} sx={{ height: 10 }}>
               <CardHeader title='Embaixadas' />
             </Grid>
-            <Grid item xs={3} style={{ display: !showFilters ? 'block' : 'none', marginTop: 6, height: 2, marginLeft:  windowWidth >= 430 ? 335 : 300  }}>
+            <Grid item xs={3} style={{ display: !showFilters ? 'block' : 'none', marginTop: 6, height: 2, marginLeft: windowWidth >= 430 ? 335 : 300 }}>
               <Button onClick={() => {
                 setShowFilters(!showFilters)
                 setShowClose(true)
@@ -221,7 +217,7 @@ const ViewEmbassie = () => {
               </>
             }
             <Grid container spacing={6}>
-              {embassie && embassie.map((item, key) => (
+              {embassie && embassie.map((item: EmbassieModel, key) => (
                 <EmbassieComponent key={key} item={item} />
               ))}
             </Grid>

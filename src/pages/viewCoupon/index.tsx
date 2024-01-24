@@ -69,7 +69,7 @@ const ViewCoupon = () => {
     const [isHovered, setIsHovered] = useState(false);
 
     return (
-      <Grid item xs={12} md={2}>
+      <Grid item xs={12} md={2} style={{ cursor: 'pointer' }}>
         <Card
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
