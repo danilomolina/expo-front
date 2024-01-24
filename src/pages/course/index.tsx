@@ -97,15 +97,16 @@ const FormCourse = () => {
                   rules={{ required: true }}
                   render={({ field: { } }) => (
                     <VisuallyHiddenInput type="file" id="uploadInput" onChange={(e) => {
-                      const src = previewImage(e, setFile, previewCurse)
+                      const result = previewImage(e, previewCurse)
                       defaultValues = {
                         name: defaultValues.name,
                         category: defaultValues.category,
-                        image: src !== undefined ? src : "",
+                        image: result && result?.url !== undefined ? result?.url : "",
                         description: defaultValues.description,
                         link: defaultValues.link
                       }
                       reset(defaultValues)
+                      setFile(result?.selectedFile)
                     }} />
                   )}
                 />

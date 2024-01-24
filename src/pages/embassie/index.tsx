@@ -98,15 +98,16 @@ const FormEmbassie = () => {
                   rules={{ required: true }}
                   render={({ field: { } }) => (
                     <VisuallyHiddenInput type="file" id="uploadInput" onChange={(e) => {
-                      const src = previewImage(e, setFile, previewEmbassie)
+                      const result = previewImage(e, previewEmbassie)
                       defaultValues = {
                         description: defaultValues.description,
                         link: defaultValues.link,
-                        image: src !== undefined ? src : "",
+                        image: result && result.url !== undefined ? result.url : "",
                         name: defaultValues.name,
                         category: defaultValues.category
                       }
                       reset(defaultValues)
+                      setFile(result?.selectedFile)
                     }} />
                   )}
                 />

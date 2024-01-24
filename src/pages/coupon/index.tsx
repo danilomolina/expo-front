@@ -101,9 +101,9 @@ const FormCoupon = () => {
                   rules={{ required: true }}
                   render={({ field: { } }) => (
                     <VisuallyHiddenInput type="file" id="uploadInput" onChange={(e) => {
-                      const src = previewImage(e, setFile, preview)
+                      const result = previewImage(e, preview)
                       defaultValues = {
-                        soon: src !== undefined ? src : "",
+                        soon: result && result.url !== undefined ? result.url : "",
                         discount: defaultValues.discount,
                         link: defaultValues.link,
                         category: defaultValues.category,
@@ -111,6 +111,7 @@ const FormCoupon = () => {
                         description: defaultValues.description
                       }
                       reset(defaultValues)
+                      setFile(result?.selectedFile)
                     }} />
                   )}
                 />

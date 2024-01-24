@@ -123,7 +123,7 @@ const FormEvent = () => {
                   rules={{ required: true }}
                   render={({ field: { } }) => (
                     <VisuallyHiddenInput type="file" id="uploadInput" onChange={(e) => {
-                      const src = previewImage(e, setFile, previewEvent)
+                      const result = previewImage(e, previewEvent)
                       defaultValues = {
                         title: defaultValues.title,
                         caption: defaultValues.caption,
@@ -134,9 +134,10 @@ const FormEvent = () => {
                         link: defaultValues.link,
                         category: defaultValues.category,
                         mentors: defaultValues.mentors,
-                        image: src !== undefined ? src : ""
+                        image: result && result.url !== undefined ? result.url : ""
                       }
                       reset(defaultValues)
+                      setFile(result?.selectedFile)
                     }} />
                   )}
                 />

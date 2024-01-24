@@ -30,7 +30,6 @@ import Icon from 'src/@core/components/icon'
 
 // ** Custom Components
 import CustomChip from 'src/@core/components/mui/chip'
-import CustomAvatar from 'src/@core/components/mui/avatar'
 import UserSuspendDialog from 'src/views/apps/user/view/UserSuspendDialog'
 import UserSubscriptionDialog from 'src/views/apps/user/view/UserSubscriptionDialog'
 
@@ -92,7 +91,6 @@ const UserViewLeft = () => {
   const [suspendDialogOpen, setSuspendDialogOpen] = useState<boolean>(false)
   const [subscriptionDialogOpen, setSubscriptionDialogOpen] = useState<boolean>(false)
   const [user, setUser] = useState<UserDataType>()
-  const [file, setFile] = useState<File>()
   const imagePreviewPerfil = document.getElementById('imagePreviewPerfil') as HTMLImageElement
   const [name, setName] = useState<string | undefined>('')
   const [people, setPeople] = useState<UserDataType>()
@@ -129,14 +127,13 @@ const UserViewLeft = () => {
     window.open('https://chk.eduzz.com/2186000', '_blank')
   }
 
-  const handleUploadFile = async () => {
-    await uploadFile(file)
-  }
+  const handleEdit = async (url?: string, fileSelected?: File | undefined) => {
 
-  const handleEdit = async (src?: string) => {
+    await uploadFile(fileSelected)
+
     if (people) {
-      if (src)
-        people.image = src
+      if (url)
+        people.image = url
 
       people.name = name
       await updatePeople(people)
@@ -151,41 +148,33 @@ const UserViewLeft = () => {
       <Grid item xs={12}>
         <Card>
           <CardContent sx={{ pt: 15, display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
-            {people && people.image ? (
-              <>
-                <CustomAvatar
-                  src={people && people.image}
-                  variant='rounded'
-                  alt={people && people.name}
-                  sx={{ width: 120, height: 120, fontWeight: 600, mb: 4 }}
+            <>
+              {people && people.image ? (
+                <img
+                  src={people.image}
+                  alt="Perfil"
+                  style={{ maxWidth: "10%", borderRadius: "50%" }}
                 />
-                <br />
-                <Button component="label" variant="contained" startIcon={<CloudUploadIcon />}>
-                  Carregar Foto
-                  <VisuallyHiddenInput type="file" id="uploadInput" onChange={(e) => {
-                    const src = previewImage(e, setFile, imagePreviewPerfil)
-                    handleUploadFile()
-                    handleEdit(src)
-                  }} />
-                </Button>
-              </>
-            ) : (
-              <>
-                <img id="imagePreviewPerfil" src='/images/avatars/1.png' alt="Perfil" style={{ display: "none", maxWidth: "10%", borderRadius: "50%" }} />
-                <br />
-                <Button component="label" variant="contained" startIcon={<CloudUploadIcon />}>
-                  Carregar Foto
-                  <VisuallyHiddenInput type="file" id="uploadInput" onChange={(e) => {
-                    const src = previewImage(e, setFile, imagePreviewPerfil)
-                    handleUploadFile()
-                    handleEdit(src)
-                  }} />
-                </Button>
-              </>
-            )}
-
+              ) : (
+                <>
+                  <img
+                    id="imagePreviewPerfil"
+                    src='/images/avatars/1.png'
+                    alt="Perfil"
+                    style={{ display: "none", maxWidth: "10%", borderRadius: "50%" }}
+                  />
+                  <br />
+                </>
+              )}
+              <Button component="label" variant="contained" startIcon={<CloudUploadIcon />}>
+                Carregar Foto
+                <VisuallyHiddenInput type="file" id="uploadInput" onChange={(e) => {
+                  const result = previewImage(e, imagePreviewPerfil)
+                  handleEdit(result?.url, result?.selectedFile)
+                }} />
+              </Button>
+            </>
           </CardContent>
-
           <CardContent>
             <Typography variant='h6'>Dados</Typography>
             <Divider sx={{ mt: theme => `${theme.spacing(4)} !important` }} />

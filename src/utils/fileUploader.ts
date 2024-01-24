@@ -5,7 +5,7 @@ export const uploadFile = async (file: any): Promise<string | undefined> => {
   const nameFile = file === undefined ? 'arquivo_inexistente' : file.name
 
   if (nameFile !== 'arquivo_inexistente') {
-    const attachment = `https://expoecomm.s3.sa-east-1.amazonaws.com/${nameFile}`
+    const attachment = `https://expoecomm-img.s3.sa-east-1.amazonaws.com/${nameFile}`
 
     const params = {
       Bucket: 'expoecomm',
@@ -32,7 +32,7 @@ export const uploadFile = async (file: any): Promise<string | undefined> => {
   }
 }
 
-export const previewImage = (event: React.ChangeEvent<HTMLInputElement>, setFile: any, preview: any) => {
+export const previewImage = (event: React.ChangeEvent<HTMLInputElement>, preview: any) => {
   const input = event.target;
 
   if (input.files && input.files[0]) {
@@ -40,7 +40,6 @@ export const previewImage = (event: React.ChangeEvent<HTMLInputElement>, setFile
     const reader = new FileReader();
 
     const selectedFile = input.files && input.files.length > 0 ? input.files[0] : undefined
-    setFile(selectedFile)
 
     reader.onload = function (e) {
       if (e.target && e.target.result) {
@@ -51,7 +50,9 @@ export const previewImage = (event: React.ChangeEvent<HTMLInputElement>, setFile
 
     reader.readAsDataURL(file)
 
-    return `https://expoecomm.s3.sa-east-1.amazonaws.com/${input.files[0].name}`
+    const url = `https://expoecomm.s3.sa-east-1.amazonaws.com/${input.files[0].name}`;
+
+    return {url, selectedFile }
   }
 }
 
