@@ -22,6 +22,7 @@ import SearchIcon from '@mui/icons-material/Search'
 import CloseIcon from '@mui/icons-material/Close'
 import { CategoryModel } from 'src/models/category'
 import { getCategoryByGroup } from 'src/services/category'
+import { getImageDimensions } from 'src/utils/imageDimensions'
 
 
 // Styled Timeline component
@@ -48,7 +49,7 @@ const UserViewOverview = () => {
   const [showFilters, setShowFilters] = useState(true)
   const [showClose, setShowClose] = useState(false)
 
-  const imageWidth = windowWidth >= 960 ? 150 : 350
+  const imageWidth = getImageDimensions(windowWidth)
   const imageHeight = windowWidth >= 960 ? 100 : 200
 
   const [categories, setCategories] = useState<CategoryModel[]>()
@@ -98,11 +99,11 @@ const UserViewOverview = () => {
       <Grid item xs={12} md={12}>
         <Card>
           <Grid container>
-            <Grid item xs={7} sx={{height: 10}}>
+            <Grid item xs={7} sx={{ height: 10 }}>
               <CardHeader title='Próximas atividades' />
             </Grid>
             {/* Ícone de busca para telas de celular */}
-            <Grid item xs={3} style={{ display: !showFilters ? 'block' : 'none', marginTop: 6, height: 2, marginLeft: 335 }}>
+            <Grid item xs={3} style={{ display: !showFilters ? 'block' : 'none', marginTop: 6, height: 2, marginLeft: windowWidth >= 430 ? 335 : 300 }}>
               <Button onClick={() => {
                 setShowFilters(!showFilters)
                 setShowClose(true)

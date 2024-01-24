@@ -41,7 +41,7 @@ const ViewMentoring = () => {
 
   const optsSmall = {
     height: '240',
-    width: '375',
+    width:  windowWidth >= 430 ? '375' : '335' ,
     playerVars: {
       autoplay: 0,
     },
