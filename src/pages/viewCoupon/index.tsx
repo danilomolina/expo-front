@@ -120,7 +120,7 @@ const ViewCoupon = () => {
             <Grid item xs={9} sx={{ height: 10 }}>
               <CardHeader title='Cupons e benefícios' />
             </Grid>
-            <Grid item xs={2} style={{ display: !showFilters ? 'block' : 'none', marginTop: 12, height: 2 }}>
+            <Grid item xs={2} style={{ display: !showFilters ? 'block' : 'none', marginTop: 6, height: 2, marginLeft: 330 }}>
               <Button onClick={() => {
                 setShowFilters(!showFilters)
                 setShowClose(true)

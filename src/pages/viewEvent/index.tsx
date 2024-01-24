@@ -48,7 +48,7 @@ const UserViewOverview = () => {
   const [showFilters, setShowFilters] = useState(true)
   const [showClose, setShowClose] = useState(false)
 
-  const imageWidth = windowWidth >= 960 ? 150 : 310
+  const imageWidth = windowWidth >= 960 ? 150 : 350
   const imageHeight = windowWidth >= 960 ? 100 : 200
 
   const [categories, setCategories] = useState<CategoryModel[]>()
@@ -102,7 +102,7 @@ const UserViewOverview = () => {
               <CardHeader title='Próximas atividades' />
             </Grid>
             {/* Ícone de busca para telas de celular */}
-            <Grid item xs={3} style={{ display: !showFilters ? 'block' : 'none', marginTop: 12, height: 2 }}>
+            <Grid item xs={3} style={{ display: !showFilters ? 'block' : 'none', marginTop: 6, height: 2, marginLeft: 335 }}>
               <Button onClick={() => {
                 setShowFilters(!showFilters)
                 setShowClose(true)
