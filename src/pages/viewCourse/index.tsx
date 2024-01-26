@@ -31,7 +31,7 @@ const ViewCourse = () => {
     if (userDataString !== null) {
       const userData = JSON.parse(userDataString) as UserDataType;
 
-      if (userData.planId !== "gold")
+      if (userData.planId !== "gold" || !userData.paidPlan)
         setIsFree(true)
       else
         setIsFree(false)

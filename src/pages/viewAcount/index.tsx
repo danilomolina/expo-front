@@ -11,7 +11,6 @@ import Select from '@mui/material/Select'
 import Switch from '@mui/material/Switch'
 import Divider from '@mui/material/Divider'
 import MenuItem from '@mui/material/MenuItem'
-import { styled } from '@mui/material/styles'
 import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
 import InputLabel from '@mui/material/InputLabel'
@@ -24,9 +23,6 @@ import DialogActions from '@mui/material/DialogActions'
 import InputAdornment from '@mui/material/InputAdornment'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import DialogContentText from '@mui/material/DialogContentText'
-
-// ** Icon Imports
-import Icon from 'src/@core/components/icon'
 
 // ** Custom Components
 import CustomChip from 'src/@core/components/mui/chip'
@@ -54,21 +50,6 @@ const statusColors: ColorsType = {
   pending: 'warning',
   inactive: 'secondary'
 }
-
-// ** Styled <sup> component
-const Sup = styled('sup')(({ theme }) => ({
-  top: '0.2rem',
-  left: '-0.6rem',
-  position: 'absolute',
-  color: theme.palette.primary.main
-}))
-
-// ** Styled <sub> component
-const Sub = styled('sub')({
-  fontWeight: 300,
-  fontSize: '1rem',
-  alignSelf: 'flex-end'
-})
 
 const data: UsersType = {
   id: 1,
@@ -122,10 +103,6 @@ const UserViewLeft = () => {
 
   // Handle Edit dialog
   const handleEditClose = () => setOpenEdit(false)
-
-  const handleRedirect = () => {
-    window.open('https://chk.eduzz.com/2186000', '_blank')
-  }
 
   const handleEdit = async (url?: string, fileSelected?: File | undefined) => {
 
@@ -352,215 +329,6 @@ const UserViewLeft = () => {
 
           <UserSuspendDialog open={suspendDialogOpen} setOpen={setSuspendDialogOpen} />
           <UserSubscriptionDialog open={subscriptionDialogOpen} setOpen={setSubscriptionDialogOpen} />
-        </Card>
-      </Grid>
-
-      <Grid item xs={12} md={6}>
-        <Card sx={{ boxShadow: 'none', border: theme => `2px solid ${theme.palette.primary.main}`, textAlign: 'center' }}>
-          <CardContent
-            sx={{ display: 'flex', flexWrap: 'wrap', pb: '0 !important', justifyContent: 'space-between' }}
-          >
-            <CustomChip
-              skin='light'
-              size='small'
-              color='primary'
-              label='Free'
-              sx={{ fontSize: '0.75rem', borderRadius: '4px' }}
-            />
-            <Box sx={{ display: 'flex', position: 'relative' }}>
-              <Sup sx={{ marginLeft: '-8px !important' }}>R$</Sup>
-              <Typography
-                variant='h3'
-                sx={{
-                  mb: -1.2,
-                  lineHeight: 1,
-                  color: 'primary.main'
-                }}
-              >
-                0
-              </Typography>
-              <Sub>/ mês</Sub>
-            </Box>
-          </CardContent>
-
-          <CardContent>
-            <Box sx={{ mt: 4, mb: 5 }}>
-              <Box
-                sx={{ display: 'flex', mb: 2.5, alignItems: 'center', '& svg': { mr: 2, color: 'text.secondary' } }}
-              >
-                <Icon icon='mdi:circle' fontSize='0.625rem' />
-                <Typography component='span' sx={{ fontSize: '0.875rem' }}>
-                  Mentoria
-                </Typography>
-              </Box>
-              <Box
-                sx={{
-                  mt: 2.5,
-                  display: 'flex',
-                  mb: 2.5,
-                  alignItems: 'center',
-                  '& svg': { mr: 2, color: 'text.secondary' }
-                }}
-              >
-                <Icon icon='mdi:circle' fontSize='0.625rem' />
-                <Typography component='span' sx={{ fontSize: '0.875rem' }}>
-                  Cupons
-                </Typography>
-              </Box>
-              <Box
-                sx={{
-                  mt: 2.5,
-                  display: 'flex',
-                  mb: 2.5,
-                  alignItems: 'center',
-                  '& svg': { mr: 2, color: 'text.secondary' }
-                }}
-              >
-                <Icon icon='mdi:circle' fontSize='0.625rem' />
-                <Typography component='span' sx={{ fontSize: '0.875rem' }}>
-                  Selo Member <span style={{ fontWeight: 'bold' }}>Blue</span>
-                </Typography>
-              </Box>
-              <br />  <br />  <br />  <br />  <br />
-            </Box>
-            <Button variant='contained' sx={{ width: '50%' }}>
-              Plano Atual
-            </Button>
-          </CardContent>
-        </Card>
-      </Grid>
-
-      <Grid item xs={12} md={6}>
-        <Card sx={{ boxShadow: 'none', border: theme => `2px solid ${theme.palette.primary.main}`, textAlign: 'center' }}>
-          <CardContent
-            sx={{ display: 'flex', flexWrap: 'wrap', pb: '0 !important', justifyContent: 'space-between' }}
-          >
-            <CustomChip
-              skin='light'
-              size='small'
-              color='primary'
-              label='Premium'
-              sx={{ fontSize: '0.75rem', borderRadius: '4px' }}
-            />
-            <Box sx={{ display: 'flex', position: 'relative' }}>
-              <Sup sx={{ marginLeft: '-8px !important' }}>R$</Sup>
-              <Typography
-                variant='h3'
-                sx={{
-                  mb: -1.2,
-                  lineHeight: 1,
-                  color: 'primary.main'
-                }}
-              >
-                187
-              </Typography>
-              <Sub>/ mês</Sub>
-            </Box>
-          </CardContent>
-
-          <CardContent>
-            <Box sx={{ mt: 4, mb: 5 }}>
-              <Box
-                sx={{ display: 'flex', mb: 2.5, alignItems: 'center', '& svg': { mr: 2, color: 'text.secondary' } }}
-              >
-                <Icon icon='mdi:circle' fontSize='0.625rem' />
-                <Typography component='span' sx={{ fontSize: '0.875rem' }}>
-                  Mentoria
-                </Typography>
-              </Box>
-              <Box
-                sx={{
-                  mt: 2.5,
-                  display: 'flex',
-                  mb: 2.5,
-                  alignItems: 'center',
-                  '& svg': { mr: 2, color: 'text.secondary' }
-                }}
-              >
-                <Icon icon='mdi:circle' fontSize='0.625rem' />
-                <Typography component='span' sx={{ fontSize: '0.875rem' }}>
-                  Cupons
-                </Typography>
-              </Box>
-              <Box
-                sx={{
-                  mt: 2.5,
-                  display: 'flex',
-                  mb: 2.5,
-                  alignItems: 'center',
-                  '& svg': { mr: 2, color: 'text.secondary' }
-                }}
-              >
-                <Icon icon='mdi:circle' fontSize='0.625rem' />
-                <Typography component='span' sx={{ fontSize: '0.875rem' }}>
-                  Selo Member <span style={{ fontWeight: 'bold' }}>Gold</span>
-                </Typography>
-              </Box>
-              <Box
-                sx={{
-                  mt: 2.5,
-                  display: 'flex',
-                  mb: 2.5,
-                  alignItems: 'center',
-                  '& svg': { mr: 2, color: 'text.secondary' }
-                }}
-              >
-                <Icon icon='mdi:circle' fontSize='0.625rem' />
-                <Typography component='span' sx={{ fontSize: '0.875rem' }}>
-                  Cursos Ilimitados
-                </Typography>
-              </Box>
-
-              <Box
-                sx={{
-                  mt: 2.5,
-                  display: 'flex',
-                  mb: 2.5,
-                  alignItems: 'center',
-                  '& svg': { mr: 2, color: 'text.secondary' }
-                }}
-              >
-                <Icon icon='mdi:circle' fontSize='0.625rem' />
-                <Typography component='span' sx={{ fontSize: '0.875rem' }}>
-                  Free Pass ExpoEcomm
-                </Typography>
-              </Box>
-
-              <Box
-                sx={{
-                  mt: 2.5,
-                  display: 'flex',
-                  mb: 2.5,
-                  alignItems: 'center',
-                  '& svg': { mr: 2, color: 'text.secondary' }
-                }}
-              >
-                <Icon icon='mdi:circle' fontSize='0.625rem' />
-                <Typography component='span' sx={{ fontSize: '0.875rem' }}>
-                  Grupos de Networking
-                </Typography>
-              </Box>
-
-              <Box
-                sx={{
-                  mt: 2.5,
-                  display: 'flex',
-                  mb: 2.5,
-                  alignItems: 'center',
-                  '& svg': { mr: 2, color: 'text.secondary' }
-                }}
-              >
-                <Icon icon='mdi:circle' fontSize='0.625rem' />
-                <Typography component='span' sx={{ fontSize: '0.875rem' }}>
-                  Embaixadas
-                </Typography>
-              </Box>
-            </Box>
-            <Button variant='contained' sx={{ width: '50%' }} onClick={handleRedirect}>
-              Alterar Plano
-            </Button>
-          </CardContent>
-
         </Card>
       </Grid>
     </Grid>

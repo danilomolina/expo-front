@@ -242,7 +242,7 @@ const UserViewOverview = () => {
                     </Timeline>
                   </Grid>
                   <Grid item xs={12} md={2}>
-                    <a href={item.link} target='blank'>
+                    <a href={`https://${item.link}`} target='blank'>
                       <Button
                         fullWidth
                         color='primary'

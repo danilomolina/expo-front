@@ -36,6 +36,11 @@ const ViewMentoring = () => {
     width: '640',
     playerVars: {
       autoplay: 0,
+      controls: 1, // Mostrar controles do player
+      rel: 0, // Não mostrar vídeos relacionados ao final
+      showinfo: 1, // Não mostrar informações do vídeo ao iniciar
+      modestbranding: 1, // Esconder o logo do YouTube
+      color:'red'
     },
   }
 
@@ -44,6 +49,10 @@ const ViewMentoring = () => {
     width:  windowWidth >= 430 ? '375' : '335' ,
     playerVars: {
       autoplay: 0,
+      controls: 1, // Mostrar controles do player
+      rel: 0, // Não mostrar vídeos relacionados ao final
+      showinfo: 1, // Não mostrar informações do vídeo ao iniciar
+      modestbranding: 1 // Esconder o logo do YouTube
     },
   }
 

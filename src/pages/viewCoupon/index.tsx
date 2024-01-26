@@ -92,7 +92,7 @@ const ViewCoupon = () => {
               <CardContent sx={{ pt: 4 }}>
                 <Typography sx={{ mb: 2, fontSize: 16 }}>
 
-                  <a href={item.link} target='blank' style={{ textDecoration: "none", color: "inherit" }}>
+                  <a href={`https://${item.link}`} target='blank' style={{ textDecoration: "none", color: "inherit" }}>
                     <Button
                       fullWidth
                       color='primary'

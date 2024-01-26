@@ -1,7 +1,11 @@
 import { styled } from "@mui/material/styles"
 import CustomChip from 'src/@core/components/mui/chip'
-import Icon from 'src/@core/components/icon'
 import { Box, Button, Card, CardContent, Grid, Typography } from "@mui/material"
+import { UserDataType } from "src/context/types"
+import { getPeople, updatePeople } from "src/services/people"
+import { useEffect, useState } from "react"
+import toast from "react-hot-toast"
+import { ResponseAPI } from "src/models/api"
 
 // ** Styled <sub> component
 const Sub = styled('sub')({
@@ -20,8 +24,49 @@ const Sup = styled('sup')(({ theme }) => ({
 
 const CustomPlan = () => {
 
-  const handleRedirect = () => {
-    window.open('https://chk.eduzz.com/2186000', '_blank')
+  const [userInfo, setUserInfo] = useState<UserDataType>()
+  const [sync, setSync] = useState<string>()
+
+  useEffect(() => {
+    const userDataString = window.localStorage.getItem('userData')
+
+    if (userDataString !== null) {
+      const userData = JSON.parse(userDataString) as UserDataType
+      handleGetPeople(userData.id === undefined ? "" : userData.id)
+    }
+  }, [sync])
+
+  const handleGetPeople = async (userId: string) => {
+    const ret: ResponseAPI<UserDataType[] | []> = await getPeople(0, 100, 0, userId)
+    setUserInfo(ret.data[0])
+  }
+
+  const handleRedirect = async () => {
+    if (userInfo) {
+      if (userInfo.paidPlan && userInfo.planId === 'gold') {
+        toast.error('Atenção para Cancelar o plano entre em contato com o Suporte!')
+        
+        return
+      }
+
+      if (userInfo.planId !== 'gold') {
+        userInfo.paidPlan = false
+        userInfo.planId = 'gold'
+        setSync('gold')
+      } else {
+        userInfo.paidPlan = true
+        userInfo.planId = 'free'
+        setSync('free')
+      }
+
+      await updatePeople(userInfo)
+
+      window.localStorage.setItem('userData', JSON.stringify(userInfo))
+      toast.success('Plano alterado com sucesso')
+
+      if (userInfo.planId === 'gold')
+        window.open('https://chk.eduzz.com/2186000', '_blank')
+    }
   }
 
   return (
@@ -108,8 +153,13 @@ const CustomPlan = () => {
               </Box>
               <br />  <br />  <br />  <br />  <br />
             </Box>
-            <Button variant='contained' sx={{ width: '50%' }} disabled>
-              Plano Atual
+            <Button
+              variant='contained'
+              sx={{ width: '50%' }}
+              disabled={userInfo && userInfo.planId === 'gold' ? false : true}
+              onClick={handleRedirect}
+            >
+              {userInfo && userInfo.planId === 'gold' ? 'Alterar Plano' : 'Plano Atual'}
             </Button>
           </CardContent>
         </Card>
@@ -120,13 +170,24 @@ const CustomPlan = () => {
           <CardContent
             sx={{ display: 'flex', flexWrap: 'wrap', pb: '0 !important', justifyContent: 'space-between' }}
           >
+
             <CustomChip
               skin='light'
               size='small'
               color='primary'
               label='Member Dark Blue'
-              sx={{ fontSize: '0.75rem', borderRadius: '4px' }}
+              sx={{ fontSize: '0.75rem', borderRadius: '4px', width: 135, marginRight: 0 }}
             />
+            {userInfo?.planId === 'gold' && (
+              <CustomChip
+                skin='light'
+                size='small'
+                color={userInfo?.paidPlan ? 'success' : 'warning'}
+                label={userInfo?.paidPlan ? 'Pago' : 'Aguardando pagamento'}
+                sx={{ fontSize: '0.75rem', borderRadius: '4px', width: 165, marginRight: 0 }}
+              />
+            )}
+
             <Box sx={{ display: 'flex', position: 'relative' }}>
               <Sup sx={{ marginLeft: '-8px !important' }}>R$</Sup>
               <Typography
@@ -255,8 +316,12 @@ const CustomPlan = () => {
                 </Typography>
               </Box>
             </Box>
-            <Button variant='contained' sx={{ width: '50%' }} onClick={handleRedirect}>
-              Alterar Plano
+            <Button
+              variant='contained' sx={{ width: '50%' }}
+              onClick={handleRedirect}
+              disabled={userInfo && userInfo.planId === 'gold' ? true : false}
+            >
+              {userInfo && userInfo.planId !== 'gold' ? 'Alterar Plano' : 'Plano Atual'}
             </Button>
           </CardContent>
 
