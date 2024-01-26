@@ -25,7 +25,6 @@ const Sup = styled('sup')(({ theme }) => ({
 const CustomPlan = () => {
 
   const [userInfo, setUserInfo] = useState<UserDataType>()
-  const [sync, setSync] = useState<string>()
 
   useEffect(() => {
     const userDataString = window.localStorage.getItem('userData')
@@ -34,7 +33,7 @@ const CustomPlan = () => {
       const userData = JSON.parse(userDataString) as UserDataType
       handleGetPeople(userData.id === undefined ? "" : userData.id)
     }
-  }, [sync])
+  }, [])
 
   const handleGetPeople = async (userId: string) => {
     const ret: ResponseAPI<UserDataType[] | []> = await getPeople(0, 100, 0, userId)
@@ -45,23 +44,28 @@ const CustomPlan = () => {
     if (userInfo) {
       if (userInfo.paidPlan && userInfo.planId === 'gold') {
         toast.error('Atenção para Cancelar o plano entre em contato com o Suporte!')
-        
+
         return
       }
 
       if (userInfo.planId !== 'gold') {
         userInfo.paidPlan = false
         userInfo.planId = 'gold'
-        setSync('gold')
       } else {
         userInfo.paidPlan = true
         userInfo.planId = 'free'
-        setSync('free')
       }
 
       await updatePeople(userInfo)
 
       window.localStorage.setItem('userData', JSON.stringify(userInfo))
+      const userDataString = window.localStorage.getItem('userData')
+
+      if (userDataString !== null) {
+        const userData = JSON.parse(userDataString) as UserDataType
+        handleGetPeople(userData.id === undefined ? "" : userData.id)
+      }
+      
       toast.success('Plano alterado com sucesso')
 
       if (userInfo.planId === 'gold')
