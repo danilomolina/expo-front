@@ -10,6 +10,8 @@ import authConfig from 'src/configs/auth'
 // ** Types
 import { AuthValuesType, LoginParams, ErrCallbackType, UserDataType } from './types'
 import { signin } from 'src/services/login'
+import axios from 'axios'
+import configValues from 'src/configs/configValues'
 
 // ** Defaults
 const defaultProvider: AuthValuesType = {
@@ -22,6 +24,8 @@ const defaultProvider: AuthValuesType = {
 }
 
 const AuthContext = createContext(defaultProvider)
+
+const { API: { EXPOAPI } } = configValues;
 
 type Props = {
   children: ReactNode
@@ -41,14 +45,47 @@ const AuthProvider = ({ children }: Props) => {
     const initAuth = async (): Promise<void> => {
       const storedToken = window.localStorage.getItem("accessToken")!
       if (storedToken) {
-        // setLoading(true)
-        // const user = localStorage.getItem('userData') as UserDataType;
-        // setLoading(false)
-        // setUser({...user})
-        localStorage.removeItem('userData')
-        localStorage.removeItem('refreshToken')
-        localStorage.removeItem('accessToken')
-        setUser(null)
+        const userDataString = window.localStorage.getItem('userData')
+        let userData: UserDataType = {}
+
+        if (userDataString !== null)
+          userData = JSON.parse(userDataString) as UserDataType
+
+        const filter: any = {};
+        filter.where = {
+          or: [
+            userData.id ? { id: userData.id } : {}
+          ],
+        };
+
+        await axios
+          .get(`${EXPOAPI.url}/people`, {
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${storedToken}`
+            },
+            params: {
+              offset: 0,
+              limit: 100,
+              skip: 0,
+              filter: filter
+            }
+          })
+          .then(async response => {
+            setLoading(false)
+            setUser({ ...response.data.userData })
+          })
+          .catch((e: any) => {
+            console.log(e)
+            localStorage.removeItem('userData')
+            localStorage.removeItem('refreshToken')
+            localStorage.removeItem('accessToken')
+            setUser(null)
+            setLoading(false)
+            if (authConfig.onTokenExpiration === 'logout' && !router.pathname.includes('login')) {
+              router.replace('/login')
+            }
+          })
       } else {
         setLoading(false)
       }

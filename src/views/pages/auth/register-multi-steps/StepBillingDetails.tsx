@@ -28,11 +28,14 @@ import router from 'next/router'
 const data: CustomRadioIconsData[] = [
   {
     value: 'free',
-    title: <Typography variant='h5'>Member Free</Typography>,
+    title: <Typography variant='h5'>Member Blue</Typography>,
     content: (
       <Box sx={{ my: 'auto', display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
         <Typography sx={{ textAlign: 'center', color: 'text.secondary' }}>
-          Um começo simples para startups e estudantes com Agenda e Mentoria
+          ✔ Mentorias Online <br />
+          ✔ Cupons de Desconto
+          ✔ Grupos de Networking
+          ✔ Selo Member <span style={{ fontWeight: 'bold' }}>Blue</span>
         </Typography>
         <Box sx={{ mt: 2, display: 'flex' }}>
           <Typography component='sup' sx={{ mt: 1.5, color: 'primary.main', alignSelf: 'flex-start' }}>
@@ -51,17 +54,25 @@ const data: CustomRadioIconsData[] = [
   {
     isSelected: true,
     value: 'gold',
-    title: <Typography variant='h5'>Member Gold</Typography>,
+    title: <Typography variant='h5'>Member Dark Blue</Typography>,
     content: (
       <Box sx={{ my: 'auto', display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
         <Typography sx={{ textAlign: 'center', color: 'text.secondary' }}>
-          Para pequenas e médias empresas com Agenda, Mentoria, Cursos, Cupons e Embaixadas</Typography>
+          ✔ Mentorias Online <br />
+          ✔ Cupons de Desconto
+          ✔ Grupos de Networking
+          ✔ Free Pass ExpoEcomm 2024 <br />
+          ✔ Acesso a +30 cursos ilimitados <br />
+          ✔ Embaixadas presenciais<br />
+          ✔ Contribuição Ações Sociais <br />
+          ✔ Selo Member <span style={{ fontWeight: 'bold' }}>Dark Blue</span>
+        </Typography>
         <Box sx={{ mt: 2, display: 'flex' }}>
           <Typography component='sup' sx={{ mt: 1.5, color: 'primary.main', alignSelf: 'flex-start' }}>
             R$
           </Typography>
           <Typography component='span' sx={{ fontSize: '2rem', fontWeight: 500, color: 'primary.main' }}>
-            99
+            197
           </Typography>
           <Typography component='sub' sx={{ mb: 1.5, alignSelf: 'flex-end', color: 'text.disabled' }}>
             /mês
@@ -73,7 +84,7 @@ const data: CustomRadioIconsData[] = [
 ]
 
 interface StepBillingDetailsParams {
-  handlePrev : () => void,
+  handlePrev: () => void,
   user: User,
   people: UserDataType
 }
@@ -96,13 +107,13 @@ const StepBillingDetails = (props: StepBillingDetailsParams) => {
 
   const handleSaveUser = async () => {
     signup(props.user.email, props.user.password)
-    .then(async response => {
-      await handleSavePeople(response.data.id)
-      alert("Usuário criado com sucesso!")
+      .then(async response => {
+        await handleSavePeople(response.data.id)
+        alert("Usuário criado com sucesso!")
 
-      const redirectURL = '/login'
-      router.replace(redirectURL as string)
-    })
+        const redirectURL = '/login'
+        router.replace(redirectURL as string)
+      })
 
   }
 
@@ -111,6 +122,9 @@ const StepBillingDetails = (props: StepBillingDetailsParams) => {
     props.people.planId = selectedRadio
     const date = new Date(props.people.birtyDate === undefined ? 0 : props.people.birtyDate)
     props.people.birtyDate = date.toISOString()
+
+    if(props.people.complement == '')
+      props.people.complement = 'Não tem'
 
     await savePeople(props.people)
   }

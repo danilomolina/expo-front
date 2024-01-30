@@ -28,6 +28,7 @@ const steps = [
     title: 'Pessoal',
     subtitle: 'Entre com suas informações'
   },
+
   {
     title: 'Plano',
     subtitle: 'Escolha seu Plano'

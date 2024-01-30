@@ -71,11 +71,12 @@ const StepPersonalDetails = (props: StepPersonalDetailsParams) => {
         </Grid>
 
         <Grid item xs={12} sm={6}>
-          <TextField 
-          fullWidth 
-          label='Data Anversario' 
+          <TextField
+          fullWidth
+          label='Data Aniversário'
           onChange={(e) => props.setPeople({ ...props.people, birtyDate: e.target.value })}
           value={props.people.birtyDate}
+          type='date'
           />
         </Grid>
         <Grid item xs={12} sm={6}>
@@ -90,17 +91,17 @@ const StepPersonalDetails = (props: StepPersonalDetailsParams) => {
           />
         </Grid>
         <Grid item xs={12} sm={6}>
-          <TextField 
-          fullWidth 
-          label='Cpf' 
+          <TextField
+          fullWidth
+          label='Cpf'
           onChange={(e) => props.setPeople({ ...props.people, cpf: e.target.value })}
           value={props.people.cpf}
         />
         </Grid>
         <Grid item xs={8}>
           <FormControl fullWidth>
-            <TextField 
-            label='Cep' 
+            <TextField
+            label='Cep'
             onChange={(e) => props.setPeople({ ...props.people, cep: e.target.value })}
             value={props.people.cep}
             />
@@ -108,40 +109,40 @@ const StepPersonalDetails = (props: StepPersonalDetailsParams) => {
         </Grid>
         <Grid item xs={8}>
           <FormControl fullWidth>
-            <TextField 
-            label='Rua' 
+            <TextField
+            label='Rua'
             onChange={(e) => props.setPeople({ ...props.people, street: e.target.value })}
             value={props.people.street}
             />
           </FormControl>
         </Grid>
         <Grid item xs={2}>
-          <TextField 
-          fullWidth 
-          label='Número' 
+          <TextField
+          fullWidth
+          label='Número'
           onChange={(e) => props.setPeople({ ...props.people, number: e.target.value })}
           value={props.people.number}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
-          <TextField 
-          fullWidth 
-          label='Bairro' 
+          <TextField
+          fullWidth
+          label='Bairro'
           onChange={(e) => props.setPeople({ ...props.people, neighborhood: e.target.value })}
           value={props.people.neighborhood}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
-          <TextField 
-          fullWidth 
-          label='Cidade' 
+          <TextField
+          fullWidth
+          label='Cidade'
           onChange={(e) => props.setPeople({ ...props.people, city: e.target.value })}
           value={props.people.city}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
-          <TextField 
-          fullWidth 
+          <TextField
+          fullWidth
           label='Complemento'
           onChange={(e) => props.setPeople({ ...props.people, complement: e.target.value })}
           value={props.people.complement}
@@ -150,8 +151,8 @@ const StepPersonalDetails = (props: StepPersonalDetailsParams) => {
         <Grid item xs={12} sm={6}>
           <FormControl fullWidth>
             <InputLabel id='state-select'>Estado</InputLabel>
-            <Select 
-            labelId='state-select' 
+            <Select
+            labelId='state-select'
             defaultValue='São Paulo'
             onChange={(e) => props.setPeople({ ...props.people, state: e.target.value })}
             value={props.people.state}
