@@ -25,6 +25,7 @@ const Sup = styled('sup')(({ theme }) => ({
 const CustomPlan = () => {
 
   const [userInfo, setUserInfo] = useState<UserDataType>()
+  const [userEmail, setUserEmail] = useState<string>()
 
   useEffect(() => {
     const userDataString = window.localStorage.getItem('userData')
@@ -38,6 +39,10 @@ const CustomPlan = () => {
   const handleGetPeople = async (userId: string) => {
     const ret: ResponseAPI<UserDataType[] | []> = await getPeople(0, 100, 0, userId)
     setUserInfo(ret.data[0])
+
+    const userEmailData = window.localStorage.getItem('email')
+    if (userEmailData !== null)
+      setUserEmail(userEmailData)
   }
 
   const handleRedirect = async () => {
@@ -69,12 +74,13 @@ const CustomPlan = () => {
       toast.success('Plano alterado com sucesso')
 
       if (userInfo.planId === 'gold')
-        window.open('https://chk.eduzz.com/2256536', '_blank')
+        window.open(`https://chk.eduzz.com/2256536?email=${encodeURIComponent(userEmail as string)}&name=${encodeURIComponent(userInfo.name as string)}&phone=${encodeURIComponent(userInfo.cellPhone as string)}&doc=${encodeURIComponent(userInfo.cpf as string)}`, '_blank')
     }
   }
 
   const handlePayment = () => {
-    window.open('https://chk.eduzz.com/2256536', '_blank')
+    if (userInfo)
+      window.open(`https://chk.eduzz.com/2256536?email=${encodeURIComponent(userEmail as string)}&name=${encodeURIComponent(userInfo.name as string)}&phone=${encodeURIComponent(userInfo.cellPhone as string)}&doc=${encodeURIComponent(userInfo.cpf as string)}`, '_blank')
   }
 
   return (
