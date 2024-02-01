@@ -65,12 +65,16 @@ const CustomPlan = () => {
         const userData = JSON.parse(userDataString) as UserDataType
         handleGetPeople(userData.id === undefined ? "" : userData.id)
       }
-      
+
       toast.success('Plano alterado com sucesso')
 
       if (userInfo.planId === 'gold')
-        window.open('https://chk.eduzz.com/2186000', '_blank')
+        window.open('https://chk.eduzz.com/2256536', '_blank')
     }
+  }
+
+  const handlePayment = () => {
+    window.open('https://chk.eduzz.com/2256536', '_blank')
   }
 
   return (
@@ -320,14 +324,32 @@ const CustomPlan = () => {
                 </Typography>
               </Box>
             </Box>
-            <Button
-              variant='contained' sx={{ width: '50%' }}
-              onClick={handleRedirect}
-              disabled={userInfo && userInfo.planId === 'gold' ? true : false}
-            >
-              {userInfo && userInfo.planId !== 'gold' ? 'Alterar Plano' : 'Plano Atual'}
-            </Button>
+            <Grid container spacing={2} style={{ justifyContent: 'center' }}>
+              <Grid item xs={12} md={6}>
+                <Button
+                  fullWidth
+                  variant='contained'
+                  onClick={handleRedirect}
+                  disabled={userInfo && userInfo.planId === 'gold' ? true : false}
+                >
+                  {userInfo && userInfo.planId !== 'gold' ? 'Alterar Plano' : 'Plano Atual'}
+                </Button>
+              </Grid>
+
+              {userInfo && !userInfo.paidPlan &&
+                <Grid item md={4} xs={12}>
+                  <Button
+                    fullWidth
+                    variant='contained'
+                    onClick={handlePayment}
+                  >
+                    Realizar Pagamento
+                  </Button>
+                </Grid>
+              }
+            </Grid>
           </CardContent>
+
 
         </Card>
       </Grid>
