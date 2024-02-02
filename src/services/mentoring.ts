@@ -39,6 +39,8 @@ export const getMentoring = async (offset: number, limit: number, skip: number, 
       };
     }
 
+    filter.order = 'date DESC'
+
     const { data }: { data: MentoringModel[] } = await api.get(`${EXPOAPI.url}/mentorings`, {
       params: {
         offset: offset,

@@ -40,13 +40,13 @@ const ViewMentoring = () => {
       rel: 0, // Não mostrar vídeos relacionados ao final
       showinfo: 1, // Não mostrar informações do vídeo ao iniciar
       modestbranding: 1, // Esconder o logo do YouTube
-      color:'red'
+      color: 'red'
     },
   }
 
   const optsSmall = {
     height: '240',
-    width:  windowWidth >= 430 ? '375' : '335' ,
+    width: windowWidth >= 430 ? '375' : '335',
     playerVars: {
       autoplay: 0,
       controls: 1, // Mostrar controles do player
@@ -92,23 +92,24 @@ const ViewMentoring = () => {
 
 
           <Grid item xs={12} md={12}>
-          <Divider>
-            <Chip label="  Atidades anteriores" size="small" />
-          </Divider> <br /><br />
+            <Divider>
+              <Chip label="  Atidades anteriores" size="small" />
+            </Divider> <br /><br />
 
             {mentorings && mentorings.map((item, key) => (
               <>
-                <Grid container spacing={1} key={key}>
-                  <Grid item xs={12} md={12}>
-                    <YouTube videoId={item !== undefined ? getYoutubeId(item.link) : ""} opts={windowWidth >= 960 ? opts : optsSmall} />
-                  </Grid>
-                  <Grid item xs={12} md={12}>
-                    <Typography style={{ fontSize: windowWidth >= 960 ? 20 : 14, fontWeight: 'bold' }} >
-                      {item.title} <br />
-                    </Typography>
-                    Por: {item.mentors}
-                  </Grid>
-                </Grid>
+                {key !== 0 &&
+                  <Grid container spacing={1} key={key}>
+                    <Grid item xs={12} md={12}>
+                      <YouTube videoId={item !== undefined ? getYoutubeId(item.link) : ""} opts={windowWidth >= 960 ? opts : optsSmall} />
+                    </Grid>
+                    <Grid item xs={12} md={12}>
+                      <Typography style={{ fontSize: windowWidth >= 960 ? 20 : 14, fontWeight: 'bold' }} >
+                        {item.title} <br />
+                      </Typography>
+                      Por: {item.mentors}
+                    </Grid>
+                  </Grid>}
                 <br /><br />
               </>
             ))}

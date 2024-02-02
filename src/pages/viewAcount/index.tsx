@@ -1,5 +1,5 @@
 // ** React Imports
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 
 // ** MUI Imports
 import Box from '@mui/material/Box'
@@ -20,6 +20,7 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload'
 import { getPeople, updatePeople } from 'src/services/people'
 import toast from 'react-hot-toast'
 import CustomPlan from 'src/@core/components/customPlan'
+import { MyAccountContext } from 'src/context/MyAccountContext'
 
 const UserViewLeft = () => {
   // ** States
@@ -28,6 +29,7 @@ const UserViewLeft = () => {
   const imagePreviewPerfil = document.getElementById('imagePreviewPerfil') as HTMLImageElement
   const [name, setName] = useState<string | undefined>('')
   const [people, setPeople] = useState<UserDataType>()
+  const { updateUserPhoto } = useContext(MyAccountContext)
 
   useEffect(() => {
     handleGetPeople()
@@ -65,6 +67,8 @@ const UserViewLeft = () => {
       people.name = name
       await updatePeople(people)
       window.localStorage.setItem('userData', JSON.stringify(people))
+      updateUserPhoto(url);
+      
       toast.success('Dados salvo com sucesso')
     }
 
@@ -76,23 +80,15 @@ const UserViewLeft = () => {
         <Card>
           <CardContent sx={{ pt: 15, display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
             <>
-              {people && people.image ? (
-                <img
-                  src={people.image}
-                  alt="Perfil"
-                  style={{ maxWidth: "10%", borderRadius: "50%" }}
-                />
-              ) : (
-                <>
+
                   <img
                     id="imagePreviewPerfil"
-                    src='/images/avatars/1.png'
+                    src={people && people.image ? people.image : '/images/avatars/1.png'}
                     alt="Perfil"
-                    style={{ display: "none", maxWidth: "10%", borderRadius: "50%" }}
+                    style={{ width: 60, height: 60, borderRadius: "50%" }}
                   />
                   <br />
-                </>
-              )}
+
               <Button component="label" variant="contained" startIcon={<CloudUploadIcon />}>
                 Carregar Foto
                 <VisuallyHiddenInput type="file" id="uploadInput" onChange={(e) => {

@@ -41,7 +41,9 @@ export const getCoupon = async (offset: number, limit: number, skip: number, cat
     }
 
     if (orderBy) {
-      filter.order = orderBy;
+      filter.order = orderBy
+    } else {
+      filter.order = 'discount DESC'
     }
 
     const { data }: { data: CouponModel[] } = await api.get(`${EXPOAPI.url}/coupons`, {

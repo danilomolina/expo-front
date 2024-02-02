@@ -55,6 +55,7 @@ import 'src/iconify-bundle/icons-bundle-react'
 
 // ** Global css styles
 import '../../styles/globals.css'
+import { MyAccountProvider } from 'src/context/MyAccountContext'
 
 // ** Extend App Props with Emotion
 type ExtendedAppProps = AppProps & {
@@ -112,18 +113,19 @@ const App = (props: ExtendedAppProps) => {
 
   return (
 
-      <CacheProvider value={emotionCache}>
-        <Head>
-          <title>{`${themeConfig.templateName}`}</title>
-          <meta
-            name='description'
-            content={`${themeConfig.templateName} – expo front`}
-          />
-          <meta name='keywords' content='Expo' />
-          <meta name='viewport' content='initial-scale=1, width=device-width' />
-        </Head>
+    <CacheProvider value={emotionCache}>
+      <Head>
+        <title>{`${themeConfig.templateName}`}</title>
+        <meta
+          name='description'
+          content={`${themeConfig.templateName} – expo front`}
+        />
+        <meta name='keywords' content='Expo' />
+        <meta name='viewport' content='initial-scale=1, width=device-width' />
+      </Head>
 
-        <AuthProvider>
+      <AuthProvider>
+        <MyAccountProvider>
           <SettingsProvider {...(setConfig ? { pageSettings: setConfig() } : {})}>
             <SettingsConsumer>
               {({ settings }) => {
@@ -142,8 +144,9 @@ const App = (props: ExtendedAppProps) => {
               }}
             </SettingsConsumer>
           </SettingsProvider>
-        </AuthProvider>
-      </CacheProvider>
+        </MyAccountProvider>
+      </AuthProvider>
+    </CacheProvider>
 
   )
 }

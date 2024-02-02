@@ -78,9 +78,9 @@ const ViewCoupon = () => {
             <>
               <CardMedia sx={{ height: 90 }} image={item.soon} />
               <CardContent sx={{ pt: 4 }}>
-                <Typography sx={{ mb: 2, fontSize: 16 }}>
+                <Typography sx={{ mb: 2, fontSize: 16 , textAlign: 'center', fontWeight: 'bold'  }}>
 
-                  Até {item.discount} % desconto
+                   {item.discount} % desconto
                 </Typography>
               </CardContent>
             </>

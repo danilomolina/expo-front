@@ -42,6 +42,8 @@ export const getEvents = async (offset: number, limit: number, skip: number, cat
 
     if (orderBy) {
       filter.order = orderBy;
+    } else {
+      filter.order = 'date'
     }
 
     const { data }: { data: EventModel[] } = await api.get(`${EXPOAPI.url}/events`, {

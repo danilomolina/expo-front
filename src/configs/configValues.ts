@@ -12,6 +12,14 @@ const configValues = {
     },
     messages: {
         apiError: 'Desculpe, houve algum problema de comunicação com o servidor.'
+    },
+    AWS: {
+      ACCESS_KEY: {
+         id: process.env.NEXT_PUBLIC_ACCESS_KEY_ID
+      },
+      SECRET_ACCESS: {
+        key: process.env.NEXT_PUBLIC_SECRET_ACCESS_KEY
+     }
     }
 };
 

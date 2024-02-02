@@ -12,7 +12,7 @@ import InputAdornment from '@mui/material/InputAdornment'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
-import { Dispatch, SetStateAction } from 'react'
+import { Dispatch, SetStateAction, useRef } from 'react'
 import { UserDataType } from 'src/context/types'
 
 interface StepPersonalDetailsParams {
@@ -23,35 +23,55 @@ interface StepPersonalDetailsParams {
 }
 
 const StepPersonalDetails = (props: StepPersonalDetailsParams) => {
+  const inputRef = useRef<HTMLInputElement>(null);
+
   const states = [
-    'Acre',
-    'Alagoas',
-    'Amapá',
-    'Amazonas',
-    'Bahia',
-    'Ceará',
-    'Distrito Federal',
-    'Espírito Santo',
-    'Goiás',
-    'Maranhão',
-    'Mato Grosso',
-    'Mato Grosso do Sul',
-    'Minas Gerais',
-    'Pará',
-    'Paraíba',
-    'Paraná',
-    'Pernambuco',
-    'Piauí',
-    'Rio de Janeiro',
-    'Rio Grande do Norte',
-    'Rio Grande do Sul',
-    'Rondônia',
-    'Roraima',
-    'Santa Catarina',
-    'São Paulo',
-    'Sergipe',
-    'Tocantins',
+    { description: 'Acre', value: 'AC' },
+    { description: 'Alagoas', value: 'AL' },
+    { description: 'Amapá', value: 'AP' },
+    { description: 'Amazonas', value: 'AM' },
+    { description: 'Bahia', value: 'BA' },
+    { description: 'Ceará', value: 'CE' },
+    { description: 'Distrito Federal', value: 'DF' },
+    { description: 'Espírito Santo', value: 'ES' },
+    { description: 'Goiás', value: 'GO' },
+    { description: 'Maranhão', value: 'MA' },
+    { description: 'Mato Grosso', value: 'MT' },
+    { description: 'Mato Grosso do Sul', value: 'MS' },
+    { description: 'Minas Gerais', value: 'MG' },
+    { description: 'Pará', value: 'PA' },
+    { description: 'Paraíba', value: 'PB' },
+    { description: 'Paraná', value: 'PR' },
+    { description: 'Pernambuco', value: 'PE' },
+    { description: 'Piauí', value: 'PI' },
+    { description: 'Rio de Janeiro', value: 'RJ' },
+    { description: 'Rio Grande do Norte', value: 'RN' },
+    { description: 'Rio Grande do Sul', value: 'RS' },
+    { description: 'Rondônia', value: 'RO' },
+    { description: 'Roraima', value: 'RR' },
+    { description: 'Santa Catarina', value: 'SC' },
+    { description: 'São Paulo', value: 'SP' },
+    { description: 'Sergipe', value: 'SE' },
+    { description: 'Tocantins', value: 'TO' }
   ];
+
+  const getAddress = (cep: string) => {
+    fetch(`https://viacep.com.br/ws/${cep}/json/`)
+      .then(response => response.json())
+      .then(data => {
+        const updatedPeople = {
+          ...props.people,
+          street: data.logradouro,
+          neighborhood: data.bairro,
+          city: data.localidade,
+          state: data.uf
+        };
+        props.setPeople(updatedPeople);
+
+        inputRef.current?.focus();
+      })
+      .catch(error => console.error('Erro ao buscar endereço:', error));
+  }
 
   return (
     <>
@@ -72,11 +92,11 @@ const StepPersonalDetails = (props: StepPersonalDetailsParams) => {
 
         <Grid item xs={12} sm={6}>
           <TextField
-          fullWidth
-          label='Data Aniversário'
-          onChange={(e) => props.setPeople({ ...props.people, birtyDate: e.target.value })}
-          value={props.people.birtyDate}
-          type='date'
+            fullWidth
+            label='Data Aniversário'
+            onChange={(e) => props.setPeople({ ...props.people, birtyDate: e.target.value })}
+            value={props.people.birtyDate}
+            type='date'
           />
         </Grid>
         <Grid item xs={12} sm={6}>
@@ -92,74 +112,76 @@ const StepPersonalDetails = (props: StepPersonalDetailsParams) => {
         </Grid>
         <Grid item xs={12} sm={6}>
           <TextField
-          fullWidth
-          label='Cpf'
-          onChange={(e) => props.setPeople({ ...props.people, cpf: e.target.value })}
-          value={props.people.cpf}
-        />
+            fullWidth
+            label='Cpf'
+            onChange={(e) => props.setPeople({ ...props.people, cpf: e.target.value })}
+            value={props.people.cpf}
+          />
         </Grid>
         <Grid item xs={8}>
           <FormControl fullWidth>
             <TextField
-            label='Cep'
-            onChange={(e) => props.setPeople({ ...props.people, cep: e.target.value })}
-            value={props.people.cep}
+              label='Cep'
+              onChange={(e) => props.setPeople({ ...props.people, cep: e.target.value })}
+              value={props.people.cep}
+              onBlur={() => getAddress(props.people.cep as string)}
             />
           </FormControl>
         </Grid>
         <Grid item xs={8}>
           <FormControl fullWidth>
             <TextField
-            label='Rua'
-            onChange={(e) => props.setPeople({ ...props.people, street: e.target.value })}
-            value={props.people.street}
+              label='Rua'
+              onChange={(e) => props.setPeople({ ...props.people, street: e.target.value })}
+              value={props.people.street}
             />
           </FormControl>
         </Grid>
         <Grid item xs={2}>
           <TextField
-          fullWidth
-          label='Número'
-          onChange={(e) => props.setPeople({ ...props.people, number: e.target.value })}
-          value={props.people.number}
+            fullWidth
+            label='Número'
+            onChange={(e) => props.setPeople({ ...props.people, number: e.target.value })}
+            value={props.people.number}
+            ref={inputRef}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
           <TextField
-          fullWidth
-          label='Bairro'
-          onChange={(e) => props.setPeople({ ...props.people, neighborhood: e.target.value })}
-          value={props.people.neighborhood}
+            fullWidth
+            label='Bairro'
+            onChange={(e) => props.setPeople({ ...props.people, neighborhood: e.target.value })}
+            value={props.people.neighborhood}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
           <TextField
-          fullWidth
-          label='Cidade'
-          onChange={(e) => props.setPeople({ ...props.people, city: e.target.value })}
-          value={props.people.city}
+            fullWidth
+            label='Cidade'
+            onChange={(e) => props.setPeople({ ...props.people, city: e.target.value })}
+            value={props.people.city}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
           <TextField
-          fullWidth
-          label='Complemento'
-          onChange={(e) => props.setPeople({ ...props.people, complement: e.target.value })}
-          value={props.people.complement}
+            fullWidth
+            label='Complemento'
+            onChange={(e) => props.setPeople({ ...props.people, complement: e.target.value })}
+            value={props.people.complement}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
           <FormControl fullWidth>
             <InputLabel id='state-select'>Estado</InputLabel>
             <Select
-            labelId='state-select'
-            defaultValue='São Paulo'
-            onChange={(e) => props.setPeople({ ...props.people, state: e.target.value })}
-            value={props.people.state}
+              labelId='state-select'
+              defaultValue='São Paulo'
+              onChange={(e) => props.setPeople({ ...props.people, state: e.target.value })}
+              value={props.people.state}
             >
               {states.map((state) => (
-                <MenuItem key={state} value={state}>
-                  {state}
+                <MenuItem key={state.value} value={state.value}>
+                  {state.description}
                 </MenuItem>
               ))}
             </Select>

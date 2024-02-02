@@ -245,24 +245,34 @@ const ViewEmbassie = () => {
         </Grid>
       )}
       {isFree && (
-        <Grid container spacing={6} >
-          <Grid item xs={12} md={12}>
-            <CardHeader title='Embaixadas' />
-          </Grid>
-          <Grid item xs={12} md={12}>
-            {embassie && embassie.map((item: EmbassieModel, key) => (
-              item.name === 'Brasil' &&
-              <EmbassieComponent key={key} item={item} />
-            ))}
-          </Grid>
-          <Grid item xs={12} md={12}>
-            <Typography sx={{ mb: 2, fontSize: 20, fontWeight: 'bold', textAlign: 'left', display: 'block', marginTop: 0 }}>
-              Você é Member Blue! Vire Member Dark Blue e tenha acesso a todos as embaixadas.
-            </Typography>
-          </Grid>
 
-          <CustomPlan />
+        <Grid item xs={12}>
+          <Card>
+            <Grid container>
+              <Grid item xs={9} sx={{ height: 10 }}>
+                <CardHeader title='Embaixadas' />
+              </Grid>
+            </Grid>
+            <CardContent>
+              <div className='demo-space-x'>
+                <Grid container spacing={6} >
+                  <Grid item xs={12} md={12}>
+                    {embassie && embassie.map((item: EmbassieModel, key) => (
+                      item.name === 'Brasil' &&
+                      <EmbassieComponent key={key} item={item} />
+                    ))}
+                  </Grid>
+                  <Grid item xs={12} md={12}>
+                    <Typography sx={{ mb: 2, fontSize: 20, fontWeight: 'bold', textAlign: 'left', display: 'block', marginTop: 0 }}>
+                      Você é Member Blue! Vire Member Dark Blue e tenha acesso a todos as embaixadas.
+                    </Typography>
+                  </Grid>
 
+                  <CustomPlan />
+                </Grid>
+              </div>
+            </CardContent>
+          </Card>
         </Grid>
       )}
     </Grid>

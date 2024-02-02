@@ -5,6 +5,7 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 import { Controller, useForm } from 'react-hook-form'
 import toast from 'react-hot-toast'
+import { awsSes } from 'src/configs/aws-exports'
 
 const defaultValues = {
   name: "",
@@ -24,14 +25,87 @@ const schema = yup.object().shape({
 
 const FAQ = () => {
   // ** Hook
-  const { handleSubmit, formState: { errors }, control } = useForm({
+  const { handleSubmit, formState: { errors }, reset, control } = useForm({
     defaultValues,
     mode: 'onChange',
     resolver: yupResolver(schema),
   });
 
-  const onSubmit = async () => {
+  const onSubmit = async (data: any) => {
+    const html = `
+                <!DOCTYPE html>
+                <html lang="pt-br">
+                <head>
+                    <meta charset="UTF-8">
+                    <title>Email de Contato</title>
+                </head>
+                <body>
+                    <h1>Contato pelo app x-ecomm</h1>
+                    <p>
+                        Olá,
+                    </p>
+                    <p>
+                        Você recebeu uma nova mensagem de contato pelo seu site.
+                    </p>
+                    <p>
+                        **Nome:** ${data.name}
+                    </p>
+                    <p>
+                        **Email:** ${data.email}
+                    </p>
+                    <p>
+                        **Telefone:** ${data.phone}
+                    </p>
+                    <p>
+                        **Empresa:** ${data.company}
+                    </p>
+                    <p>
+                      **Categoria:** ${data.category}
+                    </p>
+                    <p>
+                      **Mensagem:**
+                    </p>
+                    <p>
+                        ${data.message}
+                    </p>
+                </body>
+                </html>
+                `
+    sendEmail({
+      toAddresses: ['falecom@expoecomm.com.br'],
+      subject: 'Email suporte app x-ecomm',
+      text: html,
+      fromAddress: 'falecom@expoecomm.com.br'
+    });
+
     toast.success('Mensagem enviada com sucesso')
+    reset(defaultValues)
+  }
+
+  async function sendEmail(params: any) {
+    const emailParams = {
+      Destination: {
+        ToAddresses: params.toAddresses,
+      },
+      Message: {
+        Body: {
+          Text: {
+            Data: params.text,
+          },
+        },
+        Subject: {
+          Data: params.subject,
+        },
+      },
+      Source: params.fromAddress,
+    };
+
+    try {
+      const data = await awsSes.sendEmail(emailParams).promise();
+      console.log('Email sent successfully:', data);
+    } catch (error) {
+      console.error('Error sending email:', error);
+    }
   }
 
   return (
