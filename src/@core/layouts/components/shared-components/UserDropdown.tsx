@@ -22,6 +22,7 @@ import { useAuth } from 'src/hooks/useAuth'
 // ** Type Imports
 import { Settings } from 'src/@core/context/settingsContext'
 import { MyAccountContext } from 'src/context/MyAccountContext'
+import { UserDataType } from 'src/context/types'
 
 interface Props {
   settings: Settings
@@ -37,8 +38,8 @@ const BadgeContentSpan = styled('span')(({ theme }) => ({
 }))
 
 const UserDropdown = (props: Props) => {
-  // const [user, setUser] = useState<UserDataType>()
-  const { userPhoto } = useContext(MyAccountContext);
+  const [user, setUser] = useState<UserDataType>()
+  const { userPhoto, updateUserPhoto } = useContext(MyAccountContext);
 
   // ** Props
   const { settings } = props
@@ -70,14 +71,21 @@ const UserDropdown = (props: Props) => {
   }
 
   useEffect(() => {
-    // const userDataString = window.localStorage.getItem('userData')
+    const userDataString = window.localStorage.getItem('userData')
 
-    // if (userDataString !== null) {
-    //   const userData = JSON.parse(userDataString) as UserDataType
+    if (userDataString !== null) {
+      const userData = JSON.parse(userDataString) as UserDataType
 
-    //   setUser(userData);
-    // }
+      setUser(userData)
+      updateUserPhoto(userData.image)
+    }
+
   }, []);
+
+  const handleRedirectAccount = () => {
+    const redirectURL = '/viewAcount'
+    router.replace(redirectURL as string)
+  }
 
   return (
     <Fragment>
@@ -92,10 +100,10 @@ const UserDropdown = (props: Props) => {
         }}
       >
         <Avatar
-          alt=''
+          alt='Perfil'
           onClick={handleDropdownOpen}
           sx={{ width: 40, height: 40 }}
-          src={userPhoto ? userPhoto : '/images/avatars/1.png'}
+          src={userPhoto ? userPhoto : user && user.image}
         />
       </Badge>
       <Menu
@@ -108,26 +116,20 @@ const UserDropdown = (props: Props) => {
       >
         <Box sx={{ pt: 2, pb: 3, px: 4 }}>
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Badge
-              overlap='circular'
-              badgeContent={<BadgeContentSpan />}
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'right'
-              }}
-            >
-              <Avatar alt='John Doe' src={userPhoto ? userPhoto : '/images/avatars/1.png'} sx={{ width: '2.5rem', height: '2.5rem' }} />
-            </Badge>
+            {user && user.name}
             <Box sx={{ display: 'flex', ml: 3, alignItems: 'flex-start', flexDirection: 'column' }}>
-              {/* <Typography sx={{ fontWeight: 600 }}>John Doe</Typography> */}
-              {/* <Typography variant='body2' sx={{ fontSize: '0.8rem', color: 'text.disabled' }}>
-                Admin
-              </Typography> */}
             </Box>
           </Box>
         </Box>
         <Divider sx={{ mt: '0 !important' }} />
         <Divider />
+        <MenuItem
+          onClick={handleRedirectAccount}
+          sx={{ py: 2, '& svg': { mr: 2, fontSize: '1.375rem', color: 'text.primary' } }}
+        >
+          <Icon icon='mdi:account-circle' />
+          Minha Conta
+        </MenuItem>
         <MenuItem
           onClick={handleLogout}
           sx={{ py: 2, '& svg': { mr: 2, fontSize: '1.375rem', color: 'text.primary' } }}
