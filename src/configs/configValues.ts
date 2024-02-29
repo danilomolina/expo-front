@@ -22,5 +22,4 @@ const configValues = {
      }
     }
 };
-
 export default configValues;
