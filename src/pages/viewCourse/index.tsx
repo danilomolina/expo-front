@@ -48,11 +48,12 @@ const ViewCourse = () => {
   const handleSearch = async () => {
 
     const userDataString = window.localStorage.getItem('userData');
+    const email = window.localStorage.getItem('email');
 
     if (userDataString !== null) {
       const userData = JSON.parse(userDataString) as UserDataType;
 
-      const token = await getToken(userData.email, userData.name)
+      const token = await getToken(email, userData.name)
       window.open(`https://escola.ecommercenapratica.com/?token=${token}`, "_blank");
     }
   }

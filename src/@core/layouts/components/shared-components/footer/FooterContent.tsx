@@ -13,8 +13,12 @@ const LinkStyled = styled(Link)(({ theme }) => ({
 
 const FooterContent = () => {
 
+  // const isMobileDevice = () => {
+  //   return typeof window !== 'undefined' && window.innerWidth <= 960;
+  // }
+
   return (
-    <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between' }}>
+    <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', fontSize: '2px !importante' }}>
       <Typography sx={{ mr: 2 }}>
         {`© ${new Date().getFullYear()}, Criado com carinho `}
         <Box component='span' sx={{ color: 'error.main' }}>
