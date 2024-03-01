@@ -10,11 +10,10 @@ import Divider from '@mui/material/Divider'
 import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
 import CardContent from '@mui/material/CardContent'
-import CardActions from '@mui/material/CardActions'
-
+import CardActions from '@mui/material/CardActions' 
+                 
 // ** Utils Import
 import { UserDataType } from 'src/context/types'
-
 import { VisuallyHiddenInput, previewImage, uploadFile } from 'src/utils/fileUploader'
 import CloudUploadIcon from '@mui/icons-material/CloudUpload'
 import { getPeople, updatePeople } from 'src/services/people'

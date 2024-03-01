@@ -13,15 +13,15 @@ const LinkStyled = styled(Link)(({ theme }) => ({
 
 const FooterContent = () => {
 
-  // const isMobileDevice = () => {
-  //   return typeof window !== 'undefined' && window.innerWidth <= 960;
-  // }
+  const isMobileDevice = () => {
+    return typeof window !== 'undefined' && window.innerWidth <= 960;
+  }
 
   return (
-    <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', fontSize: '2px !importante' }}>
+    <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between'  }}>
       <Typography sx={{ mr: 2 }}>
         {`© ${new Date().getFullYear()}, Criado com carinho `}
-        <Box component='span' sx={{ color: 'error.main' }}>
+        <Box component='span' sx={{ color: 'error.main', fontSize: isMobileDevice() ? '0.5rem !important' :  '1rem !important'}}>
           ❤️
         </Box>
         {` por `}

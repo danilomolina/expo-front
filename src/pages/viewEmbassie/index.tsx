@@ -14,8 +14,6 @@ import { CategoryModel } from 'src/models/category'
 import SearchIcon from '@mui/icons-material/Search'
 import CloseIcon from '@mui/icons-material/Close'
 import { getCategoryByGroup } from 'src/services/category'
-import { UserDataType } from 'src/context/types'
-import CustomPlan from 'src/@core/components/customPlan'
 
 const ViewEmbassie = () => {
   const [embassie, setEmbassie] = useState<EmbassieModel[]>()
@@ -27,7 +25,6 @@ const ViewEmbassie = () => {
   const [showClose, setShowClose] = useState(false)
   const [category, setCategory] = useState<string>('')
   const [categories, setCategories] = useState<CategoryModel[]>()
-  const [isFree, setIsFree] = useState<boolean>(false)
 
   useEffect(() => {
     handleGetCategories()
@@ -39,17 +36,6 @@ const ViewEmbassie = () => {
   }
 
   useEffect(() => {
-    const userDataString = window.localStorage.getItem('userData');
-
-    if (userDataString !== null) {
-      const userData = JSON.parse(userDataString) as UserDataType;
-
-      if (userData.planId !== "gold" || !userData.paidPlan)
-        setIsFree(true)
-      else
-        setIsFree(false)
-    }
-
     handleGetCategories()
   }, [])
 
@@ -132,7 +118,6 @@ const ViewEmbassie = () => {
 
   return (
     <Grid container spacing={6}>
-      {!isFree && (
         <Grid item xs={12}>
           <Card>
             <Grid container>
@@ -243,38 +228,6 @@ const ViewEmbassie = () => {
             </CardContent>
           </Card>
         </Grid>
-      )}
-      {isFree && (
-
-        <Grid item xs={12}>
-          <Card>
-            <Grid container>
-              <Grid item xs={9} sx={{ height: 10 }}>
-                <CardHeader title='Embaixadas' />
-              </Grid>
-            </Grid>
-            <CardContent>
-              <div className='demo-space-x'>
-                <Grid container spacing={6} >
-                  <Grid item xs={12} md={12}>
-                    {embassie && embassie.map((item: EmbassieModel, key) => (
-                      item.name === 'Brasil' &&
-                      <EmbassieComponent key={key} item={item} />
-                    ))}
-                  </Grid>
-                  <Grid item xs={12} md={12}>
-                    <Typography sx={{ mb: 2, fontSize: 20, fontWeight: 'bold', textAlign: 'left', display: 'block', marginTop: 0 }}>
-                      Você é Member Blue! Vire Member Dark Blue e tenha acesso a todos as embaixadas.
-                    </Typography>
-                  </Grid>
-
-                  <CustomPlan />
-                </Grid>
-              </div>
-            </CardContent>
-          </Card>
-        </Grid>
-      )}
     </Grid>
   )
 }

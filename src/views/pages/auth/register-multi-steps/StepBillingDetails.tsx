@@ -45,7 +45,7 @@ const Sup = styled('sup')(({ theme }) => ({
 
 const data: CustomRadioIconsData[] = [
   {
-    value: 'free',
+    value: 'gold',
     title: <Typography variant='h5' sx={{ color: 'primary.main' }}>Member Dark Blue</Typography>,
     content: (
       <Card sx={{ boxShadow: 'none', textAlign: 'center' }}>
@@ -62,7 +62,7 @@ const data: CustomRadioIconsData[] = [
                 color: 'primary.main'
               }}
             >
-              197
+              147
             </Typography>
             <Sub>/ mês</Sub>
           </Box>
@@ -186,7 +186,7 @@ const data: CustomRadioIconsData[] = [
   },
   {
     isSelected: true,
-    value: 'gold',
+    value: 'free',
     title: <Typography variant='h5' sx={{ color: 'primary.main' }}>Member Blue</Typography>,
     content: (
       <Card sx={{ boxShadow: 'none', textAlign: 'center' }}>
@@ -299,13 +299,30 @@ const StepBillingDetails = (props: StepBillingDetailsParams) => {
       .then(async response => {
         await handleSavePeople(response.data.id)
 
-        const email = props.user.email as string
-        const password = props.user.password as string
+        if (selectedRadio == 'gold') {
+          window.open(`https://chk.eduzz.com/2256536?email=${encodeURIComponent(response.data.email as string)}
+                      &name=${encodeURIComponent(
+            response && response.data && response.data.people !== undefined && response.data.people !== null
+              ? (response.data.people[0]?.name as string)
+              : "")}
+                        &phone=${encodeURIComponent(
+                response && response.data && response.data.people !== undefined && response.data.people !== null
+                  ? (response.data.people[0]?.cellPhone as string)
+                  : "")}
+                        &doc=${encodeURIComponent(
+                    response && response.data && response.data.people !== undefined && response.data.people !== null
+                      ? (response.data.people[0]?.cpf as string)
+                      : "")}`,
+            '_blank')
+        } else {
+          const email = props.user.email as string
+          const password = props.user.password as string
 
-        auth.login({ email, password, rememberMe : true}, () => {
-          const redirectURL = '/viewEvent'
-          router.replace(redirectURL as string)
-        })
+          auth.login({ email, password, rememberMe: true }, () => {
+            const redirectURL = '/viewEvent'
+            router.replace(redirectURL as string)
+          })
+        }
       })
 
   }

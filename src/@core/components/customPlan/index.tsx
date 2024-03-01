@@ -212,7 +212,7 @@ const CustomPlan = () => {
                   color: 'primary.main'
                 }}
               >
-                197
+                147
               </Typography>
               <Sub>/ mês</Sub>
             </Box>

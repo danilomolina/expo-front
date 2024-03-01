@@ -11,6 +11,7 @@ import { UserDataType } from "src/context/types"
 import { CategoryModel } from "src/models/category"
 import { getCategoryByGroup } from "src/services/category"
 import CustomPlan from "src/@core/components/customPlan"
+import { getPeople } from "src/services/people"
 
 const ViewCourse = () => {
 
@@ -26,19 +27,21 @@ const ViewCourse = () => {
   const [isFree, setIsFree] = useState<boolean>(false)
 
   useEffect(() => {
-    const userDataString = window.localStorage.getItem('userData');
-
-    if (userDataString !== null) {
-      const userData = JSON.parse(userDataString) as UserDataType;
-
-      if (userData.planId !== "gold" || !userData.paidPlan)
-        setIsFree(true)
-      else
-        setIsFree(false)
-    }
-
+    handleGetPeople()  
     handleGetCategories()
   }, [])
+
+  const handleGetPeople = async () => {
+    const userDataString = window.localStorage.getItem('userData')
+    if (userDataString !== null) {
+      const userData = JSON.parse(userDataString) as UserDataType
+      const response = await getPeople(0, 100, 0, userData?.id)
+      if (response.data[0].planId !== "gold" || !response.data[0].paidPlan)
+      setIsFree(true)
+    else
+      setIsFree(false)
+    }
+  }
 
   const handleGetCategories = async () => {
     const response = await getCategoryByGroup(0, 100, 0, 'Cursos')

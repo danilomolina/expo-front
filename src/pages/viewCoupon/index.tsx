@@ -80,7 +80,7 @@ const ViewCoupon = () => {
               <CardContent sx={{ pt: 4 }}>
                 <Typography sx={{ mb: 2, fontSize: 16 , textAlign: 'center', fontWeight: 'bold'  }}>
 
-                   {item.discount} % desconto
+                   {item.discount} Benefício
                 </Typography>
               </CardContent>
             </>

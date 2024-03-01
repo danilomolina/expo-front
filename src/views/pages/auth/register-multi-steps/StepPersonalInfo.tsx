@@ -113,9 +113,17 @@ const StepPersonalDetails = (props: StepPersonalDetailsParams) => {
         <Grid item xs={12} sm={6}>
           <TextField
             fullWidth
-            label='Cpf'
+            label='Cpf/Cnpj'
             onChange={(e) => props.setPeople({ ...props.people, cpf: e.target.value })}
             value={props.people.cpf}
+          />
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <TextField
+            fullWidth
+            label='Empresa'
+            onChange={(e) => props.setPeople({ ...props.people, company: e.target.value })}
+            value={props.people.company}
           />
         </Grid>
         <Grid item xs={8}>

@@ -26,6 +26,7 @@ export type UserDataType = {
   city?: string,
   state?:string,
   email?: string
+  company?: string
 }
 
 export type AuthValuesType = {

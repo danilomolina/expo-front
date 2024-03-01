@@ -1,5 +1,5 @@
 // ** React Imports
-import { useState, ReactNode } from 'react'
+import { useState, ReactNode, useEffect } from 'react'
 
 // ** Next Imports
 import Link from 'next/link'
@@ -113,6 +113,12 @@ const LoginPage = () => {
   const isMobileDevice = () => {
     return typeof window !== 'undefined' && window.innerWidth <= 960;
   }
+
+  useEffect(() => {
+    if (document.activeElement instanceof HTMLElement) {
+      document.activeElement.blur();
+    }
+  }, []);
 
   // ** Vars
   const { skin } = settings
@@ -249,7 +255,12 @@ const LoginPage = () => {
               </Button>
               <Box sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', justifyContent: 'center' }}>
                 <Typography sx={{ mr: 2, color: 'text.secondary' }}>Novo por aqui?</Typography>
-                <Typography href='/register' component={Link} sx={{ color: 'primary.main', textDecoration: 'none' }}>
+                <Typography
+                  href='/register'
+                  component={Link}
+                  sx={{ color: 'primary.main', textDecoration: 'none' }}
+                  tabIndex={1} 
+                >
                   Crie sua conta agora
                 </Typography>
               </Box>
