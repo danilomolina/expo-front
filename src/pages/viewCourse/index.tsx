@@ -48,7 +48,7 @@ const ViewCourse = () => {
     setCategories(response.data)
   }
 
-  const handleSearch = async () => {
+  const handleSearch = async (link: string) => {
 
     const userDataString = window.localStorage.getItem('userData');
     const email = window.localStorage.getItem('email');
@@ -57,7 +57,7 @@ const ViewCourse = () => {
       const userData = JSON.parse(userDataString) as UserDataType;
 
       const token = await getToken(email, userData.name)
-      window.open(`https://escola.ecommercenapratica.com/?token=${token}`, "_blank");
+      window.open(`${link}?token=${token}`, "_blank");
     }
   }
 
@@ -118,7 +118,7 @@ const ViewCourse = () => {
                         fullWidth
                         color='primary'
                         variant='contained'
-                        onClick={handleSearch}
+                        onClick={() => handleSearch(item.link)}
                       >
                         Assistir
                       </Button>
@@ -227,7 +227,7 @@ const ViewCourse = () => {
                         fullWidth
                         color='primary'
                         variant='contained'
-                        onClick={handleSearch}
+                        onClick={() => handleGetCourses(name)}
                       >
                         filtrar
                       </Button>
