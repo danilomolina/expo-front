@@ -27,6 +27,7 @@ import router from 'next/router'
 import { Card, CardContent } from '@mui/material'
 import { styled } from "@mui/material/styles"
 import { useAuth } from 'src/hooks/useAuth'
+import toast from 'react-hot-toast'
 
 // ** Styled <sub> component
 const Sub = styled('sub')({
@@ -280,6 +281,13 @@ interface StepBillingDetailsParams {
 const StepBillingDetails = (props: StepBillingDetailsParams) => {
   const auth = useAuth()
 
+  const handleCheckboxChange = (event: any) => {
+    setAcceptedTerms(event.target.checked);
+  }
+
+  const pdfUrl = 'https://expoecomm.s3.sa-east-1.amazonaws.com/TERMO+DE+ADESA%CC%83O+EMBAIXADA+-+X-ECOMM.pdf'
+  const [acceptedTerms, setAcceptedTerms] = useState(false)
+
   const initialSelected: string = data.filter(item => item.isSelected)[data.filter(item => item.isSelected).length - 1]
     .value
 
@@ -295,36 +303,40 @@ const StepBillingDetails = (props: StepBillingDetailsParams) => {
   }
 
   const handleSaveUser = async () => {
-    signup(props.user.email, props.user.password)
-      .then(async response => {
-        await handleSavePeople(response.data.id)
+    if (!acceptedTerms) {
+     toast.error('Aceite os termos antes de continuar!')
+    }
+    else {
+      signup(props.user.email, props.user.password)
+        .then(async response => {
+          await handleSavePeople(response.data.id)
 
-        if (selectedRadio == 'gold') {
-          window.open(`https://chk.eduzz.com/2256536?email=${encodeURIComponent(response.data.email as string)}
+          if (selectedRadio == 'gold') {
+            window.open(`https://chk.eduzz.com/2256536?email=${encodeURIComponent(response.data.email as string)}
                       &name=${encodeURIComponent(
-            response && response.data && response.data.people !== undefined && response.data.people !== null
-              ? (response.data.people[0]?.name as string)
-              : "")}
+              response && response.data && response.data.people !== undefined && response.data.people !== null
+                ? (response.data.people[0]?.name as string)
+                : "")}
                         &phone=${encodeURIComponent(
-                response && response.data && response.data.people !== undefined && response.data.people !== null
-                  ? (response.data.people[0]?.cellPhone as string)
-                  : "")}
+                  response && response.data && response.data.people !== undefined && response.data.people !== null
+                    ? (response.data.people[0]?.cellPhone as string)
+                    : "")}
                         &doc=${encodeURIComponent(
-                    response && response.data && response.data.people !== undefined && response.data.people !== null
-                      ? (response.data.people[0]?.cpf as string)
-                      : "")}`,
-            '_blank')
-        } else {
-          const email = props.user.email as string
-          const password = props.user.password as string
+                      response && response.data && response.data.people !== undefined && response.data.people !== null
+                        ? (response.data.people[0]?.cpf as string)
+                        : "")}`,
+              '_blank')
+          } else {
+            const email = props.user.email as string
+            const password = props.user.password as string
 
-          auth.login({ email, password, rememberMe: true }, () => {
-            const redirectURL = '/viewEvent'
-            router.replace(redirectURL as string)
-          })
-        }
-      })
-
+            auth.login({ email, password, rememberMe: true }, () => {
+              const redirectURL = '/viewEvent'
+              router.replace(redirectURL as string)
+            })
+          }
+        })
+    }
   }
 
   const handleSavePeople = async (userId: string | undefined) => {
@@ -357,6 +369,14 @@ const StepBillingDetails = (props: StepBillingDetailsParams) => {
             handleChange={handleRadioChange}
           />
         ))}
+        <Grid item xs={12}>
+          <label>
+            <a href={pdfUrl} target="_blank" rel="noopener noreferrer">Ler termos de adesão</a><br /><br />
+            <input type="checkbox" checked={acceptedTerms} onChange={handleCheckboxChange} />
+            Eu li e concordo com os termos do documento.
+          </label>
+
+        </Grid>
         <Grid item xs={12}>
           <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
             <Button

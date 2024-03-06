@@ -1,7 +1,7 @@
 export type CouponModel = {
     id?:string
     soon? : string
-    discount : number,
+    discount : string,
     link: string,
     category: string,
     title: string

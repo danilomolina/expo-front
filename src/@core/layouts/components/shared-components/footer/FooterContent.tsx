@@ -18,10 +18,10 @@ const FooterContent = () => {
   }
 
   return (
-    <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between'  }}>
-      <Typography sx={{ mr: 2 }}>
+    <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between' }}>
+      <Typography sx={{ mr: 2, fontSize: isMobileDevice() ? '0.8rem !important' : '1rem !important' }}>
         {`© ${new Date().getFullYear()}, Criado com carinho `}
-        <Box component='span' sx={{ color: 'error.main', fontSize: isMobileDevice() ? '0.5rem !important' :  '1rem !important'}}>
+        <Box component='span' sx={{ color: 'error.main' }}>
           ❤️
         </Box>
         {` por `}

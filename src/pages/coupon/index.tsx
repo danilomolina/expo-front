@@ -69,8 +69,6 @@ const FormCoupon = () => {
   });
 
   const onSubmit = async (data: any) => {
-    console.log("data",data);
-    data.discount = parseFloat(data.discount.replace(",","."))
     const response = await saveCoupon(data)
     setCoupon(response.data)
 
