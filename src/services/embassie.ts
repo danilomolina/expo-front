@@ -31,10 +31,13 @@ export const getEmbassie = async (offset: number, limit: number, skip: number, t
 
     const filter: any = {};
 
+    if (!orderBy)
+      orderBy = 'name'
+
     if (title || category) {
       filter.where = {
         or: [
-          title ? { title: { like: `${title}` } } : {},
+          title ? { name: { like: `${title}` } } : {},
           category ? { category: category } : {},
         ],
       };

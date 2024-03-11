@@ -32,80 +32,77 @@ const FAQ = () => {
   });
 
   const onSubmit = async (data: any) => {
-    const html = `
-                <!DOCTYPE html>
-                <html lang="pt-br">
-                <head>
-                    <meta charset="UTF-8">
-                    <title>Email de Contato</title>
-                </head>
-                <body>
-                    <h1>Contato pelo app x-ecomm</h1>
-                    <p>
-                        Olá,
-                    </p>
-                    <p>
-                        Você recebeu uma nova mensagem de contato pelo seu site.
-                    </p>
-                    <p>
-                        **Nome:** ${data.name}
-                    </p>
-                    <p>
-                        **Email:** ${data.email}
-                    </p>
-                    <p>
-                        **Telefone:** ${data.phone}
-                    </p>
-                    <p>
-                        **Empresa:** ${data.company}
-                    </p>
-                    <p>
-                      **Categoria:** ${data.category}
-                    </p>
-                    <p>
-                      **Mensagem:**
-                    </p>
-                    <p>
-                        ${data.message}
-                    </p>
-                </body>
-                </html>
+    const userEmailData = window.localStorage.getItem('email')
+    const htmlBody = `
+            <!DOCTYPE html>
+            <html lang="pt-br">
+            <head>
+                <meta charset="UTF-8">
+                <title>Contato pelo aplicativo x-ecomm</title>
+                <style>
+                    body {
+                        font-family: Arial, sans-serif;
+                        line-height: 1.6;
+                    }
+                    h1 {
+                        color: #333;
+                    }
+                    p {
+                        margin-bottom: 10px;
+                    }
+                    strong {
+                        color: #666;
+                    }
+                </style>
+            </head>
+            <body>
+                <h1>Contato pelo aplicativo x-ecomm</h1>
+                <p>Prezado(a),</p>
+                <p>Você recebeu uma nova mensagem de contato através do aplicativo x-ecomm.</p>
+                <p><strong>Nome:</strong> ${data.name}</p>
+                <p><strong>Email:</strong> ${userEmailData}</p>
+                <p><strong>Telefone:</strong> ${data.phone}</p>
+                <p><strong>Empresa:</strong> ${data.company}</p>
+                <p><strong>Categoria:</strong> ${data.category}</p>
+                <p><strong>Mensagem:</strong></p>
+                <p>${data.message}</p>
+                <hr>
+                <p>Esta mensagem foi enviada através do aplicativo x-ecomm.</p>
+                <p>Atenciosamente,<br>Equipe de Suporte</p>
+                <p><img src="https://expoecomm.s3.sa-east-1.amazonaws.com/logo2.png" alt="Logo da Empresa" width="150"></p>
+            </body>
+            </html>
                 `
-    sendEmail({
-      toAddresses: ['falecom@expoecomm.com.br'],
-      subject: 'Email suporte app x-ecomm',
-      text: html,
-      fromAddress: 'falecom@expoecomm.com.br'
-    });
 
-    toast.success('Mensagem enviada com sucesso')
-    reset(defaultValues)
-  }
-
-  async function sendEmail(params: any) {
-    const emailParams = {
+    const params = {
       Destination: {
-        ToAddresses: params.toAddresses,
+        ToAddresses: ['falecom@expoecomm.com.br'] // Altere para o endereço de email do destinatário
       },
       Message: {
         Body: {
-          Text: {
-            Data: params.text,
-          },
+          Html: {
+            Charset: 'UTF-8',
+            Data: htmlBody
+          }
         },
         Subject: {
-          Data: params.subject,
-        },
+          Charset: 'UTF-8',
+          Data: 'Email suporte app x-ecomm'
+        }
       },
-      Source: params.fromAddress,
+      Source: 'falecom@expoecomm.com.br' // Altere para o endereço de email remetente verificado no SES
     };
 
-    try {
-      const data = await awsSes.sendEmail(emailParams).promise();
-      console.log('Email sent successfully:', data);
-    } catch (error) {
-      console.error('Error sending email:', error);
-    }
+    awsSes.sendEmail(params, (err: any) => {
+      if (err) {
+        toast.error('Error:', err);
+      } else {
+        toast.success('Mensagem enviada com sucesso')
+        reset(defaultValues)
+      }
+    });
+
+
   }
 
   return (

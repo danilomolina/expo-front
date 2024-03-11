@@ -78,9 +78,9 @@ const ViewCoupon = () => {
             <>
               <CardMedia sx={{ height: 90 }} image={item.soon} />
               <CardContent sx={{ pt: 4 }}>
-                <Typography sx={{ mb: 2, fontSize: 16 , textAlign: 'center', fontWeight: 'bold'  }}>
+                <Typography sx={{ mb: 2, fontSize: 16, textAlign: 'center', fontWeight: 'bold' }}>
 
-                   {item.discount} Benefício
+                  {item.discount}
                 </Typography>
               </CardContent>
             </>
@@ -120,7 +120,7 @@ const ViewCoupon = () => {
             <Grid item xs={9} sx={{ height: 10 }}>
               <CardHeader title='Cupons e benefícios' />
             </Grid>
-            <Grid item xs={2} style={{ display: !showFilters ? 'block' : 'none', marginTop: 6, height: 2, marginLeft: windowWidth >= 430 ? 335 : 300  }}>
+            <Grid item xs={2} style={{ display: !showFilters ? 'block' : 'none', marginTop: 6, height: 2, marginLeft: windowWidth >= 430 ? 335 : 300 }}>
               <Button onClick={() => {
                 setShowFilters(!showFilters)
                 setShowClose(true)

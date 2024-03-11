@@ -10,8 +10,8 @@ import CloseIcon from '@mui/icons-material/Close'
 import { UserDataType } from "src/context/types"
 import { CategoryModel } from "src/models/category"
 import { getCategoryByGroup } from "src/services/category"
-import CustomPlan from "src/@core/components/customPlan"
 import { getPeople } from "src/services/people"
+import AlertDialog from "./modal"
 
 const ViewCourse = () => {
 
@@ -25,9 +25,18 @@ const ViewCourse = () => {
   const [category, setCategory] = useState<string>('')
   const [categories, setCategories] = useState<CategoryModel[]>()
   const [isFree, setIsFree] = useState<boolean>(false)
+  const [open, setOpen] = useState(false)
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  }
+
+  const handleClose = () => {
+    setOpen(false);
+  }
 
   useEffect(() => {
-    handleGetPeople()  
+    handleGetPeople()
     handleGetCategories()
   }, [])
 
@@ -37,9 +46,9 @@ const ViewCourse = () => {
       const userData = JSON.parse(userDataString) as UserDataType
       const response = await getPeople(0, 100, 0, userData?.id)
       if (response.data[0].planId !== "gold" || !response.data[0].paidPlan)
-      setIsFree(true)
-    else
-      setIsFree(false)
+        setIsFree(true)
+      else
+        setIsFree(false)
     }
   }
 
@@ -49,6 +58,12 @@ const ViewCourse = () => {
   }
 
   const handleSearch = async (link: string) => {
+
+    if (isFree) {
+      handleClickOpen()
+      
+      return
+    }
 
     const userDataString = window.localStorage.getItem('userData');
     const email = window.localStorage.getItem('email');
@@ -91,6 +106,10 @@ const ViewCourse = () => {
 
     return (
       <Grid item xs={12} md={3} style={{ cursor: 'pointer' }}>
+        <AlertDialog
+          open={open}
+          handleClose={handleClose}
+        />
         <Card
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
@@ -137,130 +156,116 @@ const ViewCourse = () => {
   return (
 
     <Grid container spacing={2}>
-      {!isFree && (
-        <Grid item xs={12}>
-          <Card>
-            <Grid container>
-              <Grid item xs={7} sx={{ height: 10 }}>
-                <CardHeader title='Cursos' />
-              </Grid>
-              <Grid item xs={3} style={{ display: !showFilters ? 'block' : 'none', marginTop: 6, height: 2, marginLeft: windowWidth >= 430 ? 335 : 300 }}>
-                <Button onClick={() => {
-                  setShowFilters(!showFilters)
-                  setShowClose(true)
-                }}>
-                  <SearchIcon />
-                </Button>
-              </Grid>
+      <Grid item xs={12}>
+        <Card>
+          <Grid container>
+            <Grid item xs={7} sx={{ height: 10 }}>
+              <CardHeader title='Cursos' />
             </Grid>
-            <CardContent>
-
-
-              <div className='demo-space-x'>
-                <Grid container spacing={6} >
-                  <Grid item xs={9} style={{ display: showFilters && showClose ? 'block' : 'none' }}>
-                    Filtros
-                  </Grid>
-                  <Grid item xs={2} style={{ display: showFilters && showClose ? 'block' : 'none', marginTop: -12 }}>
-                    <Button onClick={() => setShowFilters(!showFilters)}>
-                      <CloseIcon />
-                    </Button>
-                  </Grid>
-                  <Grid item xs={12} md={3} style={{ display: showFilters ? 'block' : 'none' }}>
-                    <FormControl fullWidth>
-                      <InputLabel id='controlled-select-label'>Ordernado por</InputLabel>
-                      <Select
-                        value={orderBy}
-                        label='Ordernado por'
-                        id='controlled-select'
-                        onChange={(e) => setOrderBy(e.target.value)}
-                        labelId='controlled-select-label'
-                      >
-                        <MenuItem value=''>
-                          <em>Nada</em>
-                        </MenuItem>
-                        <MenuItem value="date">Data</MenuItem>
-                        <MenuItem value="category">Categoria</MenuItem>
-                        <MenuItem value="local">Local</MenuItem>
-                        <MenuItem value="mentors">Mentores</MenuItem>
-                      </Select>
-                    </FormControl>
-                  </Grid>
-                  <Grid item xs={12} md={3} style={{ display: showFilters ? 'block' : 'none' }}>
-                    <FormControl fullWidth>
-                      <InputLabel id='controlled-select-label'>Categorias</InputLabel>
-                      <Select
-                        value={category}
-                        label='Categorias'
-                        id='controlled-select'
-                        onChange={(e) => setCategory(e.target.value)}
-                        labelId='controlled-select-label'
-                      >
-                        <MenuItem value=''>
-                          <em>Nada</em>
-                        </MenuItem>
-                        {categories && categories.map((category, index) => (
-                          <MenuItem value={category.name} key={index}>{category.name}</MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
-                  </Grid>
-                  <Grid item xs={12} md={3} style={{ display: showFilters ? 'block' : 'none' }}>
-                    <FormControl fullWidth>
-                      <InputLabel htmlFor='auth-login-v2-password'>
-                        Buscar por Nome
-                      </InputLabel>
-
-                      <OutlinedInput
-                        value={name}
-                        label='Nome'
-                        onChange={(e) => setName(e.target.value)}
-                        id='auth-login-v2-password'
-                        type={'text'}
-                      />
-
-                    </FormControl>
-                  </Grid>
-                  <Grid item xs={12} md={3} style={{ display: showFilters ? 'block' : 'none' }}>
-                    <FormControl fullWidth>
-                      <Button
-                        fullWidth
-                        color='primary'
-                        variant='contained'
-                        onClick={() => handleGetCourses(name)}
-                      >
-                        filtrar
-                      </Button>
-                    </FormControl>
-                  </Grid>
-                </Grid>
-              </div>
-              {showFilters &&
-                <>
-                  <br /> <br />
-                </>
-              }
-              <Grid container spacing={6} >
-                {courses && courses.map((item: CourseModel, key) => (
-                  <CourseComponent key={key} item={item} />
-                ))}
-              </Grid>
-            </CardContent>
-          </Card>
-        </Grid>
-      )}
-      {isFree && (
-        <Grid container spacing={6} >
-          <Grid item xs={12} md={12}>
-            <Typography sx={{ mb: 2, fontSize: 20, fontWeight: 'bold', textAlign: 'left', display: 'block', marginTop: 0 }}>
-              Você é Member Blue! Vire Member Dark Blue e tenha acesso a todos os cursos.
-            </Typography>
+            <Grid item xs={3} style={{ display: !showFilters ? 'block' : 'none', marginTop: 6, height: 2, marginLeft: windowWidth >= 430 ? 335 : 300 }}>
+              <Button onClick={() => {
+                setShowFilters(!showFilters)
+                setShowClose(true)
+              }}>
+                <SearchIcon />
+              </Button>
+            </Grid>
           </Grid>
+          <CardContent>
 
-          <CustomPlan />
 
-        </Grid>
-      )}
+            <div className='demo-space-x'>
+              <Grid container spacing={6} >
+                <Grid item xs={9} style={{ display: showFilters && showClose ? 'block' : 'none' }}>
+                  Filtros
+                </Grid>
+                <Grid item xs={2} style={{ display: showFilters && showClose ? 'block' : 'none', marginTop: -12 }}>
+                  <Button onClick={() => setShowFilters(!showFilters)}>
+                    <CloseIcon />
+                  </Button>
+                </Grid>
+                <Grid item xs={12} md={3} style={{ display: showFilters ? 'block' : 'none' }}>
+                  <FormControl fullWidth>
+                    <InputLabel id='controlled-select-label'>Ordernado por</InputLabel>
+                    <Select
+                      value={orderBy}
+                      label='Ordernado por'
+                      id='controlled-select'
+                      onChange={(e) => setOrderBy(e.target.value)}
+                      labelId='controlled-select-label'
+                    >
+                      <MenuItem value=''>
+                        <em>Nada</em>
+                      </MenuItem>
+                      <MenuItem value="date">Data</MenuItem>
+                      <MenuItem value="category">Categoria</MenuItem>
+                      <MenuItem value="local">Local</MenuItem>
+                      <MenuItem value="mentors">Mentores</MenuItem>
+                    </Select>
+                  </FormControl>
+                </Grid>
+                <Grid item xs={12} md={3} style={{ display: showFilters ? 'block' : 'none' }}>
+                  <FormControl fullWidth>
+                    <InputLabel id='controlled-select-label'>Categorias</InputLabel>
+                    <Select
+                      value={category}
+                      label='Categorias'
+                      id='controlled-select'
+                      onChange={(e) => setCategory(e.target.value)}
+                      labelId='controlled-select-label'
+                    >
+                      <MenuItem value=''>
+                        <em>Nada</em>
+                      </MenuItem>
+                      {categories && categories.map((category, index) => (
+                        <MenuItem value={category.name} key={index}>{category.name}</MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Grid>
+                <Grid item xs={12} md={3} style={{ display: showFilters ? 'block' : 'none' }}>
+                  <FormControl fullWidth>
+                    <InputLabel htmlFor='auth-login-v2-password'>
+                      Buscar por Nome
+                    </InputLabel>
+
+                    <OutlinedInput
+                      value={name}
+                      label='Nome'
+                      onChange={(e) => setName(e.target.value)}
+                      id='auth-login-v2-password'
+                      type={'text'}
+                    />
+
+                  </FormControl>
+                </Grid>
+                <Grid item xs={12} md={3} style={{ display: showFilters ? 'block' : 'none' }}>
+                  <FormControl fullWidth>
+                    <Button
+                      fullWidth
+                      color='primary'
+                      variant='contained'
+                      onClick={() => handleGetCourses(name)}
+                    >
+                      filtrar
+                    </Button>
+                  </FormControl>
+                </Grid>
+              </Grid>
+            </div>
+            {showFilters &&
+              <>
+                <br /> <br />
+              </>
+            }
+            <Grid container spacing={6} >
+              {courses && courses.map((item: CourseModel, key) => (
+                <CourseComponent key={key} item={item} />
+              ))}
+            </Grid>
+          </CardContent>
+        </Card>
+      </Grid>
     </Grid >
   )
 }
