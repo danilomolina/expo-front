@@ -13,7 +13,7 @@ const Home = () => {
           <CardHeader title='Bem vindo a área administrativa do app expoecomm 🔒'></CardHeader>
           <CardContent>
             <Typography sx={{ mb: 2 }}>
-             Aqui é possível fazer os cadastros e manutenções.
+             Aqui é possível fazer os cadastros e manutenções e consultar Gráficos.
             </Typography>
           </CardContent>
         </Card>
