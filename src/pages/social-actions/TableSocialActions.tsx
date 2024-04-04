@@ -80,9 +80,6 @@ const TableSocialActions = (props: TableSocialActionsParams) => {
   });
 
   const onSubmit = async (data: any) => {
-    const newDate = new Date(data.date);
-    data.date = newDate.toISOString();
-
     const response = await updateSocialAction(data)
 
     if (response.isSuccess) {
@@ -277,51 +274,51 @@ const TableSocialActions = (props: TableSocialActionsParams) => {
                     </FormHelperText>
                   )}
                 </FormControl>
-
-                <Grid item xs={12}>
-                  <FormControl fullWidth>
-                    <Controller
-                      name='link'
-                      control={control}
-                      rules={{ required: true }}
-                      render={({ field: { value, onChange } }) => (
-                        <TextField
-                          value={value}
-                          label='Link'
-                          onChange={onChange}
-                          error={Boolean(errors.link)}
-                          aria-describedby='validation-schema-last-name'
-                        />
-                      )}
-                    />
-                    {errors.link && (
-                      <FormHelperText sx={{ color: 'error.main' }} id='validation-schema-last-name'>
-                        {errors.link.message}
-                      </FormHelperText>
-                    )}
-                  </FormControl>
-                </Grid>
-
               </Grid>
 
-              <DialogActions
-                sx={{
-                  justifyContent: 'center',
-                  px: theme => [`${theme.spacing(5)} !important`, `${theme.spacing(15)} !important`],
-                  pb: theme => [`${theme.spacing(8)} !important`, `${theme.spacing(12.5)} !important`]
-                }}
-              >
-                <Button variant='contained' sx={{ mr: 2 }} type="submit">
-                  Alterar
-                </Button>
-                <Button variant='outlined' color='secondary' onClick={handleEditClose}>
-                  Cancelar
-                </Button>
-              </DialogActions>
+              <Grid item xs={12}>
+                <FormControl fullWidth>
+                  <Controller
+                    name='link'
+                    control={control}
+                    rules={{ required: true }}
+                    render={({ field: { value, onChange } }) => (
+                      <TextField
+                        value={value}
+                        label='Link'
+                        onChange={onChange}
+                        error={Boolean(errors.link)}
+                        aria-describedby='validation-schema-last-name'
+                      />
+                    )}
+                  />
+                  {errors.link && (
+                    <FormHelperText sx={{ color: 'error.main' }} id='validation-schema-last-name'>
+                      {errors.link.message}
+                    </FormHelperText>
+                  )}
+                </FormControl>
+              </Grid>
+
             </Grid>
+
+            <DialogActions
+              sx={{
+                justifyContent: 'center',
+                px: theme => [`${theme.spacing(5)} !important`, `${theme.spacing(15)} !important`],
+                pb: theme => [`${theme.spacing(8)} !important`, `${theme.spacing(12.5)} !important`]
+              }}
+            >
+              <Button variant='contained' sx={{ mr: 2 }} type="submit">
+                Alterar
+              </Button>
+              <Button variant='outlined' color='secondary' onClick={handleEditClose}>
+                Cancelar
+              </Button>
+            </DialogActions>
           </form>
         </DialogContent>
-      </Dialog>
+      </Dialog >
     </>
   )
 }
