@@ -53,6 +53,13 @@ const navigation = (): VerticalNavItemsType => {
       action: 'read',
     },
     {
+      title: 'Ação Social',
+      path: '/social-actions',
+      icon: 'mdi:book-account',
+      subject: 'admin-page',
+      action: 'read',
+    },
+    {
       path: '/viewEvent',
       action: 'read',
       subject: 'acl-page',

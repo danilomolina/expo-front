@@ -42,7 +42,8 @@ export const previewImage = (event: React.ChangeEvent<HTMLInputElement>, preview
     const selectedFile = input.files && input.files.length > 0 ? input.files[0] : undefined
 
     reader.onload = function (e) {
-      if (e.target && e.target.result) {
+      if (e.target && e.target.result && preview) {
+        console.log("e.target.result.toString() ==>", e.target.result.toString())
         preview.src = e.target.result.toString();
         preview.style.display = 'block';
       }
@@ -52,7 +53,7 @@ export const previewImage = (event: React.ChangeEvent<HTMLInputElement>, preview
 
     const url = `https://expoecomm.s3.sa-east-1.amazonaws.com/${input.files[0].name}`;
 
-    return {url, selectedFile }
+    return { url, selectedFile }
   }
 }
 
