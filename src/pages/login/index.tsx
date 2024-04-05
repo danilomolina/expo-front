@@ -67,7 +67,7 @@ const FormControlLabel = styled(MuiFormControlLabel)<FormControlLabelProps>(({ t
 }))
 
 const schema = yup.object().shape({
-  email: yup.string().email().required('Email é obrigatório'),
+  email: yup.string().email('Não é um Email valído').required('Email é obrigatório'),
   password: yup.string().min(5, 'Senha tem que ter no minímo 5 caracteres').required('Senha é obrigatório')
 })
 
