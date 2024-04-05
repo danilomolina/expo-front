@@ -95,6 +95,13 @@ const navigation = (): VerticalNavItemsType => {
       icon: 'mdi:cellphone-marker',
     },
     {
+      title: 'Ação Social',
+      path: '/viewSocialAction',
+      icon: 'mdi:book-account',
+      subject: 'acl-page',
+      action: 'read',
+    },
+    {
       path: '/viewSupport',
       action: 'read',
       subject: 'acl-page',
