@@ -23,6 +23,7 @@ import CloseIcon from '@mui/icons-material/Close'
 import { CategoryModel } from 'src/models/category'
 import { getCategoryByGroup } from 'src/services/category'
 import { getImageDimensions } from 'src/utils/imageDimensions'
+import { getMetrics, getMetricsIp, saveMetrics } from 'src/services/metrics'
 
 
 // Styled Timeline component
@@ -48,7 +49,6 @@ const UserViewOverview = () => {
   const [windowWidth, setWindowWidth] = useState(window.innerWidth)
   const [showFilters, setShowFilters] = useState(true)
   const [showClose, setShowClose] = useState(false)
-  console.log(windowWidth)
   const imageWidth = getImageDimensions(windowWidth)
   const imageHeight = windowWidth >= 960 ? 100 : 200
 
@@ -56,7 +56,26 @@ const UserViewOverview = () => {
 
   useEffect(() => {
     handleGetCategories()
+    handleMetrics()
   }, [])
+
+  const handleMetrics = async () => {
+    const response = await getMetricsIp()
+
+    const isMobile = /Mobile|iP(hone|od)|Android|BlackBerry|IEMobile/.test(navigator.userAgent)
+
+    const metrics = {
+      userIP: response.data.ip,
+      userAgent: navigator.userAgent,
+      isMobile: isMobile.toString(),
+      currentDate: new Date(),
+    }
+
+    const responseMetrics = await getMetrics(response.data.ip, new Date())
+
+    if (responseMetrics.data.length === 0)
+      await saveMetrics(metrics)
+  }
 
   const handleGetCategories = async () => {
     const response = await getCategoryByGroup(0, 100, 0, 'Agenda')

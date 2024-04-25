@@ -1,7 +1,7 @@
 import { api } from "src/configs/api";
 import { ResponseAPI, ResponseLoginDefault } from "src/models/api";
 import configValues from "src/configs/configValues";
-import { UserDataType } from "src/context/types";
+import { PeopleCount, UserDataType } from "src/context/types";
 
 const { API: { EXPOAPI } } = configValues;
 
@@ -47,15 +47,18 @@ export const updatePeople = async (user: UserDataType): Promise<ResponseAPI<User
   }
 }
 
-export const getPeople = async (offset: number, limit: number, skip: number, id?: string): Promise<ResponseAPI<UserDataType[] | []>> => {
+export const getPeople = async (offset: number, limit: number, skip: number, id?: string, name?: string, company?: string, idPlan?: string): Promise<ResponseAPI<UserDataType[] | []>> => {
   try {
 
     const filter: any = {};
 
-    if (id) {
+    if (id || name || company || idPlan) {
       filter.where = {
         or: [
-          id ? { id: id } : {}
+          id ? { id: id } : {},
+          name ? { name: name } : {},
+          company ? { company: company } : {},
+          idPlan ? { planId: idPlan } : {}
         ],
       };
     }
@@ -81,5 +84,29 @@ export const getPeople = async (offset: number, limit: number, skip: number, id?
       isSuccess: false,
       message: error.message
     } as ResponseAPI<UserDataType[] | []>
+  }
+}
+
+export const getPeopleCount = async (planId?: string): Promise<ResponseAPI<PeopleCount>> => {
+  try {
+    let filter = ''
+
+    if (planId !== undefined)
+     filter = `?where=%7B%0A%20%20%22planId%22%3A%22${planId}%22%0A%7D`
+
+    const { data }: { data: PeopleCount } = await api.get(`${EXPOAPI.url}/people/count${filter}`);
+
+    return {
+      data: data,
+      isSuccess: true
+    } as ResponseAPI<PeopleCount>;
+  }
+  catch (error: any) {
+    console.log(error);
+
+    return {
+      isSuccess: false,
+      message: error.message
+    } as ResponseAPI<PeopleCount>
   }
 }

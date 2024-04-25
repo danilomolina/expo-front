@@ -118,7 +118,7 @@ const LoginPage = () => {
     if (document.activeElement instanceof HTMLElement) {
       document.activeElement.blur();
     }
-  }, []);
+  }, [])
 
   // ** Vars
   const { skin } = settings

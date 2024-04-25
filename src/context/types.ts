@@ -37,3 +37,7 @@ export type AuthValuesType = {
   setUser: (value: UserDataType | null) => void
   login: (params: LoginParams, errorCallback?: ErrCallbackType) => void
 }
+
+export type PeopleCount = {
+    count: number
+}

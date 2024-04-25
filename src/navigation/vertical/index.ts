@@ -11,6 +11,13 @@ const navigation = (): VerticalNavItemsType => {
       action: 'read',
     },
     {
+      title: 'Dashboard',
+      path: '/dashboard',
+      icon: 'mdi:finance',
+      subject: 'admin-page',
+      action: 'read',
+    },
+    {
       title: 'Evento/Agenda',
       path: '/events',
       icon: 'mdi:calendar-range',
@@ -56,6 +63,13 @@ const navigation = (): VerticalNavItemsType => {
       title: 'Ação Social',
       path: '/social-actions',
       icon: 'mdi:book-account',
+      subject: 'admin-page',
+      action: 'read',
+    },
+    {
+      title: 'Relatório de Clientes',
+      path: '/client-report',
+      icon: 'mdi:file-chart-outline',
       subject: 'admin-page',
       action: 'read',
     },
