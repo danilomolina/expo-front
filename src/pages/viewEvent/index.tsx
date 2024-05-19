@@ -71,7 +71,7 @@ const UserViewOverview = () => {
       currentDate: new Date(),
     }
 
-    const responseMetrics = await getMetrics(response.data.ip, new Date())
+    const responseMetrics = await getMetrics(response.data.ip, new Date(), new Date())
 
     if (responseMetrics.data.length === 0)
       await saveMetrics(metrics)

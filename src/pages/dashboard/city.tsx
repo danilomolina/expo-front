@@ -19,10 +19,37 @@ import ReactApexcharts from 'src/@core/components/react-apexcharts'
 
 // ** Util Import
 import { hexToRGBA } from 'src/@core/utils/hex-to-rgba'
+import { useEffect, useState } from 'react'
+import { getPeopleAll, getPeopleByTopCities } from 'src/services/people'
+import { getCategory } from 'src/services/category'
 
 const CardTopCity = () => {
   // ** Hook
   const theme = useTheme()
+
+  const [categories, setCategories] = useState([])
+  const [data, setData] = useState([])
+
+  useEffect(() => {
+    getAllPeopleByCity(false)
+  }, [])
+
+  const getAllPeopleByCity = async (all: boolean) => {
+    const responseTop = await getPeopleByTopCities(all)
+
+    let _categories: any = []
+    let _data: any = []
+
+    if (responseTop.data !== undefined) {
+      responseTop.data.map((category: any) => {
+        _categories.push(category.city)
+        _data.push(category.count)
+      })
+    }
+
+    setCategories(_categories)
+    setData(_data)
+  }
 
   const options: ApexOptions = {
     chart: {
@@ -32,13 +59,10 @@ const CardTopCity = () => {
     legend: { show: false },
     dataLabels: { enabled: false },
     colors: [
-      hexToRGBA(theme.palette.primary.main, 0.1),
+      hexToRGBA('#FDB528', 2),
       hexToRGBA(theme.palette.primary.main, 1),
-      hexToRGBA(theme.palette.primary.main, 0.1),
-      hexToRGBA(theme.palette.primary.main, 1),
-      hexToRGBA(theme.palette.primary.main, 1),
-      hexToRGBA(theme.palette.primary.main, 0.1),
-      hexToRGBA(theme.palette.primary.main, 0.1)
+      hexToRGBA('#FDB528', 2),  
+      hexToRGBA(theme.palette.primary.main, 1)
     ],
     grid: {
       show: false,
@@ -68,7 +92,7 @@ const CardTopCity = () => {
     xaxis: {
       axisTicks: { show: false },
       axisBorder: { show: false },
-      categories: ['S', 'M', 'T', 'W', 'T', 'F', 'S'],
+      categories: categories,
       labels: {
         style: { colors: theme.palette.text.disabled }
       }
@@ -79,25 +103,20 @@ const CardTopCity = () => {
   return (
     <Card>
       <CardHeader
-        title='Visits by Day'
-        subheader='Total 248.5k Visits'
+        title='Top 4 Cidades'
+        subheader=''
         subheaderTypographyProps={{ sx: { lineHeight: 1.429 } }}
         titleTypographyProps={{ sx: { letterSpacing: '0.15px' } }}
-        action={
-          <OptionsMenu
-            options={['Refresh', 'Update', 'Share']}
-            iconButtonProps={{ size: 'small', className: 'card-more-options' }}
-          />
-        }
       />
       <CardContent>
-        <ReactApexcharts type='bar' height={222} options={options} series={[{ data: [38, 55, 48, 65, 80, 38, 48] }]} />
+        <ReactApexcharts type='bar' height={222} options={options} series={[{ data: data }]} />
         <Box sx={{ mt: 4, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <CustomAvatar skin='light' variant='rounded' onClick={() => getAllPeopleByCity(false)} style={{ cursor: 'pointer' }}>
+            <Icon icon='mdi:chevron-left' />
+          </CustomAvatar>
           <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-            <Typography sx={{ mb: 0.75, fontWeight: 600 }}>Most Visited Day</Typography>
-            <Typography variant='body2'>Total 62.4k Visits on Thursday</Typography>
           </Box>
-          <CustomAvatar skin='light' variant='rounded'>
+          <CustomAvatar skin='light' variant='rounded' onClick={() => getAllPeopleByCity(true)} style={{ cursor: 'pointer' }}>
             <Icon icon='mdi:chevron-right' />
           </CustomAvatar>
         </Box>
