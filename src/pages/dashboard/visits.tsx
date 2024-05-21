@@ -72,6 +72,7 @@ const CardStatsTotalVisits = () => {
     const roundTwoPlacesDecimals = (_number: number) => {
         const housesDecimals = 2;
         const fator = Math.pow(10, housesDecimals);
+        
         return Math.round(_number * fator) / fator;
     };
 

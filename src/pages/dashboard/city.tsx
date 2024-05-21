@@ -3,8 +3,6 @@ import Box from '@mui/material/Box'
 import Card from '@mui/material/Card'
 import { useTheme } from '@mui/material/styles'
 import CardHeader from '@mui/material/CardHeader'
-import Typography from '@mui/material/Typography'
-import CardContent from '@mui/material/CardContent'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
@@ -14,14 +12,15 @@ import { ApexOptions } from 'apexcharts'
 
 // ** Custom Components Imports
 import CustomAvatar from 'src/@core/components/mui/avatar'
-import OptionsMenu from 'src/@core/components/option-menu'
-import ReactApexcharts from 'src/@core/components/react-apexcharts'
 
 // ** Util Import
 import { hexToRGBA } from 'src/@core/utils/hex-to-rgba'
 import { useEffect, useState } from 'react'
-import { getPeopleAll, getPeopleByTopCities } from 'src/services/people'
-import { getCategory } from 'src/services/category'
+import { getPeopleByTopCities } from 'src/services/people'
+import { CardContent } from '@mui/material'
+import dynamic from 'next/dynamic'
+
+const ReactApexcharts = dynamic(() => import('react-apexcharts'), { ssr: false });
 
 const CardTopCity = () => {
   // ** Hook
@@ -37,8 +36,8 @@ const CardTopCity = () => {
   const getAllPeopleByCity = async (all: boolean) => {
     const responseTop = await getPeopleByTopCities(all)
 
-    let _categories: any = []
-    let _data: any = []
+    const _categories: any = []
+    const _data: any = []
 
     if (responseTop.data !== undefined) {
       responseTop.data.map((category: any) => {

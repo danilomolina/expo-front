@@ -2,7 +2,6 @@ import { api, apiEcommerce } from "src/configs/api";
 import { ResponseAPI } from "src/models/api";
 import configValues from "src/configs/configValues";
 import { MetricsIpModel, MetricsModel } from "src/models/metrics"
-import { Between } from 'typeorm'
 
 const { API: { EXPOAPI } } = configValues;
 

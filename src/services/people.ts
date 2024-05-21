@@ -140,6 +140,7 @@ function groupByCity(people: UserDataType[]) {
       acc[city] = [];
     }
     acc[city].push(person);
+    
     return acc;
   }, {});
 }
