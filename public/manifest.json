@@ -1,0 +1,27 @@
+{
+  "background_color": "#1a86fb",
+  "description": "X-Ecomm – Tenha acesso a cursos sobre e-commerce",
+  "dir": "ltr",
+  "display": "standalone",
+  "name": "Xecomm",
+  "orientation": "any",
+  "scope": "/",
+  "short_name": "Xecomm",
+  "start_url": "/",
+  "theme_color": "#1a86fb",
+  "icons": [
+    {
+      "src": "/images/favicon.ico"
+    },
+    {
+      "src": "/images/apple-touch-icon.png",
+      "type": "image/png",
+      "sizes": "500x500"
+    }
+  ],
+  "id": "xecomm",
+  "lang": "pt",
+  "categories": [
+    "education"
+  ]
+}
