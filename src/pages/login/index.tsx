@@ -34,6 +34,7 @@ import { useSettings } from 'src/@core/hooks/useSettings'
 
 // ** Layout Import
 import BlankLayout from 'src/@core/layouts/BlankLayout'
+import { Grid } from '@mui/material'
 
 const RightWrapper = styled(Box)<BoxProps>(({ theme }) => ({
   width: '100%',
@@ -259,11 +260,16 @@ const LoginPage = () => {
                   href='/register'
                   component={Link}
                   sx={{ color: 'primary.main', textDecoration: 'none' }}
-                  tabIndex={1} 
+                  tabIndex={1}
                 >
                   Crie sua conta agora
                 </Typography>
               </Box>
+              <Grid item xs={12} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: '15px'}}>
+                <a href='https://expoecomm.s3.sa-east-1.amazonaws.com/Xecomm.apk' rel='noreferrer'>
+                  <img src={'/images/disponivel-google-play-badge.png'} alt='download android' height={50} />
+                </a>
+              </Grid>
             </form>
           </BoxWrapper>
         </Box>
