@@ -12,8 +12,10 @@ import InputAdornment from '@mui/material/InputAdornment'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
-import { Dispatch, SetStateAction, useRef } from 'react'
+import { Dispatch, SetStateAction, useRef, useState } from 'react'
 import { UserDataType } from 'src/context/types'
+import { getCitys } from 'src/services/city'
+import { CityModel } from 'src/models/city'
 
 interface StepPersonalDetailsParams {
   handleNext: () => void,
@@ -24,6 +26,7 @@ interface StepPersonalDetailsParams {
 
 const StepPersonalDetails = (props: StepPersonalDetailsParams) => {
   const inputRef = useRef<HTMLInputElement>(null);
+  const [citys, setCitys] = useState<CityModel[]>()
 
   const states = [
     { description: 'Acre', value: 'AC' },
@@ -55,10 +58,17 @@ const StepPersonalDetails = (props: StepPersonalDetailsParams) => {
     { description: 'Tocantins', value: 'TO' }
   ];
 
+  const handleGetCitys = async (state: string) => {
+    const response = await getCitys(state)
+    setCitys(response.data)
+  }
+
   const getAddress = (cep: string) => {
     fetch(`https://viacep.com.br/ws/${cep}/json/`)
       .then(response => response.json())
       .then(data => {
+        handleGetCitys(data.uf)
+
         const updatedPeople = {
           ...props.people,
           street: data.logradouro,
@@ -163,28 +173,15 @@ const StepPersonalDetails = (props: StepPersonalDetailsParams) => {
           />
         </Grid>
         <Grid item xs={12} sm={6}>
-          <TextField
-            fullWidth
-            label='Cidade'
-            onChange={(e) => props.setPeople({ ...props.people, city: e.target.value })}
-            value={props.people.city}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            fullWidth
-            label='Complemento'
-            onChange={(e) => props.setPeople({ ...props.people, complement: e.target.value })}
-            value={props.people.complement}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6}>
           <FormControl fullWidth>
             <InputLabel id='state-select'>Estado</InputLabel>
             <Select
               labelId='state-select'
               defaultValue='São Paulo'
-              onChange={(e) => props.setPeople({ ...props.people, state: e.target.value })}
+              onChange={(e) => {
+                props.setPeople({ ...props.people, state: e.target.value })
+                handleGetCitys(e.target.value)
+              }}
               value={props.people.state}
             >
               {states.map((state) => (
@@ -195,6 +192,32 @@ const StepPersonalDetails = (props: StepPersonalDetailsParams) => {
             </Select>
           </FormControl>
         </Grid>
+        <Grid item xs={12} sm={6}>
+           <FormControl fullWidth>
+            <InputLabel id='state-select'>Cidade</InputLabel>
+            <Select
+              labelId='state-select'
+              defaultValue=''
+              onChange={(e) => props.setPeople({ ...props.people, city: e.target.value })}
+              value={props.people.city}
+            >
+              {citys && citys.map((city) => (
+                <MenuItem key={city.id} value={city.nome}>
+                  {city.nome}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <TextField
+            fullWidth
+            label='Complemento'
+            onChange={(e) => props.setPeople({ ...props.people, complement: e.target.value })}
+            value={props.people.complement}
+          />
+        </Grid>
+
         <Grid item xs={12}>
           <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
             <Button

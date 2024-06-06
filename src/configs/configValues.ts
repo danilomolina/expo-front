@@ -8,6 +8,9 @@ const configValues = {
         },
         ECOMMERCE: {
             url: process.env.NEXT_PUBLIC_ECOMMERCE_API_URL
+        },
+        CITYS: {
+            url: process.env.NEXT_PUBLIC_EXPO_API_CIDADES_URL
         }
     },
     messages: {

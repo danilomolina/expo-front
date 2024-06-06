@@ -26,6 +26,8 @@ import themeOptions from 'src/@core/theme/ThemeOptions'
 // ** Util Import
 import { hexToRGBA } from 'src/@core/utils/hex-to-rgba'
 
+import Typography from '@mui/material/Typography'
+
 interface Props {
   navWidth: number
   navVisible: boolean
@@ -181,6 +183,10 @@ const Navigation = (props: Props) => {
                     {...props}
                   />
                 </List>
+                <br />
+                <Typography sx={{ mb: 1, fontSize: 12, textAlign: 'center'}}>
+                  APOIO
+                </Typography>
                 <Img alt='logo' src='/images/logo-correios.png/' />
                 <Img alt='logo' src='/images/logo-ecommerce.png/' />
               </>
@@ -194,7 +200,7 @@ const Navigation = (props: Props) => {
           ? afterNavMenuContent(navMenuContentProps)
           : null}
       </Drawer>
-    </ThemeProvider>
+    </ThemeProvider >
   )
 }
 

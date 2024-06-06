@@ -54,7 +54,7 @@ const AuthProvider = ({ children }: Props) => {
         const filter: any = {};
         filter.where = {
           or: [
-            userData.id ? { id: userData.id } : {}
+            userData && userData.id ? { id: userData.id } : {}
           ],
         };
 

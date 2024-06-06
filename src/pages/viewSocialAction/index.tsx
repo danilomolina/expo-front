@@ -62,7 +62,7 @@ const ViewSocialAction = () => {
           {!isHovered &&
             <>
               <CardMedia sx={{ height: 90 }} image={item.photo} />
-              <CardContent sx={{ pt: 4, height: 60 }}>
+              <CardContent sx={{ pt: 4, height: 120 }}>
                 <Typography sx={{ mb: 2, fontSize: 20, fontWeight: 'bold', textAlign: 'center', display: 'block', marginTop: 0 }}>
                   {item.title}
                 </Typography>
